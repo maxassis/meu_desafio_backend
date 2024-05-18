@@ -26,6 +26,8 @@
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "5.14.0",
     "bcrypt": "^5.1.1",
+    "ioredis": "^5.4.1",
+    "nanoid": "3",
     "nestjs-zod": "^3.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",

@@ -8,7 +8,7 @@ import { IUserRepository } from '../repositories/user.repository';
 export class CreateUserUseCase {
   constructor(private userRepository: IUserRepository) {}
 
-  async execute(data: CreateUserDTO) {
+  async create(data: CreateUserDTO) {
     const user = await this.userRepository.findUsernameOrEmail({
       username: data.username,
       email: data.email,
