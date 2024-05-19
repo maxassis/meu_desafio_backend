@@ -8,18 +8,18 @@ import {
   Request,
 } from '@nestjs/common';
 import { CreateUserUseCase } from './useCases/create-user.usecase';
-// import { CreateUserDTO } from './dto/user.dto';
 import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
 import { CreateUserSchemaDTO } from './schemas/create-user-schema';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
-import { RedisService } from 'src/infra/database/redis.service';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { MailerService } from '@nestjs-modules/mailer';
+import Redis from 'ioredis';
 
 @Controller('/users')
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
-    private readonly redis: RedisService,
+    @InjectRedis() private readonly redis: Redis,
     private readonly mailerService: MailerService,
   ) {}
 
@@ -32,16 +32,16 @@ export class UserController {
   @Get('/profile')
   @UseGuards(AuthGuard)
   async profile(@Request() req) {
-    console.log(req.user);
+   // console.log(req.user);
 
-    await this.mailerService.sendMail({
-      to: 'max.assis@ymail.com',
-      from: 'bondis@bondis.com',
-      subject: 'Teste',
-      text: 'Teste',
-      html: '<b>Teste</b>',
-    });
+    // await this.mailerService.sendMail({
+    //   to: 'max.assis@ymail.com',
+    //   from: 'bondis@bondis.com',
+    //   subject: 'Teste',
+    //   text: 'Teste',
+    //   html: '<b>Teste</b>',
+    // });
 
-    await this.redis.set('chave', 'consegui usar o redis hehehehh !!!!!');
+    return await this.redis.set('usando a lib222', 'usando a lib222', 'EX', 30); //300
   }
 }

@@ -4,7 +4,6 @@ import { CreateUserUseCase } from './useCases/create-user.usecase';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { IUserRepository } from './repositories/user.repository';
 import { UserPrismaRepository } from './repositories/prisma/user.prisma.repository';
-import { RedisService } from 'src/infra/database/redis.service';
 
 @Module({
   imports: [],
@@ -12,7 +11,6 @@ import { RedisService } from 'src/infra/database/redis.service';
   providers: [
     CreateUserUseCase,
     PrismaService,
-    RedisService,
     {
       provide: IUserRepository,
       useClass: UserPrismaRepository,
