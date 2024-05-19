@@ -13,12 +13,14 @@ import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
 import { CreateUserSchemaDTO } from './schemas/create-user-schema';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { RedisService } from 'src/infra/database/redis.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Controller('/users')
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly redis: RedisService,
+    private readonly mailerService: MailerService,
   ) {}
 
   @Post()
@@ -31,6 +33,14 @@ export class UserController {
   @UseGuards(AuthGuard)
   async profile(@Request() req) {
     console.log(req.user);
+
+    await this.mailerService.sendMail({
+      to: 'max.assis@ymail.com',
+      from: 'bondis@bondis.com',
+      subject: 'Teste',
+      text: 'Teste',
+      html: '<b>Teste</b>',
+    });
 
     await this.redis.set('chave', 'consegui usar o redis hehehehh !!!!!');
   }
