@@ -3,7 +3,7 @@ import { IUserRepository } from '../user.repository';
 import {
   CreateUserDTO,
   UserCreatedDTO,
-  UsernameAndEmail,
+  NameAndEmail,
 } from '../../dto/user.dto';
 import { Injectable } from '@nestjs/common';
 
@@ -12,11 +12,11 @@ export class UserPrismaRepository implements IUserRepository {
   constructor(private prisma: PrismaService) {}
 
   async findUsernameOrEmail(
-    data: UsernameAndEmail,
+    data: NameAndEmail,
   ): Promise<UserCreatedDTO | null> {
     return await this.prisma.users.findFirst({
       where: {
-        OR: [{ username: data.username }, { email: data.email }],
+        email: data.email,
       },
     });
   }

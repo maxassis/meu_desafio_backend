@@ -3,7 +3,6 @@ import { z } from 'nestjs-zod/z';
 
 export const CreateUserSchema = z.object({
   name: z.string(),
-  username: z.string(),
   email: z.string().email(),
   password: z.string(),
 });

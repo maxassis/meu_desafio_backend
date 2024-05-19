@@ -25,14 +25,17 @@ export class UserController {
 
   @Post()
   @UsePipes(new CreateUserValidationPipe())
-  async create(@Body() data: CreateUserSchemaDTO) {
-    return await this.createUserUseCase.create(data);
+  async createUser(@Body() data: CreateUserSchemaDTO) {
+    const dt = await this.createUserUseCase.create(data);
+    Reflect.deleteProperty(dt, 'password');
+
+    return dt;
   }
 
   @Get('/profile')
   @UseGuards(AuthGuard)
   async profile(@Request() req) {
-   // console.log(req.user);
+    // console.log(req.user);
 
     // await this.mailerService.sendMail({
     //   to: 'max.assis@ymail.com',
