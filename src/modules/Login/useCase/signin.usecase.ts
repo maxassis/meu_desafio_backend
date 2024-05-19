@@ -14,7 +14,7 @@ export class SignInUseCase {
   async execute(data: SignInSchemaDTO) {
     const user = await this.prisma.users.findFirst({
       where: {
-        username: data.username,
+        email: data.email,
       },
     });
 
