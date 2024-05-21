@@ -1,0 +1,19 @@
+meta {
+  name: Criar usuario
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Bondis",
+    "email": "bondis@teste.com",
+    "password": "54321"
+  }
+}

@@ -14,6 +14,7 @@ import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { MailerService } from '@nestjs-modules/mailer';
 import Redis from 'ioredis';
+import { CreateUserTermplate } from 'src/templates-email/create.user.template';
 
 @Controller('/users')
 export class UserController {
@@ -37,13 +38,12 @@ export class UserController {
   async profile(@Request() req) {
     // console.log(req.user);
 
-    // await this.mailerService.sendMail({
-    //   to: 'max.assis@ymail.com',
-    //   from: 'bondis@bondis.com',
-    //   subject: 'Teste',
-    //   text: 'Teste',
-    //   html: '<b>Teste</b>',
-    // });
+    await this.mailerService.sendMail({
+      to: 'max.assis@ymail.com',
+      from: 'bondis@bondis.com',
+      subject: 'Teste email',
+      html: CreateUserTermplate('Max'),
+    });
 
     return await this.redis.set('usando a lib222', 'usando a lib222', 'EX', 30); //300
   }
