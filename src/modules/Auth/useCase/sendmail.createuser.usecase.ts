@@ -13,7 +13,7 @@ export class SendMailUseCase {
   ) {}
 
   async sendMail(name: string, email: string) {
-    console.log(name, email);
+    // console.log(name, email);
 
     const nanoid = customAlphabet('0123456789', 6);
     const code = nanoid();
