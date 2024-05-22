@@ -24,7 +24,7 @@ export class SendMailUseCase {
       await this.mailerService.sendMail({
         to: email,
         from: 'bondis@meudesafio.com',
-        subject: 'teste de envio com dados2',
+        subject: 'Confirme seu email',
         html: CreateUserTermplate(name, code),
       });
     } catch {
