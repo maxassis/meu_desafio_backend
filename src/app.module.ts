@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './modules/Users/user.module';
 import { APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
-import { LoginModule } from './modules/Login/login.module';
+import { LoginModule } from './modules/Auth/login.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 

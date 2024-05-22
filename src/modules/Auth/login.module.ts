@@ -3,7 +3,7 @@ import { LoginController } from './login.controller';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { SignInUseCase } from './useCase/signin.usecase';
 import { JwtModule } from '@nestjs/jwt';
-import { GetCodeUseCase } from './useCase/getCode.usecase';
+import { SendMailUseCase } from './useCase/sendmail.createuser.usecase';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { GetCodeUseCase } from './useCase/getCode.usecase';
     }),
   ],
   controllers: [LoginController],
-  providers: [PrismaService, SignInUseCase, GetCodeUseCase],
+  providers: [PrismaService, SignInUseCase, SendMailUseCase],
   exports: [],
 })
 export class LoginModule {}
