@@ -9,3 +9,12 @@ services:
        POSTGRES_PASSWORD: example
        POSTGRES_DB: bondis_app
        POSTGRES_USER: docker
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+         
+

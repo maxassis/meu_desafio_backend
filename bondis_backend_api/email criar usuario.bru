@@ -1,0 +1,22 @@
+meta {
+  name: email criar usuario
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/sendmail
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQm9uZGlzMiIsImVtYWlsIjoiYm9uZGlzMkB0ZXN0ZS5jb20iLCJpZCI6ImNsd2h5NHFzaDAwMDBxbXJyajMyZWdrOXYiLCJpYXQiOjE3MTYzODk5NjIsImV4cCI6MTcyNDE2NTk2Mn0.IPjrwEes0HAo7ByIgRTHVfUdHiXwJMH7pCKDBrNiIuU
+}
+
+body:json {
+  {
+    "name": "nildis",
+    "email": "nildis@teste.com"
+  }
+}

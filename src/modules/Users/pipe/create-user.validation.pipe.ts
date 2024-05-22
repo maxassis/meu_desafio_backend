@@ -1,5 +1,4 @@
 import {
-  ArgumentMetadata,
   HttpException,
   HttpStatus,
   Injectable,
@@ -10,16 +9,16 @@ import { CreateUserDTO } from '../dto/user.dto';
 @Injectable()
 export class CreateUserValidationPipe implements PipeTransform {
   transform(
-    { name, email, username, password }: CreateUserDTO,
+    { email, password, name }: CreateUserDTO,
     // metadata: ArgumentMetadata,
   ) {
-    if (!name || !email || !username || !password) {
+    if (!email || !password || !name) {
       throw new HttpException(
         'Missing required fields',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
 
-    return { name, email, username, password };
+    return { name, email, password };
   }
 }

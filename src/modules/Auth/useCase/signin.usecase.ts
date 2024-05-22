@@ -14,7 +14,7 @@ export class SignInUseCase {
   async execute(data: SignInSchemaDTO) {
     const user = await this.prisma.users.findFirst({
       where: {
-        username: data.username,
+        email: data.email,
       },
     });
 
@@ -29,7 +29,7 @@ export class SignInUseCase {
     }
 
     const payload = {
-      username: user.username,
+      name: user.name,
       email: user.email,
       id: user.id,
     };
