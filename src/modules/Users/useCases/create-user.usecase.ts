@@ -1,14 +1,20 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 // import { PrismaService } from 'src/infra/database/prisma.service';
+import { MailerService } from '@nestjs-modules/mailer';
 import { CreateUserDTO } from '../dto/user.dto';
 import { hash } from 'bcrypt';
-import { IUserRepository } from '../repositories/user.repository';
 import { PrismaService } from 'src/infra/database/prisma.service';
+import { AccountCreatedTemplate } from 'src/templates-email/account.created.template';
 
 @Injectable()
 export class CreateUserUseCase {
   constructor(
-    private userRepository: IUserRepository,
+    private mailerService: MailerService,
     private prisma: PrismaService,
   ) {}
 
@@ -25,11 +31,26 @@ export class CreateUserUseCase {
 
     const password = await hash(data.password, 10);
 
+    this.sendCreatedAccountEmail(data.name, data.email);
+
     return await this.prisma.users.create({
       data: {
         ...data,
         password,
       },
     });
+  }
+
+  async sendCreatedAccountEmail(name, email) {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        from: 'bondis@meudesafio.com',
+        subject: 'Cadastro realizado com sucesso',
+        html: AccountCreatedTemplate(name),
+      });
+    } catch {
+      throw new InternalServerErrorException();
+    }
   }
 }

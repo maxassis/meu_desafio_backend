@@ -125,7 +125,7 @@ export function CreateUserTermplate(name, code) {
   <body>
     <div class="mail-container">
       <div class="mail-logo-wrapper">
-        <img src="https://i.imgur.com/O8zYpgB.png" />
+        <img src="https://iijythvtsrfruihwseua.supabase.co/storage/v1/object/public/Meu%20desafio/logo.png?t=2024-05-26T23%3A20%3A25.568Z" />
       </div>
   
       <h3 class="mail-name">Ola, ${name},</h3>
@@ -150,7 +150,7 @@ export function CreateUserTermplate(name, code) {
   
       <span class="mail-text-6">Siga-nos nossa rede:</span>
   
-      <img class="mail-instagram" src="https://i.imgur.com/nVyiypa.png" />
+      <img class="mail-instagram" src="https://iijythvtsrfruihwseua.supabase.co/storage/v1/object/public/Meu%20desafio/insta.png" />
   
       <div class="mail-social-wrapper">
         <a target="_blank" class="mail-link" href="https://www.meudesafio.com.br/">
@@ -169,8 +169,6 @@ export function CreateUserTermplate(name, code) {
           <span class="mail-social">Fale conosco</span>
         </a>
       </div>
-  
-  
     </div>
   </body>
   
