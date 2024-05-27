@@ -5,6 +5,7 @@ import { SignInUseCase } from './useCase/signin.usecase';
 import { JwtModule } from '@nestjs/jwt';
 import { SendMailUseCase } from './useCase/sendmail.createuser.usecase';
 import { ConfirmCodeUseCase } from './useCase/confirmCode.usercase';
+import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ConfirmCodeUseCase } from './useCase/confirmCode.usercase';
     PrismaService,
     SignInUseCase,
     SendMailUseCase,
+    SendMailRecoveryUseCase,
     ConfirmCodeUseCase,
   ],
   exports: [],
