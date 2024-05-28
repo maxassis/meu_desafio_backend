@@ -7,6 +7,8 @@ import { SendMailRecoveryDTO } from './schemas/sendMail.recovery.schema';
 import { ConfirmCodeUseCase } from './useCase/confirmCode.usercase';
 import { ConfirmCodeDTO } from './schemas/confirmCode.schema';
 import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
+import { SendMailDoneDTO } from './schemas/sendMail.recovery.done';
+import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
 
 @Controller()
 export class LoginController {
@@ -15,6 +17,7 @@ export class LoginController {
     private readonly sendMailUseCase: SendMailUseCase,
     private readonly confirCodeUseCase: ConfirmCodeUseCase,
     private readonly sendMailRecoveryUseCase: SendMailRecoveryUseCase,
+    private readonly sendMailDoneUseCase: SendMailRecoveryDoneUseCase,
   ) {}
 
   @Post('/signin')
@@ -39,5 +42,13 @@ export class LoginController {
   async RecoveryMail(@Body() data: SendMailRecoveryDTO) {
     const { email } = data;
     return await this.sendMailRecoveryUseCase.sendMailRecovery(email);
+  }
+
+  @Post('/sendMailDone')
+  async sendMailDone(@Body() data: SendMailDoneDTO) {
+    const { email } = data;
+    console.log(email);
+
+    return await this.sendMailDoneUseCase.sendMailDone(email);
   }
 }

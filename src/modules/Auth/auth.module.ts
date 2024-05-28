@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { SendMailUseCase } from './useCase/sendmail.createuser.usecase';
 import { ConfirmCodeUseCase } from './useCase/confirmCode.usercase';
 import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
+import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
     SendMailUseCase,
     SendMailRecoveryUseCase,
     ConfirmCodeUseCase,
+    SendMailRecoveryDoneUseCase,
   ],
   exports: [],
 })

@@ -3,7 +3,7 @@ import { customAlphabet } from 'nanoid';
 import { MailerService } from '@nestjs-modules/mailer';
 import Redis from 'ioredis';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import { CreateUserTermplate } from 'src/templates-email/create.user.template';
+import { CreateUserTemplate } from 'src/templates-email/create.user.code.template';
 
 @Injectable()
 export class SendMailUseCase {
@@ -22,7 +22,7 @@ export class SendMailUseCase {
         to: email,
         from: 'bondis@meudesafio.com',
         subject: 'Confirme seu email',
-        html: CreateUserTermplate(name, code),
+        html: CreateUserTemplate(name, code),
       });
     } catch {
       throw new InternalServerErrorException();

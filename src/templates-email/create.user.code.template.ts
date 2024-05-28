@@ -1,4 +1,4 @@
-export function CreateUserTermplate(name, code) {
+export function CreateUserTemplate(name, code) {
   return `
   <!DOCTYPE html>
   <html lang="en">

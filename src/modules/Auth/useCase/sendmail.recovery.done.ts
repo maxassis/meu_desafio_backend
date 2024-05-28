@@ -3,22 +3,18 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { customAlphabet } from 'nanoid';
 import { MailerService } from '@nestjs-modules/mailer';
-import Redis from 'ioredis';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { PrismaService } from 'src/infra/database/prisma.service';
-import { AccountRecoveryCodeTemplate } from 'src/templates-email/account.recovery.code.template';
+import { AccountCreatedTemplate } from 'src/templates-email/account.created.template';
 
 @Injectable()
-export class SendMailRecoveryUseCase {
+export class SendMailRecoveryDoneUseCase {
   constructor(
     private readonly prisma: PrismaService,
-    @InjectRedis() private readonly redis: Redis,
     private readonly mailerService: MailerService,
   ) {}
 
-  async sendMailRecovery(email: string) {
+  async sendMailDone(email: string) {
     const user = await this.prisma.users.findUnique({
       where: {
         email,
@@ -29,16 +25,12 @@ export class SendMailRecoveryUseCase {
       throw new UnauthorizedException();
     }
 
-    const nanoid = customAlphabet('0123456789', 6);
-    const code = nanoid();
-
     try {
-      await this.redis.set(`code-${email}`, code, 'EX', 300);
       await this.mailerService.sendMail({
         to: email,
         from: 'bondis@meudesafio.com',
-        subject: 'Confirme seu email',
-        html: AccountRecoveryCodeTemplate(user.name, code),
+        subject: 'Sua senha foi cadastrada com sucesso',
+        html: AccountCreatedTemplate(user.name),
       });
     } catch {
       throw new InternalServerErrorException();
