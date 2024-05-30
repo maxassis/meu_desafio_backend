@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 // import { PrismaService } from 'src/infra/database/prisma.service';
 import { MailerService } from '@nestjs-modules/mailer';
-import { CreateUserDTO } from '../dto/user.dto';
 import { hash } from 'bcrypt';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { AccountCreatedTemplate } from 'src/templates-email/account.created.template';
+import { CreateUserSchemaDTO } from '../schemas/create-user-schema';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -18,7 +18,7 @@ export class CreateUserUseCase {
     private prisma: PrismaService,
   ) {}
 
-  async create(data: CreateUserDTO) {
+  async create(data: CreateUserSchemaDTO) {
     const user = await this.prisma.users.findFirst({
       where: {
         email: data.email,

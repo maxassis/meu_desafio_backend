@@ -7,7 +7,6 @@ import { SendMailUseCase } from './useCase/sendmail.createuser.usecase';
 import { ConfirmCodeUseCase } from './useCase/confirmCode.usercase';
 import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
 import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
-import { ChangeEmailUseCase } from './useCase/changeEmail.usecase';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { ChangeEmailUseCase } from './useCase/changeEmail.usecase';
     SendMailRecoveryUseCase,
     ConfirmCodeUseCase,
     SendMailRecoveryDoneUseCase,
-    ChangeEmailUseCase,
   ],
   exports: [],
 })

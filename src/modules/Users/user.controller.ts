@@ -1,17 +1,16 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Patch, Post, UsePipes } from '@nestjs/common';
 import { CreateUserUseCase } from './useCases/create-user.usecase';
 import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
 import { CreateUserSchemaDTO } from './schemas/create-user-schema';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import { MailerService } from '@nestjs-modules/mailer';
-import Redis from 'ioredis';
+import { ChangePasswordUseCase } from './useCases/changePassword.usecase';
+import { ChangePasswordDTO } from './schemas/change.Password.schema';
 
 @Controller('/users')
 export class UserController {
+  changeEmailUseCase: any;
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
-    @InjectRedis() private readonly redis: Redis,
-    private readonly mailerService: MailerService,
+    private readonly changePasswordUseCase: ChangePasswordUseCase,
   ) {}
 
   @Post()
@@ -21,5 +20,11 @@ export class UserController {
     Reflect.deleteProperty(dt, 'password');
 
     return dt;
+  }
+
+  @Patch('/changePassword')
+  async changePassword(@Body() data: ChangePasswordDTO) {
+    const { new_password, email } = data;
+    return await this.changePasswordUseCase.changePassword(email, new_password);
   }
 }

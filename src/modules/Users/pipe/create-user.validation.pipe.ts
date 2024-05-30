@@ -4,12 +4,12 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import { CreateUserDTO } from '../dto/user.dto';
+import { CreateUserSchemaDTO } from '../schemas/create-user-schema';
 
 @Injectable()
 export class CreateUserValidationPipe implements PipeTransform {
   transform(
-    { email, password, name }: CreateUserDTO,
+    { email, password, name }: CreateUserSchemaDTO,
     // metadata: ArgumentMetadata,
   ) {
     if (!email || !password || !name) {

@@ -3,10 +3,10 @@ import { hash } from 'bcrypt';
 import { PrismaService } from 'src/infra/database/prisma.service';
 
 @Injectable()
-export class ChangeEmailUseCase {
+export class ChangePasswordUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
-  async changeEmail(email: string, new_password: string) {
+  async changePassword(email: string, new_password: string) {
     const user = await this.prisma.users.findUnique({
       where: {
         email: email,
