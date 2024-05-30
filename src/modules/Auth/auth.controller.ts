@@ -1,4 +1,4 @@
-import { Controller, Body, Post } from '@nestjs/common';
+import { Controller, Body, Post, Patch } from '@nestjs/common';
 import { SignInUseCase } from './useCase/signin.usecase';
 import { SignInSchemaDTO } from './schemas/signin-schema';
 import { SendMailUseCase } from './useCase/sendmail.createuser.usecase';
@@ -9,15 +9,18 @@ import { ConfirmCodeDTO } from './schemas/confirmCode.schema';
 import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
 import { SendMailDoneDTO } from './schemas/sendMail.recovery.done';
 import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
+import { ChangeEmailUseCase } from './useCase/changeEmail.usecase';
+import { ChangeMailDTO } from './schemas/changeMail.schema';
 
 @Controller()
 export class LoginController {
   constructor(
     private readonly signInUseCase: SignInUseCase,
     private readonly sendMailUseCase: SendMailUseCase,
-    private readonly confirCodeUseCase: ConfirmCodeUseCase,
+    private readonly confirmCodeUseCase: ConfirmCodeUseCase,
     private readonly sendMailRecoveryUseCase: SendMailRecoveryUseCase,
     private readonly sendMailDoneUseCase: SendMailRecoveryDoneUseCase,
+    private readonly changeEmailUseCase: ChangeEmailUseCase,
   ) {}
 
   @Post('/signin')
@@ -25,6 +28,13 @@ export class LoginController {
     return await this.signInUseCase.execute(data);
   }
 
+  @Patch('/changePassword')
+  async changePassword(@Body() data: ChangeMailDTO) {
+    const { new_password, email } = data;
+    return await this.changeEmailUseCase.changeEmail(email, new_password);
+  }
+
+  // ROTAS DE EMAIL
   @Post('/sendMail')
   async getCode(@Body() data: SendMailCreateUserDTO) {
     const { name, email } = data;
@@ -35,7 +45,7 @@ export class LoginController {
   @Post('/confirmCode')
   async confirmCode(@Body() data: ConfirmCodeDTO) {
     const { code, email } = data;
-    return await this.confirCodeUseCase.confirmCode(code, email);
+    return await this.confirmCodeUseCase.confirmCode(code, email);
   }
 
   @Post('/sendMailRecovery')
@@ -47,8 +57,6 @@ export class LoginController {
   @Post('/sendMailDone')
   async sendMailDone(@Body() data: SendMailDoneDTO) {
     const { email } = data;
-    console.log(email);
-
     return await this.sendMailDoneUseCase.sendMailDone(email);
   }
 }
