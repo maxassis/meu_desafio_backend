@@ -9,6 +9,8 @@ import { ConfirmCodeDTO } from './schemas/confirmCode.schema';
 import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
 import { SendMailDoneDTO } from './schemas/sendMail.recovery.done';
 import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
+import { CheckEmailUseCase } from './useCase/checkEmail.usecase';
+import { CheckEmailDTO } from './schemas/checkEmail.schema';
 
 @Controller()
 export class LoginController {
@@ -18,11 +20,19 @@ export class LoginController {
     private readonly confirmCodeUseCase: ConfirmCodeUseCase,
     private readonly sendMailRecoveryUseCase: SendMailRecoveryUseCase,
     private readonly sendMailDoneUseCase: SendMailRecoveryDoneUseCase,
+    private readonly checkEmailUseCase: CheckEmailUseCase,
   ) {}
 
+  // LOGIN
   @Post('/signin')
   async signIn(@Body() data: SignInSchemaDTO) {
     return await this.signInUseCase.execute(data);
+  }
+
+  @Post('/checkEmail')
+  async checkEmail(@Body() data: CheckEmailDTO) {
+    const { email } = data;
+    return this.checkEmailUseCase.checkEmail(email);
   }
 
   // ROTAS DE EMAIL

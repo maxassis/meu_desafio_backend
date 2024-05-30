@@ -1,0 +1,17 @@
+meta {
+  name: checa se o email informado esta cadastrado
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:3000/checkemail
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "bondis7@teste.com"
+  }
+}
