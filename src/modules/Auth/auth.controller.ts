@@ -1,26 +1,30 @@
 import { Controller, Body, Post } from '@nestjs/common';
-import { SignInUseCase } from './useCase/signin.usecase';
-import { SignInSchemaDTO } from './schemas/signin-schema';
-import { SendMailUseCase } from './useCase/sendmail.createuser.usecase';
-import { SendMailCreateUserDTO } from './schemas/sendMail.createuser.schema';
-import { SendMailRecoveryDTO } from './schemas/sendMail.recovery.schema';
-import { ConfirmCodeUseCase } from './useCase/confirmCode.usercase';
-import { ConfirmCodeDTO } from './schemas/confirmCode.schema';
-import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
-import { SendMailDoneDTO } from './schemas/sendMail.recovery.done';
-import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
-import { CheckEmailUseCase } from './useCase/checkEmail.usecase';
-import { CheckEmailDTO } from './schemas/checkEmail.schema';
+import {
+  SignInSchemaDTO,
+  SendMailCreateUserDTO,
+  CheckEmailDTO,
+  SendMailRecoveryDTO,
+  ConfirmCodeDTO,
+  SendMailDoneDTO,
+} from './schemas';
+import {
+  SignInUseCase,
+  SendMailUseCase,
+  ConfirmCodeUseCase,
+  SendMailRecoveryUseCase,
+  SendMailRecoveryDoneUseCase,
+  CheckEmailUseCase,
+} from './useCase';
 
 @Controller()
 export class LoginController {
   constructor(
     private readonly signInUseCase: SignInUseCase,
-    private readonly sendMailUseCase: SendMailUseCase,
+    private readonly sendMailCreateUseCase: SendMailUseCase,
     private readonly confirmCodeUseCase: ConfirmCodeUseCase,
     private readonly sendMailRecoveryUseCase: SendMailRecoveryUseCase,
     private readonly sendMailDoneUseCase: SendMailRecoveryDoneUseCase,
-    private readonly checkEmailUseCase: CheckEmailUseCase,
+    private readonly checkValidEmailUseCase: CheckEmailUseCase,
   ) {}
 
   // LOGIN
@@ -32,7 +36,7 @@ export class LoginController {
   @Post('/checkEmail')
   async checkEmail(@Body() data: CheckEmailDTO) {
     const { email } = data;
-    return this.checkEmailUseCase.checkEmail(email);
+    return this.checkValidEmailUseCase.checkEmail(email);
   }
 
   // ROTAS DE EMAIL
@@ -40,7 +44,7 @@ export class LoginController {
   async getCode(@Body() data: SendMailCreateUserDTO) {
     const { name, email } = data;
 
-    return await this.sendMailUseCase.sendMail(name, email);
+    return await this.sendMailCreateUseCase.sendMail(name, email);
   }
 
   @Post('/confirmCode')

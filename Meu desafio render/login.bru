@@ -1,0 +1,18 @@
+meta {
+  name: login
+  type: http
+  seq: 3
+}
+
+post {
+  url: https://bondis-app-backend.onrender.com/signin/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "bondis@teste.com",
+    "password": "1234"
+  }
+}

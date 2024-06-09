@@ -1,0 +1,19 @@
+meta {
+  name: criar usuario
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://bondis-app-backend.onrender.com/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "bondis2",
+    "email": "bondis2@teste.com",
+    "password": "1234"
+  }
+}

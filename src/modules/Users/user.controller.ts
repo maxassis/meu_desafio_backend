@@ -1,9 +1,7 @@
 import { Body, Controller, Patch, Post, UsePipes } from '@nestjs/common';
-import { CreateUserUseCase } from './useCases/create-user.usecase';
 import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
-import { CreateUserSchemaDTO } from './schemas/create-user-schema';
-import { ChangePasswordUseCase } from './useCases/changePassword.usecase';
-import { ChangePasswordDTO } from './schemas/change.Password.schema';
+import { ChangePasswordDTO, CreateUserSchemaDTO } from './schemas';
+import { CreateUserUseCase, ChangePasswordUseCase } from './useCases';
 
 @Controller('/users')
 export class UserController {
