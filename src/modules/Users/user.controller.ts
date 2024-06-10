@@ -1,7 +1,15 @@
-import { Body, Controller, Patch, Post, UsePipes } from '@nestjs/common';
-import { CreateUserValidationPipe } from './pipe/create-user.validation.pipe';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ChangePasswordDTO, CreateUserSchemaDTO } from './schemas';
 import { CreateUserUseCase, ChangePasswordUseCase } from './useCases';
+import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 
 @Controller('/users')
 export class UserController {
@@ -12,7 +20,6 @@ export class UserController {
   ) {}
 
   @Post()
-  @UsePipes(new CreateUserValidationPipe())
   async createUser(@Body() data: CreateUserSchemaDTO) {
     const dt = await this.createUserUseCase.create(data);
     Reflect.deleteProperty(dt, 'password');
@@ -24,5 +31,13 @@ export class UserController {
   async changePassword(@Body() data: ChangePasswordDTO) {
     const { new_password, email } = data;
     return await this.changePasswordUseCase.changePassword(email, new_password);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getUser(@Request() req) {
+    console.log(req.user);
+
+    return 'ok';
   }
 }
