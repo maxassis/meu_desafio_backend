@@ -4,6 +4,7 @@ import { CreateUserUseCase } from './useCases/create-user.usecase';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { ChangePasswordUseCase } from './useCases/changePassword.usecase';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
+import { UploadAvatarUseCase } from './useCases/saveAvatar.usecase';
 
 @Module({
   imports: [],
@@ -13,6 +14,7 @@ import { Supabase } from 'src/infra/providers/storage/storage-supabase';
     PrismaService,
     ChangePasswordUseCase,
     Supabase,
+    UploadAvatarUseCase,
   ],
 })
 export class UserModule {}
