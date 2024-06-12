@@ -54,7 +54,6 @@ export class UserController {
     @Request() req,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<any> {
-    // console.log(file);
     const extFile = extname(file.originalname);
     const newName = `${req.user.id}${extFile}`;
 

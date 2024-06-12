@@ -7,9 +7,13 @@ meta {
 post {
   url: http://localhost:3000/users/uploadavatar
   body: multipartForm
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYm9uZGlzMiIsImVtYWlsIjoiYm9uZGlzMkB0ZXN0ZS5jb20iLCJpZCI6ImNsd3RnYTByYTAwMDBrdGo1bHliNXNwYjAiLCJpYXQiOjE3MTgwNTQ1ODAsImV4cCI6MTcyNTgzMDU4MH0.yxwg1ZnmpnrLeb_j38zlNN54cQnJ-7doudOq2MbtkdM
 }
 
 body:multipart-form {
-  file: @file(/home/max/Área de trabalho/Screenshot_1717884119.png)
+  file: @file(/home/max/Imagens/Capturas de tela/Captura de tela de 2024-04-19 14-56-12.png)
 }
