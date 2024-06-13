@@ -13,8 +13,8 @@ import { ChangePasswordDTO, CreateUserSchemaDTO } from './schemas';
 import { CreateUserUseCase, ChangePasswordUseCase } from './useCases';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 import { UploadAvatarUseCase } from './useCases/saveAvatar.usecase';
+import { GetUserDataUseCase } from './useCases/getUserData.usecase';
 
 @Controller('/users')
 export class UserController {
@@ -22,7 +22,7 @@ export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,
-    private readonly supabase: Supabase,
+    private readonly getUserDataUseCase: GetUserDataUseCase,
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
   ) {}
 
@@ -40,12 +40,15 @@ export class UserController {
     return await this.changePasswordUseCase.changePassword(email, new_password);
   }
 
-  @Get()
+  @Get('/getUserData')
   @UseGuards(AuthGuard)
-  async getUser(@Request() req) {
-    console.log(req.user);
+  async getUserData(@Request() req) {
+    const user = this.getUserDataUseCase.getUserData(
+      req.user.id,
+      req.user.name,
+    );
 
-    return 'ok';
+    return user;
   }
 
   @Post('/uploadAvatar')
