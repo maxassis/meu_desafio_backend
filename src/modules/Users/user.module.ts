@@ -6,6 +6,7 @@ import { ChangePasswordUseCase } from './useCases/changePassword.usecase';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 import { UploadAvatarUseCase } from './useCases/saveAvatar.usecase';
 import { GetUserDataUseCase } from './useCases/getUserData.usecase';
+import { DeleteAvatarUseCase } from './useCases';
 
 @Module({
   imports: [],
@@ -17,6 +18,7 @@ import { GetUserDataUseCase } from './useCases/getUserData.usecase';
     Supabase,
     UploadAvatarUseCase,
     GetUserDataUseCase,
+    DeleteAvatarUseCase,
   ],
 })
 export class UserModule {}

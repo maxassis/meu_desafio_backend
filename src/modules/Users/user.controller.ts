@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Patch,
   Post,
   Request,
@@ -10,11 +12,15 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ChangePasswordDTO, CreateUserSchemaDTO } from './schemas';
-import { CreateUserUseCase, ChangePasswordUseCase } from './useCases';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadAvatarUseCase } from './useCases/saveAvatar.usecase';
-import { GetUserDataUseCase } from './useCases/getUserData.usecase';
+import {
+  DeleteAvatarUseCase,
+  CreateUserUseCase,
+  UploadAvatarUseCase,
+  GetUserDataUseCase,
+  ChangePasswordUseCase,
+} from './useCases';
 
 @Controller('/users')
 export class UserController {
@@ -24,6 +30,7 @@ export class UserController {
     private readonly changePasswordUseCase: ChangePasswordUseCase,
     private readonly getUserDataUseCase: GetUserDataUseCase,
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
+    private readonly deleteAvatarUseCase: DeleteAvatarUseCase,
   ) {}
 
   @Post()
@@ -61,5 +68,13 @@ export class UserController {
     const result = this.uploadAvatarUseCase.uploadAvatar(req.user.id, file);
 
     return result;
+  }
+
+  @Delete('/deleteAvatar/:param')
+  @UseGuards(AuthGuard)
+  async deleteAvatar(@Request() req, @Param('param') param: string) {
+   const result = this.deleteAvatarUseCase.deleteAvatar(param);
+
+    return;
   }
 }

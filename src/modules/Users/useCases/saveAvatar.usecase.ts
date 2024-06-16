@@ -37,9 +37,10 @@ export class UploadAvatarUseCase {
         usersId: id,
       },
       data: {
-        avatar:
+        avatar_url:
           'https://iijythvtsrfruihwseua.supabase.co/storage/v1/object/public/avatars/' +
           fileUpload.data.path,
+        avatar_filename: fileUpload.data.path,
       },
     });
 
@@ -47,6 +48,9 @@ export class UploadAvatarUseCase {
       throw new HttpException("Can't upload file", HttpStatus.BAD_REQUEST);
     }
 
-    return { avatar_url: user.avatar };
+    return {
+      avatar_url: user.avatar_url,
+      avatar_filename: user.avatar_filename,
+    };
   }
 }
