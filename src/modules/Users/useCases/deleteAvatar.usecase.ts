@@ -9,7 +9,7 @@ export class DeleteAvatarUseCase {
     private readonly prisma: PrismaService,
   ) {}
 
-  async deleteAvatar(file: string): Promise<any> {
+  async deleteAvatar(file: string, id: string): Promise<any> {
     try {
       const { data, error } = await this.supabase.client.storage
         .from('avatars')
@@ -18,7 +18,19 @@ export class DeleteAvatarUseCase {
       if (error) {
         throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
       }
-      console.log('File deleted successfully:', data);
+
+      await this.prisma.userData.update({
+        where: {
+          usersId: id,
+        },
+        data: {
+          avatar_url: null,
+          avatar_filename: null,
+        },
+      });
+
+      return data;
+      // console.log('File deleted successfully:', data);
     } catch (error) {
       //
       if (error instanceof Error) {

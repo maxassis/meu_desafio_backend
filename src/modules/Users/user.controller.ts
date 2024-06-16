@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
   Request,
@@ -11,7 +10,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ChangePasswordDTO, CreateUserSchemaDTO } from './schemas';
+import {
+  ChangePasswordDTO,
+  CreateUserSchemaDTO,
+  RequestSchemaDTO,
+  DeleteAvatarDTO,
+} from './schemas';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -49,7 +53,7 @@ export class UserController {
 
   @Get('/getUserData')
   @UseGuards(AuthGuard)
-  async getUserData(@Request() req) {
+  async getUserData(@Request() req: RequestSchemaDTO) {
     const user = this.getUserDataUseCase.getUserData(
       req.user.id,
       req.user.name,
@@ -62,19 +66,26 @@ export class UserController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadAvatar(
-    @Request() req,
+    @Request() req: RequestSchemaDTO,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<any> {
-    const result = this.uploadAvatarUseCase.uploadAvatar(req.user.id, file);
-
-    return result;
+    return this.uploadAvatarUseCase.uploadAvatar(req.user.id, file);
   }
 
   @Delete('/deleteAvatar/:param')
   @UseGuards(AuthGuard)
-  async deleteAvatar(@Request() req, @Param('param') param: string) {
-   const result = this.deleteAvatarUseCase.deleteAvatar(param);
-
-    return;
+  async deleteAvatar(
+    @Request() req: RequestSchemaDTO,
+    @Body() { filename }: DeleteAvatarDTO,
+  ) {
+    return this.deleteAvatarUseCase.deleteAvatar(filename, req.user.id);
   }
+
+  // @Patch('/editavatar')
+  // @UseGuards(AuthGuard)
+  // async editAvatar(@Request() req) {
+  //   console.log('edit');
+
+  //   // return await this.uploadAvatarUseCase.uploadAvatar(req.user.id, req.file);
+  // }
 }
