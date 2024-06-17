@@ -79,7 +79,7 @@ export class UserController {
     return this.deleteAvatarUseCase.deleteAvatar(filename, req.user.id);
   }
 
-  @Patch('/editAvatar')
+  @Patch('/editUserData')
   @UseGuards(AuthGuard)
   async editAvatar(
     @Request() req: RequestSchemaDTO,
