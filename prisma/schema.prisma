@@ -43,7 +43,7 @@ model UserData {
 enum Gender {
   homem
   mulher
-  nao_bianrio
+  nao_binario
   prefiro_nao_responder
 }
 

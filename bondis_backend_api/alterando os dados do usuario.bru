@@ -5,7 +5,20 @@ meta {
 }
 
 patch {
-  url: 
-  body: none
-  auth: none
+  url: http://localhost:3000/users/editAvatar
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYm9uZGlzOCIsImVtYWlsIjoiYm9uZGlzOEB0ZXN0ZS5jb20iLCJpZCI6ImNseGNvdjlnMDAwMDBsbzF1cnUxdTFkNHYiLCJpYXQiOjE3MTg1NTI3MTQsImV4cCI6MTcyNjMyODcxNH0.nLQk4thN6_Ox17T_MGII85rDZSQifoYd_8XiKT9dCCM
+}
+
+body:json {
+  {
+    "full_name" : "Marionis da Silva",
+    "bio": "programadora senior2",
+    "gender": "mulher",
+    "zzzz": "dsadasd"
+  }
 }

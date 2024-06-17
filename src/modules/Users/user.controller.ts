@@ -15,6 +15,7 @@ import {
   CreateUserSchemaDTO,
   RequestSchemaDTO,
   DeleteAvatarDTO,
+  EditUserDataDTO,
 } from './schemas';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -24,6 +25,7 @@ import {
   UploadAvatarUseCase,
   GetUserDataUseCase,
   ChangePasswordUseCase,
+  EditUserDataUseCase,
 } from './useCases';
 
 @Controller('/users')
@@ -35,6 +37,7 @@ export class UserController {
     private readonly getUserDataUseCase: GetUserDataUseCase,
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
     private readonly deleteAvatarUseCase: DeleteAvatarUseCase,
+    private readonly editUserDataUseCase: EditUserDataUseCase,
   ) {}
 
   @Post()
@@ -48,18 +51,13 @@ export class UserController {
   @Patch('/changePassword')
   async changePassword(@Body() data: ChangePasswordDTO) {
     const { new_password, email } = data;
-    return await this.changePasswordUseCase.changePassword(email, new_password);
+    return this.changePasswordUseCase.changePassword(email, new_password);
   }
 
   @Get('/getUserData')
   @UseGuards(AuthGuard)
   async getUserData(@Request() req: RequestSchemaDTO) {
-    const user = this.getUserDataUseCase.getUserData(
-      req.user.id,
-      req.user.name,
-    );
-
-    return user;
+    return this.getUserDataUseCase.getUserData(req.user.id, req.user.name);
   }
 
   @Post('/uploadAvatar')
@@ -81,11 +79,12 @@ export class UserController {
     return this.deleteAvatarUseCase.deleteAvatar(filename, req.user.id);
   }
 
-  // @Patch('/editavatar')
-  // @UseGuards(AuthGuard)
-  // async editAvatar(@Request() req) {
-  //   console.log('edit');
-
-  //   // return await this.uploadAvatarUseCase.uploadAvatar(req.user.id, req.file);
-  // }
+  @Patch('/editAvatar')
+  @UseGuards(AuthGuard)
+  async editAvatar(
+    @Request() req: RequestSchemaDTO,
+    @Body() newData: EditUserDataDTO,
+  ) {
+    return this.editUserDataUseCase.editUserData(newData, req.user.id);
+  }
 }
