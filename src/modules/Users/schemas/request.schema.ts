@@ -2,9 +2,9 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 
 export const UserDataReqSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   email: z.string().email(),
-  id: z.string(),
+  id: z.string().min(1),
   iat: z.date(),
   exp: z.date(),
 });

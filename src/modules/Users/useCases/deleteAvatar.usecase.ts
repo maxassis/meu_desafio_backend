@@ -11,7 +11,7 @@ export class DeleteAvatarUseCase {
 
   async deleteAvatar(file: string, id: string): Promise<any> {
     try {
-      const { data, error } = await this.supabase.client.storage
+      const { error } = await this.supabase.client.storage
         .from('avatars')
         .remove([file]);
 
@@ -19,7 +19,7 @@ export class DeleteAvatarUseCase {
         throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
-      await this.prisma.userData.update({
+      const user = await this.prisma.userData.update({
         where: {
           usersId: id,
         },
@@ -29,7 +29,7 @@ export class DeleteAvatarUseCase {
         },
       });
 
-      return data;
+      return user;
       // console.log('File deleted successfully:', data);
     } catch (error) {
       //
