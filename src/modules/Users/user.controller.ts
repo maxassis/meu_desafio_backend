@@ -84,7 +84,7 @@ export class UserController {
   async editAvatar(
     @Request() req: RequestSchemaDTO,
     @Body() newData: EditUserDataDTO,
-  ) {
+  ) {    
     return this.editUserDataUseCase.editUserData(newData, req.user.id);
   }
 }

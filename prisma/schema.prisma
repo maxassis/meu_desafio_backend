@@ -32,6 +32,7 @@ model UserData {
   bio       String?  @db.Text
   gender    Gender?
   sport     Sport?
+  birthDate String?
   createdAt DateTime @default(now())
   user      Users    @relation(fields: [usersId], references: [id])
   usersId   String @unique

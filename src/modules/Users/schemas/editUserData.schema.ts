@@ -11,12 +11,13 @@ const Gender = z.enum([
 const Sports = z.enum(['corrida', 'bicicleta']);
 
 export const EditUserDataSchema = z.object({
-  avatar_url: z.string().optional(),
-  avatar_filename: z.string().optional(),
-  full_name: z.string().optional(),
-  bio: z.string().optional(),
-  gender: Gender.optional(),
-  sport: Sports.optional(),
+  avatar_url: z.string().nullable().optional(),
+  avatar_filename: z.string().nullable().optional(),
+  full_name: z.string().nullable().optional(),
+  bio: z.string().nullable().optional(),
+  gender: Gender.nullable().optional(),
+  sport: Sports.nullable().optional(),
+  birthDate: z.string().nullable().optional(),
 });
 
 export class EditUserDataDTO extends createZodDto(EditUserDataSchema) {}

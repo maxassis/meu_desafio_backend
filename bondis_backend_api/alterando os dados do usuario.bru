@@ -5,7 +5,7 @@ meta {
 }
 
 patch {
-  url: http://localhost:3000/users/editAvatar
+  url: http://localhost:3000/users/edituserdata
   body: json
   auth: bearer
 }
@@ -16,9 +16,8 @@ auth:bearer {
 
 body:json {
   {
-    "full_name" : "Marionis da Silva",
-    "bio": "programadora senior2",
-    "gender": "mulher",
-    "zzzz": "dsadasd"
+    "full_name" : "teste",
+    "bio": "programadora senior",
+    "birthDate": "11041983"
   }
 }
