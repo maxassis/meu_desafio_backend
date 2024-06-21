@@ -12,33 +12,25 @@ export class RegisterUserDesafioUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async registerUserDesafio(idDesafio: string, idUser: string) {
-    // verifica se o desafio existe
+    // verifica se o desafio existe e se o usuário participa
     const desafio = await this.prisma.desafio.findUnique({
       where: { id: +idDesafio },
-      include: { participation: true },
+      include: {
+        participation: {
+          where: { userId: idUser },
+        },
+      },
     });
+
+    console.log(desafio);
 
     if (!desafio) {
       throw new NotFoundException(`Desafio with ID ${idDesafio} not found`);
     }
 
-    // Verificar se o usuário existe e se já está registrado no desafio
-    const usuario = await this.prisma.users.findUnique({
-      where: { id: idUser },
-      include: {
-        Participation: {
-          where: { desafioId: +idDesafio },
-        },
-      },
-    });
-
-    if (!usuario) {
-      throw new NotFoundException(`Usuário com ID ${idUser} não encontrado.`);
-    }
-
-    if (usuario.Participation.length > 0) {
+    if (desafio.participation.length > 0) {
       throw new BadRequestException(
-        `Usuário já está registrado neste desafio.`,
+        `User already registered for this challenge.`,
       );
     }
 
