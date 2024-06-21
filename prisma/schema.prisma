@@ -53,11 +53,11 @@ model Desafio {
 
 model Participation {
   id        Int     @id @default(autoincrement())
-  usuarioId String
-  corridaId Int
-  progress  Int
-  user      Users   @relation(fields: [usuarioId], references: [id])
-  desafio   Desafio @relation(fields: [corridaId], references: [id])
+  userId String
+  desafioId Int
+  progress  Int     
+  user      Users   @relation(fields: [userId], references: [id])
+  desafio   Desafio @relation(fields: [desafioId], references: [id])
 
   @@map("participation")
 }
