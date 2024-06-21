@@ -5,10 +5,12 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { LoginModule } from './modules/Auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { DesafioModule } from './modules/Desafio/desafio.module';
 
 @Module({
   imports: [
     UserModule,
+    DesafioModule,
     LoginModule,
     MailerModule.forRoot({
       transport: {

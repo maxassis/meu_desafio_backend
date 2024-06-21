@@ -1,0 +1,23 @@
+meta {
+  name: criar novo desafio
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/desafio/create
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYm9uZGlzOCIsImVtYWlsIjoiYm9uZGlzOEB0ZXN0ZS5jb20iLCJpZCI6ImNseGNvdjlnMDAwMDBsbzF1cnUxdTFkNHYiLCJpYXQiOjE3MTg5OTIxNzksImV4cCI6MTcyNjc2ODE3OX0.xA8RHyncVCgFWqhDPFNxxGqguN2GzMaEo_JWqgV5Yk4
+}
+
+body:json {
+  {
+    "name" : "condominio Cisne Branco",
+    "description": "corrida ate o condominio",
+    "location": "[{teste: teste}]"
+  }
+}

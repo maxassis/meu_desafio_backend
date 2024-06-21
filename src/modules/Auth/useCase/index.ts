@@ -1,4 +1,4 @@
-export * from './sendmail.checkValidEmail.usecase';
+export * from './checkValidEmail.usecase';
 export * from './signin.usecase';
 export * from './sendmail.createuser.usecase';
 export * from './sendmail.recovery.usecase';
