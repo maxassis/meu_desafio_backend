@@ -20,8 +20,6 @@ export class RegisterUserDesafioUseCase {
       },
     });
 
-    console.log(desafio);
-
     if (!desafio) {
       throw new NotFoundException(`Desafio with ID ${idDesafio} not found`);
     }
