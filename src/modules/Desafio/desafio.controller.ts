@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -9,16 +8,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
-import { CreateDesafioUseCase } from './useCases/createDesafio.usecase';
 import { CreateDesafioDTO } from './schemas/createDesafio.schema';
-import { RegisterUserDesafioUseCase } from './useCases/registerUserDesafio.usecase';
 import { RequestSchemaDTO } from '../Users/schemas';
+import { RegisterUserDesafioUseCase, CreateDesafioUseCase } from './useCase';
+import { GetUserDesafioUseCase } from './useCase/getUserDesafio.usecase';
 
 @Controller('/desafio/')
 export class DesafioController {
   constructor(
     private readonly createDesafioUseCase: CreateDesafioUseCase,
     private readonly registerUserDesafio: RegisterUserDesafioUseCase,
+    private readonly getUserDesafio: GetUserDesafioUseCase,
   ) {}
 
   @Post('/create')
@@ -31,7 +31,7 @@ export class DesafioController {
     );
   }
 
-  @Get('/registerDesafio/:id')
+  @Post('/registerDesafio/:id')
   @UseGuards(AuthGuard)
   async registerDesafio(
     @Param('id') idDesafio: string,
@@ -43,5 +43,11 @@ export class DesafioController {
         req.user.id,
       );
     }
+  }
+
+  @Get('/getDesafio')
+  @UseGuards(AuthGuard)
+  async getDesafio(@Request() req: RequestSchemaDTO) {
+    return this.getUserDesafio.getDesafio(req.user.id);
   }
 }
