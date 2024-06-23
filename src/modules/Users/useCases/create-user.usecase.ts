@@ -37,7 +37,15 @@ export class CreateUserUseCase {
       data: {
         ...data,
         password,
+        UserData: {
+          create: {
+            full_name: data.name,
+          },
+        },
       },
+      // include: {
+      //   UserData: true,
+      // },
     });
   }
 

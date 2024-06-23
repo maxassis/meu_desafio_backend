@@ -14,7 +14,7 @@ export class GetUserDataUseCase {
 
     return {
       ...user,
-      name,
+      username: name,
     };
   }
 }

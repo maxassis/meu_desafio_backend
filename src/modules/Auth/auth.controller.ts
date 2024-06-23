@@ -36,6 +36,7 @@ export class LoginController {
   @Post('/checkEmail')
   async checkEmail(@Body() data: CheckEmailDTO) {
     const { email } = data;
+
     return this.checkValidEmailUseCase.checkEmail(email);
   }
 

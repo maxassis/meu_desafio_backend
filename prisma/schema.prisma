@@ -14,32 +14,53 @@ datasource db {
 }
 
 model Users {
-  id        String     @id @default(cuid())
-  name      String
-  email     String     @unique
-  password  String
-  createdAt DateTime   @default(now())
-  UserData  UserData?
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  password      String
+  createdAt     DateTime        @default(now())
+  UserData      UserData?
+  Participation Participation[]
 
   @@map("users")
 }
 
 model UserData {
-  id        String   @id @default(cuid())
-  avatar_url    String?
+  id              String   @id @default(cuid())
+  avatar_url      String?
   avatar_filename String?
-  full_name String?
-  bio       String?  @db.Text
-  gender    Gender?
-  sport     Sport?
-  birthDate String?
-  createdAt DateTime @default(now())
-  user      Users    @relation(fields: [usersId], references: [id])
-  usersId   String @unique
+  full_name       String?
+  bio             String?  @db.Text
+  gender          Gender?
+  sport           Sport?
+  birthDate       String?
+  createdAt       DateTime @default(now())
+  user            Users    @relation(fields: [usersId], references: [id])
+  usersId         String   @unique
 
   @@map("userData")
 }
 
+model Desafio {
+  id            Int             @id @default(autoincrement())
+  name          String @unique
+  description   String?
+  location      Json            @db.Json
+  participation Participation[]
+
+  @@map("desafio")
+}
+
+model Participation {
+  id        Int     @id @default(autoincrement())
+  userId String
+  desafioId Int
+  progress  Int     
+  user      Users   @relation(fields: [userId], references: [id])
+  desafio   Desafio @relation(fields: [desafioId], references: [id])
+
+  @@map("participation")
+}
 
 enum Gender {
   homem
