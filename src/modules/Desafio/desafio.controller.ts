@@ -31,7 +31,7 @@ export class DesafioController {
     );
   }
 
-  @Post('/registerDesafio/:id')
+  @Post('/registerUserDesafio/:id')
   @UseGuards(AuthGuard)
   async registerDesafio(
     @Param('id') idDesafio: string,
