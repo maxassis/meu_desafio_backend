@@ -8,10 +8,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
-import { CreateDesafioDTO } from './schemas/createDesafio.schema';
+import { CreateDesafioDTO } from './schemas';
 import { RequestSchemaDTO } from '../Users/schemas';
-import { RegisterUserDesafioUseCase, CreateDesafioUseCase } from './useCase';
-import { GetUserDesafioUseCase } from './useCase/getUserDesafio.usecase';
+import {
+  RegisterUserDesafioUseCase,
+  CreateDesafioUseCase,
+  GetUserDesafioUseCase,
+  GetDesafioUseCase,
+} from './useCase';
 
 @Controller('/desafio/')
 export class DesafioController {
@@ -19,6 +23,7 @@ export class DesafioController {
     private readonly createDesafioUseCase: CreateDesafioUseCase,
     private readonly registerUserDesafio: RegisterUserDesafioUseCase,
     private readonly getUserDesafio: GetUserDesafioUseCase,
+    private readonly desafio: GetDesafioUseCase,
   ) {}
 
   @Post('/create')
@@ -45,9 +50,15 @@ export class DesafioController {
     }
   }
 
-  @Get('/getDesafio')
+  @Get('/getUserDesafio')
   @UseGuards(AuthGuard)
   async getDesafio(@Request() req: RequestSchemaDTO) {
     return this.getUserDesafio.getDesafio(req.user.id);
+  }
+
+  @Get('/getDesafio/:id')
+  @UseGuards(AuthGuard)
+  async getDesafioById(@Param('id') idDesafio: string) {
+    return this.desafio.getDesafio(idDesafio);
   }
 }
