@@ -42,12 +42,7 @@ export class DesafioController {
     @Param('id') idDesafio: string,
     @Request() req: RequestSchemaDTO,
   ) {
-    {
-      return this.registerUserDesafio.registerUserDesafio(
-        idDesafio,
-        req.user.id,
-      );
-    }
+    return this.registerUserDesafio.registerUserDesafio(idDesafio, req.user.id);
   }
 
   @Get('/getUserDesafio')

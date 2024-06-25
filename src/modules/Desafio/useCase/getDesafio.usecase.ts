@@ -9,20 +9,13 @@ export class GetDesafioUseCase {
     const desafio = await this.prisma.desafio.findUnique({
       where: { id: +idDesafio },
       include: {
-        participation: true,
+        participation: false,
       },
     });
 
     if (!desafio) {
       throw new NotFoundException(`Desafio with ID ${idDesafio} not found`);
     }
-
-    // const desafio = await this.prisma.users.findUnique({
-    //   where: { id: idDesafio },
-    //   include: {
-    //     Participation: true,
-    //   },
-    // });
 
     return desafio;
   }

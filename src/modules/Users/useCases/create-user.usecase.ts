@@ -39,7 +39,7 @@ export class CreateUserUseCase {
         password,
         UserData: {
           create: {
-            full_name: data.name,
+            full_name: '',
           },
         },
       },
