@@ -9,7 +9,22 @@ export class GetDesafioUseCase {
     const desafio = await this.prisma.desafio.findUnique({
       where: { id: +idDesafio },
       include: {
-        participation: false,
+        participation: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                UserData: {
+                  select: {
+                    full_name: true,
+                    avatar_url: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
