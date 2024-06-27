@@ -10,14 +10,14 @@ export class GetDesafioUseCase {
       where: { id: +idDesafio },
       include: {
         participation: {
-          include: {
+          select: {
+            desafioId: true,
             user: {
               select: {
                 id: true,
                 name: true,
                 UserData: {
                   select: {
-                    full_name: true,
                     avatar_url: true,
                   },
                 },
