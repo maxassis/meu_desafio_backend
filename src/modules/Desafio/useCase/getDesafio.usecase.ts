@@ -11,7 +11,7 @@ export class GetDesafioUseCase {
       include: {
         participation: {
           select: {
-            desafioId: true,
+            desafioId: false,
             user: {
               select: {
                 id: true,
