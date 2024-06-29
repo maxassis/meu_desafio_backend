@@ -12,6 +12,7 @@ export class GetDesafioUseCase {
         participation: {
           select: {
             desafioId: false,
+            progress: true,
             user: {
               select: {
                 id: true,
