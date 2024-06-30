@@ -55,7 +55,7 @@ model Participation {
   id        Int     @id @default(autoincrement())
   userId String
   desafioId Int
-  progress  Int     
+  progress  Decimal @db.Decimal(10, 2)     
   user      Users   @relation(fields: [userId], references: [id])
   desafio   Desafio @relation(fields: [desafioId], references: [id])
 
