@@ -4,7 +4,6 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-// import { PrismaService } from 'src/infra/database/prisma.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { hash } from 'bcrypt';
 import { PrismaService } from 'src/infra/database/prisma.service';

@@ -21,6 +21,7 @@ model Users {
   createdAt     DateTime        @default(now())
   UserData      UserData?
   Participation Participation[]
+  Task          Task[]
 
   @@map("users")
 }
@@ -35,7 +36,7 @@ model UserData {
   sport           Sport?
   birthDate       String?
   createdAt       DateTime @default(now())
-  user            Users    @relation(fields: [usersId], references: [id])
+  user            Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId         String   @unique
 
   @@map("userData")
@@ -43,7 +44,7 @@ model UserData {
 
 model Desafio {
   id            Int             @id @default(autoincrement())
-  name          String @unique
+  name          String          @unique
   description   String?
   location      Json            @db.Json
   participation Participation[]
@@ -53,13 +54,31 @@ model Desafio {
 
 model Participation {
   id        Int     @id @default(autoincrement())
-  userId String
+  userId    String
   desafioId Int
-  progress  Decimal @db.Decimal(10, 2)     
-  user      Users   @relation(fields: [userId], references: [id])
-  desafio   Desafio @relation(fields: [desafioId], references: [id])
+  progress  Decimal @db.Decimal(10, 2)
+  tasks     Task[]
+  user      Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  desafio   Desafio @relation(fields: [desafioId], references: [id], onDelete: Cascade)
 
   @@map("participation")
+}
+
+model Task {
+  id              Int           @id @default(autoincrement())
+  name            String
+  environment     Environment
+  date            DateTime?
+  duration        String?
+  calories        Int?
+  local           String?   
+  distanceKm      Decimal       @db.Decimal(10, 2)
+  participationId Int
+  participation   Participation @relation(fields: [participationId], references: [id], onDelete: Cascade)
+  Users           Users?        @relation(fields: [usersId], references: [id])
+  usersId         String?
+
+  @@map("tasks")
 }
 
 enum Gender {
@@ -72,4 +91,9 @@ enum Gender {
 enum Sport {
   corrida
   bicicleta
+}
+
+enum Environment {
+  livre
+  esteira
 }
