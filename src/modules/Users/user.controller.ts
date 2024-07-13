@@ -30,7 +30,7 @@ import {
 
 @Controller('/users')
 export class UserController {
-  changeEmailUseCase: any;
+  // changeEmailUseCase: any;
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,

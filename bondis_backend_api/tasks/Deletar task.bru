@@ -1,0 +1,22 @@
+meta {
+  name: Deletar task
+  type: http
+  seq: 3
+}
+
+delete {
+  url: http://localhost:3000/tasks/delete-task/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZnVyaXMiLCJlbWFpbCI6ImZ1cmlzQHRlc3RlLmNvbSIsImlkIjoiY2x5MjZkZjA5MDAwMDFmYmcxZDVicnc2ciIsImlhdCI6MTcyMDg4OTU3OSwiZXhwIjoxNzI4NjY1NTc5fQ.kPjtaGThnCtbpgeHoJsur22FBp-xXaonara1--rWGh8
+}
+
+body:json {
+  {
+    "taskId": 2,
+    "participationId": 21
+  }
+}

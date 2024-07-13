@@ -6,12 +6,14 @@ import { LoginModule } from './modules/Auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { DesafioModule } from './modules/Desafio/desafio.module';
+import { TasksModule } from './modules/Tasks/tasks.module';
 
 @Module({
   imports: [
     UserModule,
     DesafioModule,
     LoginModule,
+    TasksModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.ethereal.email',
