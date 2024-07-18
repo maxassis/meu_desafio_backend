@@ -20,7 +20,7 @@ export class CreateDesafioUseCase {
       throw new HttpException('Name already exists', HttpStatus.CONFLICT);
     }
 
-    const desafio = await this.prisma.desafio.create({
+    const result = await this.prisma.desafio.create({
       data: {
         name,
         description,
@@ -28,6 +28,13 @@ export class CreateDesafioUseCase {
       },
     });
 
-    return desafio;
+    if (!result) {
+      throw new HttpException(
+        'Error creating desafio',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return 'Desafio criado com sucesso';
   }
 }

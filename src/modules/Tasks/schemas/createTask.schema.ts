@@ -3,7 +3,7 @@ import { z } from 'nestjs-zod/z';
 
 const CreateTaskSchema = z.object({
   name: z.string().optional(),
-  enviroment: z.enum(['livre', 'esteira']).optional(),
+  enviroment: z.enum(['livre', 'esteira']),
   date: z.date().optional(),
   duration: z.string().optional(),
   calories: z.number().optional(),

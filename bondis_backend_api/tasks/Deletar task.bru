@@ -5,7 +5,7 @@ meta {
 }
 
 delete {
-  url: http://localhost:3000/tasks/delete-task/
+  url: http://localhost:3000/tasks/delete-task/3
   body: json
   auth: bearer
 }
@@ -16,7 +16,7 @@ auth:bearer {
 
 body:json {
   {
-    "taskId": 2,
+    "taskId": 3,
     "participationId": 21
   }
 }
