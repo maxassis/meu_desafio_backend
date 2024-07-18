@@ -17,7 +17,7 @@ export class DeleteUserTaskUseCase {
         },
       });
 
-      console.log(task);
+      // console.log(task);
 
       if (!task) {
         throw new HttpException(
@@ -32,7 +32,28 @@ export class DeleteUserTaskUseCase {
         },
       });
 
-      return 'Tarefa deletada com sucesso';
+      // Busca todas as tarefas do usuário com o ID de participação fornecido
+      const tasks = await this.prisma.task.findMany({
+        where: {
+          usersId: userId,
+          participationId: task.participationId,
+        },
+      });
+
+      // Calcula a distância total percorrida
+      const totalDistance = tasks
+        .reduce((acc, task) => acc + parseFloat(task.distanceKm + ''), 0)
+        .toFixed(3);
+
+      // Atualiza o progresso da participação com a distância total
+      await this.prisma.participation.update({
+        where: { id: task.participationId },
+        data: { progress: totalDistance },
+      });
+
+      return {
+        message: 'Tarefa deletada com sucesso',
+      };
     } catch (error) {
       console.error('Erro ao deletar tarefa:', error);
     }
