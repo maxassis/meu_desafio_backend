@@ -7,8 +7,9 @@ import {
   Get,
   Param,
   Delete,
+  Patch,
 } from '@nestjs/common';
-import { CreateTaskDTO } from './schemas';
+import { CreateTaskDTO, UpdateTaskDTO } from './schemas';
 import {
   CreateTaskUseCase,
   DeleteUserTaskUseCase,
@@ -16,6 +17,7 @@ import {
 } from './useCases';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { RequestSchemaDTO } from '../Users/schemas';
+import { UpdateUserTaskUseCase } from './useCases/updateUserTask.usecase';
 
 @Controller('/tasks')
 export class TaskController {
@@ -23,6 +25,7 @@ export class TaskController {
     private readonly createTaskUseCase: CreateTaskUseCase,
     private readonly getUserTaskUseCase: GetUserTaskUseCase,
     private readonly deleteTaskUseCase: DeleteUserTaskUseCase,
+    private readonly updateTaskUseCase: UpdateUserTaskUseCase,
   ) {}
 
   @Post('/create')
@@ -47,5 +50,15 @@ export class TaskController {
     @Param() { taskId }: { taskId: string },
   ) {
     return this.deleteTaskUseCase.deleteTask(req.user.id, +taskId);
+  }
+
+  @Patch('/update-task/:taskId')
+  @UseGuards(AuthGuard)
+  async updateTask(
+    @Request() req: RequestSchemaDTO,
+    @Body() body: UpdateTaskDTO,
+    @Param() { taskId }: { taskId: string }
+  ) {
+    return this.updateTaskUseCase.updateTask(req.user.id, body, +taskId);
   }
 }

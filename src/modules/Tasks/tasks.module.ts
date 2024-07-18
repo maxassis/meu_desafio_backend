@@ -6,6 +6,7 @@ import {
   DeleteUserTaskUseCase,
   GetUserTaskUseCase,
 } from './useCases';
+import { UpdateUserTaskUseCase } from './useCases/updateUserTask.usecase';
 
 @Module({
   imports: [],
@@ -15,6 +16,7 @@ import {
     GetUserTaskUseCase,
     CreateTaskUseCase,
     DeleteUserTaskUseCase,
+    UpdateUserTaskUseCase,
   ],
 })
 export class TasksModule {}

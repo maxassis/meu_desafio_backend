@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
-// import { CreateTaskDTO } from '../schemas';
 
 @Injectable()
 export class GetUserTaskUseCase {
@@ -14,7 +13,7 @@ export class GetUserTaskUseCase {
       },
     });
 
-    console.log(task);
+    // console.log(task);
 
     return task;
   }
