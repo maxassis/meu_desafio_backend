@@ -57,7 +57,7 @@ export class TaskController {
   async updateTask(
     @Request() req: RequestSchemaDTO,
     @Body() body: UpdateTaskDTO,
-    @Param() { taskId }: { taskId: string }
+    @Param() { taskId }: { taskId: string },
   ) {
     return this.updateTaskUseCase.updateTask(req.user.id, body, +taskId);
   }
