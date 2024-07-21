@@ -8,6 +8,15 @@ export class GetUserDesafioUseCase {
   async getDesafio(userId: string) {
     const desafio = await this.prisma.participation.findMany({
       where: { userId: userId },
+      include: {
+        desafio: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
+      },
     });
 
     return desafio;
