@@ -5,11 +5,11 @@ meta {
 }
 
 get {
-  url: http://localhost:3000/tasks/get-tasks/25
+  url: {{baseUrl}}/tasks/get-tasks/25
   body: none
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZnVyaXMiLCJlbWFpbCI6ImZ1cmlzQHRlc3RlLmNvbSIsImlkIjoiY2x5cnByMWNwMDAwMWo1cWdmaGpqZ3E2eSIsImlhdCI6MTcyMTMzMzkwOSwiZXhwIjoxNzI5MTA5OTA5fQ.P6QD8tdMRcj_KG-UU-oAP47ahyJ6H7-CpI085mrv8BM
+  token: {{tokenValue}}
 }

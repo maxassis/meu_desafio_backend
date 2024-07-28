@@ -5,13 +5,13 @@ meta {
 }
 
 patch {
-  url: http://localhost:3000/tasks/update-task/40
+  url: {{baseUrl}}/tasks/update-task/40
   body: json
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZnVyaXMiLCJlbWFpbCI6ImZ1cmlzQHRlc3RlLmNvbSIsImlkIjoiY2x5cnByMWNwMDAwMWo1cWdmaGpqZ3E2eSIsImlhdCI6MTcyMTMzNzQyOCwiZXhwIjoxNzI5MTEzNDI4fQ.fQE5jmO8THbmujsTl50ieY8vyyWZzpFj7CEaT0vY5Mo
+  token: {{tokenValue}}
 }
 
 body:json {

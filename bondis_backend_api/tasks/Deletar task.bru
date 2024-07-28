@@ -5,11 +5,11 @@ meta {
 }
 
 delete {
-  url: http://localhost:3000/tasks/delete-task/39
+  url: {{baseUrl}}/tasks/delete-task/39
   body: none
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZnVyaXMiLCJlbWFpbCI6ImZ1cmlzQHRlc3RlLmNvbSIsImlkIjoiY2x5cnByMWNwMDAwMWo1cWdmaGpqZ3E2eSIsImlhdCI6MTcyMTMzNzQyOCwiZXhwIjoxNzI5MTEzNDI4fQ.fQE5jmO8THbmujsTl50ieY8vyyWZzpFj7CEaT0vY5Mo
+  token: {{tokenValue}}
 }

@@ -5,13 +5,13 @@ meta {
 }
 
 patch {
-  url: http://localhost:3000/users/edituserdata
+  url: {{baseUrl}}/users/edituserdata
   body: json
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZnVyaXNfMyIsImVtYWlsIjoiZnVyaXNfM0B0ZXN0ZS5jb20iLCJpZCI6ImNseWVpdzAwOTAwMDVrZ2ttM3gyN2hnaTgiLCJpYXQiOjE3MjA1MzYzNDUsImV4cCI6MTcyODMxMjM0NX0.lBSG6HxUCsALiOsQWedP10dHyyqSTM6nESRTQ1-yv5I
+  token: {{tokenValue}}
 }
 
 body:json {

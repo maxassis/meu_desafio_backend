@@ -5,13 +5,13 @@ meta {
 }
 
 post {
-  url: http://localhost:3000/desafio/create
+  url: {{baseUrl}}/desafio/create
   body: json
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYm9uZGlzMiIsImVtYWlsIjoiYm9uZGlzMkB0ZXN0ZS5jb20iLCJpZCI6ImNseHBhNjI4ODAwMDBianJpaTJkbW5pZm8iLCJpYXQiOjE3MTkwMTAwMDQsImV4cCI6MTcyNjc4NjAwNH0.Kc4QNrZFdS98W13-TyvReCulCpehCu7gh8eU06erNf0
+  token: {{tokenValue}}
 }
 
 body:json {
