@@ -28,7 +28,7 @@ export class CreateTaskUseCase {
         const createUserTask = await prisma.task.create({
           data: {
             name: body.name!,
-            environment: body.enviroment,
+            environment: body.environment,
             date: body.date,
             duration: body.duration,
             calories: body.calories,
