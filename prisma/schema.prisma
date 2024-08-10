@@ -68,7 +68,7 @@ model Task {
   id              Int           @id @default(autoincrement())
   name            String
   environment     Environment
-  date            DateTime?
+  date            DateTime?     @db.Date
   duration        String?
   calories        Int?
   local           String?
