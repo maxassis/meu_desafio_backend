@@ -18,12 +18,12 @@ const CreateTaskSchema = z.object({
     message: 'Invalid date format. Expected YYYY-MM-DDTHH:MM:SSZ.',
   }),
   duration: z.string().datetime({
-    message: 'Formato de data e hora inválido , Expected YYYY-MM-DDTHH:MM:SSZ',
+    message: 'Invalid date format , Expected YYYY-MM-DDTHH:MM:SSZ',
   }),
   calories: z.number().optional(),
-  distance: z.number(),
+  distance: z.number({ message: 'distance Required' }),
   local: z.string().optional(),
-  participationId: z.number(),
+  participationId: z.number({ message: 'participationId Required' }),
 });
 
 export class CreateTaskDTO extends createZodDto(CreateTaskSchema) {}
