@@ -30,7 +30,7 @@ export class CreateTaskUseCase {
             name: body.name!,
             environment: body.environment,
             date: body.date,
-            duration: body.duration,
+            duration: '2024-08-13T10:30:20Z',
             calories: body.calories,
             local: body.local,
             distanceKm: body.distance,
@@ -41,7 +41,7 @@ export class CreateTaskUseCase {
 
         if (!createUserTask) {
           throw new HttpException(
-            'Erro ao criar a tarefa',
+            'Erro ao criar a tarefa 1',
             HttpStatus.NOT_FOUND,
           );
         }
@@ -71,8 +71,9 @@ export class CreateTaskUseCase {
         task: body,
       };
     } catch (error) {
+      console.error(error);
       throw new HttpException(
-        'Erro ao criar a tarefa',
+        'Erro ao criar a tarefa 2',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
