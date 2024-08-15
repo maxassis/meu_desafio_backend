@@ -30,7 +30,7 @@ export class CreateTaskUseCase {
             name: body.name!,
             environment: body.environment,
             date: body.date,
-            duration: '2024-08-13T10:30:20Z',
+            duration: body.duration,
             calories: body.calories,
             local: body.local,
             distanceKm: body.distance,
