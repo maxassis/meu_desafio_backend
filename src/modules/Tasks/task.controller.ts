@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   Patch,
+  UsePipes,
 } from '@nestjs/common';
 import { CreateTaskDTO, UpdateTaskDTO } from './schemas';
 import {
@@ -18,8 +19,10 @@ import {
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { RequestSchemaDTO } from '../Users/schemas';
 import { UpdateUserTaskUseCase } from './useCases/updateUserTask.usecase';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @Controller('/tasks')
+@UsePipes(ZodValidationPipe)
 export class TaskController {
   constructor(
     private readonly createTaskUseCase: CreateTaskUseCase,

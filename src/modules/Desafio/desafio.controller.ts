@@ -6,6 +6,7 @@ import {
   Post,
   Request,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { CreateDesafioDTO } from './schemas';
@@ -16,8 +17,10 @@ import {
   GetUserDesafioUseCase,
   GetDesafioUseCase,
 } from './useCase';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @Controller('/desafio/')
+@UsePipes(ZodValidationPipe)
 export class DesafioController {
   constructor(
     private readonly createDesafioUseCase: CreateDesafioUseCase,
