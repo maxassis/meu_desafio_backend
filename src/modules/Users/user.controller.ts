@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
 import {
   ChangePasswordDTO,
@@ -27,10 +28,12 @@ import {
   ChangePasswordUseCase,
   EditUserDataUseCase,
 } from './useCases';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 @Controller('/users')
+@UsePipes(ZodValidationPipe)
 export class UserController {
-  changeEmailUseCase: any;
+  // changeEmailUseCase: any;
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,

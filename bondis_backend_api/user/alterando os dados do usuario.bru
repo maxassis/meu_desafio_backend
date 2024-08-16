@@ -5,19 +5,19 @@ meta {
 }
 
 patch {
-  url: http://localhost:3000/users/edituserdata
+  url: {{baseUrl}}/users/edituserdata
   body: json
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYm9uZGlzMjIiLCJlbWFpbCI6ImJvbmRpczIyQHRlc3RlLmNvbSIsImlkIjoiY2x4djF4MXBvMDAwMDl4cDFzejQ4d2JzeSIsImlhdCI6MTcxOTM1ODk5MywiZXhwIjoxNzI3MTM0OTkzfQ.ZuhYuCjwLdK7zsWrrixdQUfXgRVeaq3kxAWLnLUcvlc
+  token: {{tokenValue}}
 }
 
 body:json {
   {
-    "full_name" : "22",
-    "bio": "programadora senior",
+    "full_name" : "zzzzz",
+    "bio": "22222",
     "birthDate": "11041983"
   }
 }

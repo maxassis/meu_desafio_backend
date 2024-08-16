@@ -1,0 +1,15 @@
+meta {
+  name: Pegar as tarefas de um desafio
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/tasks/get-tasks/25
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
+}

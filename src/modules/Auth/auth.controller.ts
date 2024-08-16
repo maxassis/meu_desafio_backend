@@ -1,4 +1,5 @@
-import { Controller, Body, Post } from '@nestjs/common';
+import { Controller, Body, Post, UsePipes } from '@nestjs/common';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
   SignInSchemaDTO,
   SendMailCreateUserDTO,
@@ -17,6 +18,7 @@ import {
 } from './useCase';
 
 @Controller()
+@UsePipes(ZodValidationPipe)
 export class LoginController {
   constructor(
     private readonly signInUseCase: SignInUseCase,
@@ -33,6 +35,7 @@ export class LoginController {
     return await this.signInUseCase.execute(data);
   }
 
+  // CHECK EMAIL
   @Post('/checkEmail')
   async checkEmail(@Body() data: CheckEmailDTO) {
     const { email } = data;

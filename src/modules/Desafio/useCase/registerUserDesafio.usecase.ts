@@ -10,7 +10,6 @@ export class RegisterUserDesafioUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async registerUserDesafio(idDesafio: string, idUser: string) {
-    // verifica se o desafio existe e se o usuário participa
     const desafio = await this.prisma.desafio.findUnique({
       where: { id: +idDesafio },
       include: {
@@ -30,7 +29,7 @@ export class RegisterUserDesafioUseCase {
       );
     }
 
-    return this.prisma.desafio.update({
+    const result = await this.prisma.desafio.update({
       where: { id: +idDesafio },
       data: {
         participation: {
@@ -42,5 +41,11 @@ export class RegisterUserDesafioUseCase {
       },
       include: { participation: true },
     });
+
+    if (!result) {
+      throw new BadRequestException('Error registering user');
+    }
+
+    return 'Desafio registrado com sucesso';
   }
 }

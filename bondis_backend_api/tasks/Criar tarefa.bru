@@ -1,0 +1,27 @@
+meta {
+  name: Criar tarefa
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/tasks/create
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
+}
+
+body:json {
+  {
+    "name": "tarefa com data de criação 7",
+    "calories": 4,
+    "distance": 2,
+    "participationId": 25,
+    "environment": "livre", 
+    "duration": "2024-08-13T10:30:20Z",
+    "date": "2024-08-09T14:30:00Z"
+  }
+}

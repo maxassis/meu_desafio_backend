@@ -1,0 +1,24 @@
+meta {
+  name: alterando informaçoes da task
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/tasks/update-task/126
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
+}
+
+body:json {
+  {
+   "name": "topo do lista",
+    "distanceKm": 7,
+    "environment": "esteira",
+    "date": "2024-08-09T14:30:00Z"
+  }
+}
