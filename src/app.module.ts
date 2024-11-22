@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './modules/Users/user.module';
-import { APP_PIPE } from '@nestjs/core';
-import { ZodValidationPipe } from 'nestjs-zod';
 import { LoginModule } from './modules/Auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { DesafioModule } from './modules/Desafio/desafio.module';
 import { TasksModule } from './modules/Tasks/tasks.module';
+import { ConfigModule } from '@nestjs/config';
+import { envSchema } from './env';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      validate: (env) => envSchema.parse(env),
+      isGlobal: true,
+    }),
     UserModule,
     DesafioModule,
     LoginModule,
@@ -28,17 +32,12 @@ import { TasksModule } from './modules/Tasks/tasks.module';
     RedisModule.forRoot({
       config: {
         host: 'localhost',
-        port: 6379,
+        port: Number(process.env.REDIS_PORT),
         // password: 'authpassword',
       },
     }),
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}
