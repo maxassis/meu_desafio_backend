@@ -30,7 +30,7 @@ export class DesafioController {
   ) {}
 
   @Post('/create')
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async createDesafio(@Body() body: CreateDesafioDTO) {
     return this.createDesafioUseCase.createDesafio(
       body.name,

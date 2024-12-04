@@ -35,6 +35,6 @@ export class CreateDesafioUseCase {
       );
     }
 
-    return 'Desafio criado com sucesso';
+    return { message: 'Desafio criado com sucesso' };
   }
 }
