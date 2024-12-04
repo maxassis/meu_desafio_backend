@@ -8,7 +8,7 @@ export class CreateDesafioUseCase {
   async createDesafio(
     name: string,
     description: string | null | undefined,
-    location: string,
+    location: Array<{ latitude: number; longitude: number }>,
   ) {
     const desafioExists = await this.prisma.desafio.findFirst({
       where: {
