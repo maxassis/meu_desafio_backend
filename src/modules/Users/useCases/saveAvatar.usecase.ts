@@ -11,8 +11,8 @@ export class UploadAvatarUseCase {
   ) {}
 
   async uploadAvatar(id: string, file: Express.Multer.File): Promise<any> {
-    const extFile = extname(file.originalname);
-    const newName = `${id}${extFile}`;
+    // const extFile = extname(file.originalname);
+    const newName = id;
 
     if (!file.mimetype.startsWith('image/')) {
       throw new HttpException(
