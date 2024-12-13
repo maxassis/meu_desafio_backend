@@ -9,7 +9,7 @@ export class DeleteAvatarUseCase {
     private readonly prisma: PrismaService,
   ) {}
 
-  async deleteAvatar(file: string, id: string): Promise<any> {
+  async deleteAvatar(id: string): Promise<any> {
     try {
       const user = await this.prisma.userData.update({
         where: {
@@ -22,14 +22,22 @@ export class DeleteAvatarUseCase {
       });
 
       return user;
-      // console.log('File deleted successfully:', data);
     } catch (error) {
-      //
+      // Tratamento de erros com mais detalhes
       if (error instanceof Error) {
-        console.error('Error deleting file:', error.message);
-      } else {
-        console.error('error:', error);
+        console.error(
+          'Erro ao atualizar o avatar no banco de dados:',
+          error.message,
+        );
+        throw new HttpException(
+          `Erro ao remover avatar: ${error.message}`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
+      throw new HttpException(
+        'Erro inesperado ao remover avatar.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

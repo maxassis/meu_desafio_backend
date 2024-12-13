@@ -15,7 +15,7 @@ import {
   ChangePasswordDTO,
   CreateUserSchemaDTO,
   RequestSchemaDTO,
-  DeleteAvatarDTO,
+  // DeleteAvatarDTO,
   EditUserDataDTO,
 } from './schemas';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
@@ -75,11 +75,8 @@ export class UserController {
 
   @Delete('/deleteAvatar')
   @UseGuards(AuthGuard)
-  async deleteAvatar(
-    @Request() req: RequestSchemaDTO,
-    @Body() { filename }: DeleteAvatarDTO,
-  ) {
-    return this.deleteAvatarUseCase.deleteAvatar(filename, req.user.id);
+  async deleteAvatar(@Request() req: RequestSchemaDTO) {
+    return this.deleteAvatarUseCase.deleteAvatar(req.user.id);
   }
 
   @Patch('/editUserData')
