@@ -11,7 +11,35 @@ export class DeleteAvatarUseCase {
 
   async deleteAvatar(id: string): Promise<any> {
     try {
-      const user = await this.prisma.userData.update({
+      const user = await this.prisma.userData.findUnique({
+        where: {
+          usersId: id,
+        },
+      });
+
+      if (!user || !user.avatar_filename) {
+        throw new HttpException(
+          'Usuário não encontrado ou avatar não existente.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const { error: deleteError } = await this.supabase.client.storage
+        .from('avatars')
+        .remove([user.avatar_filename]);
+
+      if (deleteError) {
+        console.error(
+          'Erro ao deletar arquivo do Supabase:',
+          deleteError.message,
+        );
+        throw new HttpException(
+          `Erro ao remover avatar do armazenamento: ${deleteError.message}`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      const updatedUser = await this.prisma.userData.update({
         where: {
           usersId: id,
         },
@@ -21,19 +49,13 @@ export class DeleteAvatarUseCase {
         },
       });
 
-      return user;
+      return updatedUser;
     } catch (error) {
-      // Tratamento de erros com mais detalhes
-      if (error instanceof Error) {
-        console.error(
-          'Erro ao atualizar o avatar no banco de dados:',
-          error.message,
-        );
-        throw new HttpException(
-          `Erro ao remover avatar: ${error.message}`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+      if (error instanceof HttpException) {
+        throw error;
       }
+
+      console.error('Erro inesperado ao remover avatar:', error);
       throw new HttpException(
         'Erro inesperado ao remover avatar.',
         HttpStatus.INTERNAL_SERVER_ERROR,
