@@ -9,7 +9,9 @@ export const envSchema = z.object({
   JWT_SECRET: z.string(),
   DATABASE_URL: z.string().url(),
   PORT: z.coerce.number().default(3000),
-  REDIS_URL: z.string().url(),
+  TURSO_AUTH_TOKEN: z.string(),
+  TURSO_DATABASE_URL: z.string().url(),
+  // REDIS_URL: z.string().url(),
 });
 
 export type Env = z.infer<typeof envSchema>;
