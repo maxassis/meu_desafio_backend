@@ -24,7 +24,7 @@ export class CreateDesafioUseCase {
       data: {
         name,
         description,
-        location,
+        location: JSON.stringify(location),
       },
     });
 
