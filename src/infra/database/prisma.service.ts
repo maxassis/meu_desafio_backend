@@ -18,6 +18,7 @@ export class PrismaService
 
     const adapter = new PrismaLibSQL(libsql);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     super({ adapter });
   }

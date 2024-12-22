@@ -31,9 +31,9 @@ import { envSchema } from './env';
     }),
     RedisModule.forRoot({
       config: {
-        // url: process.env.REDIS_URL,
-        host: 'localhost',
-        port: Number(process.env.REDIS_PORT),
+        url: process.env.REDIS_URL,
+        // host: 'localhost',
+        // port: Number(process.env.REDIS_PORT),
         // password: 'authpassword',
       },
     }),
