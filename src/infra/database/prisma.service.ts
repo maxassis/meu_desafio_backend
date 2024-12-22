@@ -18,6 +18,7 @@ export class PrismaService
 
     const adapter = new PrismaLibSQL(libsql);
 
+    // @ts-ignore
     super({ adapter });
   }
 
