@@ -7,7 +7,7 @@ export const envSchema = z.object({
   SUPABASE_KEY: z.string(),
   SUPABASE_BUCKET: z.string(),
   JWT_SECRET: z.string(),
-  DATABASE_URL: z.string().url(),
+  // DATABASE_URL: z.string().url(),
   PORT: z.coerce.number().default(3000),
   TURSO_AUTH_TOKEN: z.string(),
   TURSO_DATABASE_URL: z.string().url(),
