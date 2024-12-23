@@ -6,17 +6,20 @@ import {
 import { customAlphabet } from 'nanoid';
 import { MailerService } from '@nestjs-modules/mailer';
 import Redis from 'ioredis';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { RedisService, DEFAULT_REDIS } from '@liaoliaots/nestjs-redis';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { AccountRecoveryCodeTemplate } from 'src/templates-email/account.recovery.code.template';
 
 @Injectable()
 export class SendMailRecoveryUseCase {
+  private readonly redis: Redis;
   constructor(
     private readonly prisma: PrismaService,
-    @InjectRedis() private readonly redis: Redis,
+    private readonly redisService: RedisService,
     private readonly mailerService: MailerService,
-  ) {}
+  ) {
+    this.redis = this.redisService.getOrThrow();
+  }
 
   async sendMailRecovery(email: string) {
     const user = await this.prisma.users.findUnique({

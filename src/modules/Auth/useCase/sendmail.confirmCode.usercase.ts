@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { RedisService, DEFAULT_REDIS } from '@liaoliaots/nestjs-redis';
 
 @Injectable()
 export class ConfirmCodeUseCase {
-  constructor(@InjectRedis() private readonly redis: Redis) {}
+  private readonly redis: Redis;
+
+  constructor(private readonly redisService: RedisService) {
+    this.redis = this.redisService.getOrThrow();
+  }
 
   async confirmCode(code: string, email: string) {
     const codeRedis = await this.redis.get(`code-${email}`);
