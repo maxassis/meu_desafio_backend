@@ -7,9 +7,15 @@ import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 import { UploadAvatarUseCase } from './useCases/saveAvatar.usecase';
 import { GetUserDataUseCase } from './useCases/getUserData.usecase';
 import { DeleteAvatarUseCase, EditUserDataUseCase } from './useCases';
+import { MailService } from 'src/jobs/sendmail-producer-service';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
-  imports: [],
+  imports: [
+    BullModule.registerQueue({
+      name: 'email-queue',
+    }),
+  ],
   controllers: [UserController],
   providers: [
     CreateUserUseCase,
@@ -20,6 +26,7 @@ import { DeleteAvatarUseCase, EditUserDataUseCase } from './useCases';
     GetUserDataUseCase,
     DeleteAvatarUseCase,
     EditUserDataUseCase,
+    MailService,
   ],
 })
 export class UserModule {}

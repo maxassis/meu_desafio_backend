@@ -6,7 +6,9 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { DesafioModule } from './modules/Desafio/desafio.module';
 import { TasksModule } from './modules/Tasks/tasks.module';
 import { ConfigModule } from '@nestjs/config';
+import { BullModule } from '@nestjs/bullmq';
 import { envSchema } from './env';
+import { MailConsumer } from './jobs/sendmail-consumer';
 
 @Module({
   imports: [
@@ -31,14 +33,20 @@ import { envSchema } from './env';
     }),
     RedisModule.forRoot({
       config: {
-        url: process.env.REDIS_URL,
-        // host: 'localhost',
-        // port: Number(process.env.REDIS_PORT),
+        // url: process.env.REDIS_URL,
+        host: 'localhost',
+        port: Number(process.env.REDIS_PORT),
         // password: 'authpassword',
+      },
+    }),
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: Number(process.env.REDIS_PORT),
       },
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [MailConsumer],
 })
 export class AppModule {}

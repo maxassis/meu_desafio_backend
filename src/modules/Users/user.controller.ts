@@ -29,6 +29,7 @@ import {
   EditUserDataUseCase,
 } from './useCases';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { MailService } from '../../jobs/sendmail-producer-service';
 
 @Controller('/users')
 @UsePipes(ZodValidationPipe)
@@ -41,6 +42,7 @@ export class UserController {
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
     private readonly deleteAvatarUseCase: DeleteAvatarUseCase,
     private readonly editUserDataUseCase: EditUserDataUseCase,
+    private readonly mailService: MailService,
   ) {}
 
   @Post()
@@ -49,6 +51,11 @@ export class UserController {
     Reflect.deleteProperty(dt, 'password');
 
     return dt;
+  }
+
+  @Get('/teste')
+  async teste() {
+    return this.mailService.sendEmail('bondis@teste.com', 'Teste', 'Teste');
   }
 
   @Patch('/changePassword')
