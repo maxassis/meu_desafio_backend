@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import { RedisService, DEFAULT_REDIS } from '@liaoliaots/nestjs-redis';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 
 @Injectable()
 export class ConfirmCodeUseCase {

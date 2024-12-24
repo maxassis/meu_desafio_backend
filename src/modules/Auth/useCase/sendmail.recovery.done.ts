@@ -5,13 +5,15 @@ import {
 } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { PrismaService } from 'src/infra/database/prisma.service';
-import { AccountCreatedTemplate } from 'src/templates-email/account.created.template';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Injectable()
 export class SendMailRecoveryDoneUseCase {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mailerService: MailerService,
+    @InjectQueue('emailRecoveryDone-queue') private queue: Queue,
   ) {}
 
   async sendMailDone(email: string) {
@@ -26,16 +28,14 @@ export class SendMailRecoveryDoneUseCase {
     }
 
     try {
-      await this.mailerService.sendMail({
-        to: email,
-        from: 'bondis@meudesafio.com',
-        subject: 'Sua senha foi cadastrada com sucesso',
-        html: AccountCreatedTemplate(user.name),
+      await this.queue.add('emailRecoveryDone-queue', {
+        email,
+        name: user.name,
       });
     } catch {
       throw new InternalServerErrorException();
     }
 
-    return { message: 'Email enviado com sucesso' };
+    return { message: 'Email enfileirado com sucesso' };
   }
 }

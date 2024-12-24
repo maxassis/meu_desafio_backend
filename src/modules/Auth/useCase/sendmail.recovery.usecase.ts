@@ -6,7 +6,7 @@ import {
 import { customAlphabet } from 'nanoid';
 import { MailerService } from '@nestjs-modules/mailer';
 import Redis from 'ioredis';
-import { RedisService, DEFAULT_REDIS } from '@liaoliaots/nestjs-redis';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { AccountRecoveryCodeTemplate } from 'src/templates-email/account.recovery.code.template';
 

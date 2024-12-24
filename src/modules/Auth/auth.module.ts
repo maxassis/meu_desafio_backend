@@ -4,10 +4,13 @@ import { PrismaService } from 'src/infra/database/prisma.service';
 import { SignInUseCase } from './useCase/signin.usecase';
 import { JwtModule } from '@nestjs/jwt';
 import { SendMailUseCase } from './useCase/sendmail.createuser.usecase';
-import { ConfirmCodeUseCase } from './useCase/sendmail.confirmCode.usercase';
+import { ConfirmCodeUseCase } from './useCase/confirmCode.usercase';
 import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
 import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
 import { CheckEmailUseCase } from './useCase/checkValidEmail.usecase';
+import { BullModule } from '@nestjs/bullmq';
+import { MailConsumer } from 'src/jobs/sendmailCreate-consumer';
+import { MailRecoveryDoneConsumer } from 'src/jobs/recoveryDoneMail-consumer';
 
 @Module({
   imports: [
@@ -16,6 +19,10 @@ import { CheckEmailUseCase } from './useCase/checkValidEmail.usecase';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '90d' },
     }),
+    BullModule.registerQueue(
+      { name: 'email-queue' },
+      { name: 'emailRecoveryDone-queue' },
+    ),
   ],
   controllers: [LoginController],
   providers: [
@@ -26,6 +33,8 @@ import { CheckEmailUseCase } from './useCase/checkValidEmail.usecase';
     ConfirmCodeUseCase,
     SendMailRecoveryDoneUseCase,
     CheckEmailUseCase,
+    MailConsumer,
+    MailRecoveryDoneConsumer,
   ],
   exports: [],
 })
