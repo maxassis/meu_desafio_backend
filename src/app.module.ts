@@ -8,7 +8,6 @@ import { TasksModule } from './modules/Tasks/tasks.module';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { envSchema } from './env';
-import { MailConsumer } from './jobs/sendmail-consumer';
 
 @Module({
   imports: [
@@ -47,6 +46,6 @@ import { MailConsumer } from './jobs/sendmail-consumer';
     }),
   ],
   controllers: [],
-  providers: [MailConsumer],
+  providers: [],
 })
 export class AppModule {}

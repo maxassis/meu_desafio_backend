@@ -9,6 +9,7 @@ import { GetUserDataUseCase } from './useCases/getUserData.usecase';
 import { DeleteAvatarUseCase, EditUserDataUseCase } from './useCases';
 import { MailService } from 'src/jobs/sendmail-producer-service';
 import { BullModule } from '@nestjs/bullmq';
+import { MailConsumer } from 'src/jobs/sendmail-consumer';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { BullModule } from '@nestjs/bullmq';
     DeleteAvatarUseCase,
     EditUserDataUseCase,
     MailService,
+    MailConsumer,
   ],
 })
 export class UserModule {}
