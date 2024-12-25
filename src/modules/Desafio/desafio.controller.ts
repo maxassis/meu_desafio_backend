@@ -36,6 +36,7 @@ export class DesafioController {
       body.name,
       body.description,
       body.location,
+      body.distance,
     );
   }
 

@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
@@ -27,8 +27,8 @@ model UserData {
   avatar_filename String?
   full_name       String?
   bio             String?
-  gender          String?  // homem, mulher, nao_binario, prefiro_nao_responder
-  sport           String?  // corrida, bicicleta
+  gender          String? // homem, mulher, nao_binario, prefiro_nao_responder
+  sport           String? // corrida, bicicleta
   birthDate       String?
   createdAt       DateTime @default(now())
   user            Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
@@ -41,7 +41,8 @@ model Desafio {
   id            Int             @id @default(autoincrement())
   name          String          @unique
   description   String?
-  location      String          // Armazena JSON como string
+  location      String
+  distance      Decimal
   participation Participation[]
 
   @@map("desafio")
@@ -64,7 +65,7 @@ model Task {
   name            String
   environment     String
   date            DateTime?
-  duration        DateTime?    
+  duration        DateTime?
   calories        Int?
   local           String?
   distanceKm      Decimal       @default(0)
@@ -72,7 +73,7 @@ model Task {
   participation   Participation @relation(fields: [participationId], references: [id], onDelete: Cascade)
   Users           Users?        @relation(fields: [usersId], references: [id])
   usersId         String?
-  createdAt       DateTime      @default(now()) 
+  createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
   @@map("tasks")
