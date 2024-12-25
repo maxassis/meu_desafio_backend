@@ -9,6 +9,7 @@ export class CreateDesafioUseCase {
     name: string,
     description: string | null | undefined,
     location: Array<{ latitude: number; longitude: number }>,
+    distance: number,
   ) {
     const desafioExists = await this.prisma.desafio.findFirst({
       where: {
@@ -25,6 +26,7 @@ export class CreateDesafioUseCase {
         name,
         description,
         location: JSON.stringify(location),
+        distance,
       },
     });
 

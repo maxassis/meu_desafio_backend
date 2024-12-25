@@ -12,6 +12,7 @@ const CreateDesafioSchema = z.object({
   name: z.string(),
   description: z.string(),
   location: coordinatesArraySchema,
+  distance: z.number(),
 });
 
 export class CreateDesafioDTO extends createZodDto(CreateDesafioSchema) {}
