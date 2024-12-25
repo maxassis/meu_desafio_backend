@@ -11,6 +11,7 @@ import { CheckEmailUseCase } from './useCase/checkValidEmail.usecase';
 import { BullModule } from '@nestjs/bullmq';
 import { MailConsumer } from 'src/jobs/sendmailCreate-consumer';
 import { MailRecoveryDoneConsumer } from 'src/jobs/recoveryDoneMail-consumer';
+import { MailRecoveryConsumer } from 'src/jobs/sendmailRecovery-consumer';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { MailRecoveryDoneConsumer } from 'src/jobs/recoveryDoneMail-consumer';
     BullModule.registerQueue(
       { name: 'email-queue' },
       { name: 'emailRecoveryDone-queue' },
+      { name: 'emailRecovery-queue' },
     ),
   ],
   controllers: [LoginController],
@@ -35,6 +37,7 @@ import { MailRecoveryDoneConsumer } from 'src/jobs/recoveryDoneMail-consumer';
     CheckEmailUseCase,
     MailConsumer,
     MailRecoveryDoneConsumer,
+    MailRecoveryConsumer,
   ],
   exports: [],
 })

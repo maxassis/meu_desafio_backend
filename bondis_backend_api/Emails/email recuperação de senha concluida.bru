@@ -7,11 +7,15 @@ meta {
 post {
   url: {{baseUrl}}/sendMailDone
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
 }
 
 body:json {
   {
-    "email": "hehe@teste.com"
+    "email": "furis@teste.com"
   }
 }

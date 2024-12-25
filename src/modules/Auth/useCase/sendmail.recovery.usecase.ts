@@ -8,7 +8,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 import Redis from 'ioredis';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { PrismaService } from 'src/infra/database/prisma.service';
-import { AccountRecoveryCodeTemplate } from 'src/templates-email/account.recovery.code.template';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Injectable()
 export class SendMailRecoveryUseCase {
@@ -17,6 +18,7 @@ export class SendMailRecoveryUseCase {
     private readonly prisma: PrismaService,
     private readonly redisService: RedisService,
     private readonly mailerService: MailerService,
+    @InjectQueue('emailRecovery-queue') private queue: Queue,
   ) {
     this.redis = this.redisService.getOrThrow();
   }
@@ -37,16 +39,15 @@ export class SendMailRecoveryUseCase {
 
     try {
       await this.redis.set(`code-${email}`, code, 'EX', 300);
-      await this.mailerService.sendMail({
-        to: email,
-        from: 'bondis@meudesafio.com',
-        subject: 'Confirme seu email',
-        html: AccountRecoveryCodeTemplate(user.name, code),
+      await this.queue.add('emailRecovery-job', {
+        name: user.name,
+        email,
+        code,
       });
     } catch {
       throw new InternalServerErrorException();
     }
 
-    return { message: 'Email enviado com sucesso' };
+    return { message: 'Email enfileirado com sucesso 2' };
   }
 }
