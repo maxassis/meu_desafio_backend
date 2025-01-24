@@ -1,73 +1,124 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Meu Desafio Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![Postgres](https://img.shields.io/badge/Postgres-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![BullMQ](https://img.shields.io/badge/BullMQ-FF6C37?style=for-the-badge&logo=redis&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-1E90FF?style=for-the-badge&logo=zod&logoColor=white)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+Meu Desafio Backend é a API que suporta o aplicativo **Meu Desafio**, fornecendo serviços para cadastro, gerenciamento de atividades e armazenamento seguro dos dados do usuário.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Installation
+## Funcionalidades
 
-```bash
-$ pnpm install
-```
+- Processamento de tarefas em segundo plano com **BullMQ**.
+- Cadastro e autenticação de usuários.
+- Envio de emails.
+- Upload de arquivos para o **Supabase Storage**.
+- Registro de atividades (corridas e pedaladas).
+- Integração com o banco de dados **PostgreSQL**.
+- Validação de dados robusta com **Zod**.
 
-## Running the app
+---
 
-```bash
-# development
-$ pnpm run start
+## Tecnologias Utilizadas
 
-# watch mode
-$ pnpm run start:dev
+- **BullMQ** - Biblioteca para gerenciamento de filas utilizando Redis.
+- **NestJS** - Framework para desenvolvimento de APIs escaláveis e modulares.
+- **Node.js** - Ambiente de execução para JavaScript no lado do servidor.
+- **Prisma** - ORM moderno para interação com o banco de dados.
+- **PostgreSQL** - Banco de dados relacional utilizado.
+- **Supabase** - Plataforma de backend como serviço (BaaS) com armazenamento e autenticação.
+- **Zod** - Biblioteca de validação e tipagem.
 
-# production mode
-$ pnpm run start:prod
-```
+---
 
-## Test
+## Instalação
+
+1. Clone este repositório:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+git clone https://github.com/seu-usuario/meu-desafio-backend.git
 ```
 
-## Support
+2. Instale as dependências:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm install
+# ou
+yarn install
+```
 
-## Stay in touch
+3. Configure o ambiente:
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+```env
+     DATABASE_URL=postgresql://usuario:senha@localhost:5432/meu-desafio
+     JWT_SECRET=sua_chave_secreta
+     PORT=3000
+     SUPABASE_URL=seu_url_supabase
+     SUPABASE_KEY=sua_chave_supabase
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+4. Suba os serviços necessários com Docker Compose:
 
-## License
+```bash
+docker-compose up -d
+```
 
-Nest is [MIT licensed](LICENSE).
+5. Execute as migrações do banco de dados:
+
+```bash
+npx prisma migrate dev
+```
+
+6. Inicie o servidor:
+
+```bash
+npm run start:dev
+```
+---
+
+## Como Usar
+
+1. Certifique-se de que o servidor está rodando em `http://localhost:3000`.
+2. Utilize ferramentas como **Postman** ou **Insomnia** para testar as rotas da API.
+3. Integre o Mobile (aplicativo Meu Desafio) com o backend.
+
+---
+
+## Frontend Mobile
+
+O frontend mobile da aplicação Meu Desafio pode ser encontrado no repositório abaixo:
+
+  - [Repositório do Frontend Mobile](https://github.com/maxassis/meu-desafio.git)
+
+## Contribuições
+
+Contribuições são bem-vindas! Siga os passos abaixo para colaborar:
+
+1. Faça um fork do repositório.
+2. Crie um branch para sua feature ou bugfix: `git checkout -b minha-feature`.
+3. Faça os commits e adicione uma descrição clara: `git commit -m "Minha nova feature"`.
+4. Envie seu código: `git push origin minha-feature`.
+5. Abra um Pull Request.
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a Licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais informações.
+
+---
+
+## Contato
+
+- **Desenvolvedor**: Max Assis
+- **E-mail**: max.assis@outlook.com
+- **GitHub**: [@maxassis](https://github.com/maxassis)
+
+
+
