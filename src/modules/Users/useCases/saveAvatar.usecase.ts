@@ -1,12 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
+import { ConfigService } from '@nestjs/config';
+import { Env } from 'src/env';
 
 @Injectable()
 export class UploadAvatarUseCase {
   constructor(
     private readonly supabase: Supabase,
     private readonly prisma: PrismaService,
+    private configService: ConfigService<Env, true>,
   ) {}
 
   async uploadAvatar(id: string, file: Express.Multer.File): Promise<any> {
@@ -54,10 +57,13 @@ export class UploadAvatarUseCase {
     }
 
     // Atualize o banco de dados com o novo avatar dentro da transação
+    const SUPABASE_URL = this.configService.get('SUPABASE_URL', {
+      infer: true,
+    });
     const updatedUser = await this.prisma.userData.update({
       where: { usersId: id },
       data: {
-        avatar_url: `https://iijythvtsrfruihwseua.supabase.co/storage/v1/object/public/avatars/${fileUpload.data.path}`,
+        avatar_url: `${SUPABASE_URL}/storage/v1/object/public/avatars/${fileUpload.data.path}`,
         avatar_filename: fileUpload.data.path,
       },
     });

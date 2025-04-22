@@ -56,6 +56,8 @@ model Participation {
   tasks     Task[]
   user      Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
   desafio   Desafio @relation(fields: [desafioId], references: [id], onDelete: Cascade)
+  completed Boolean @default(false)  // Campo para rastrear se o desafio foi concluído
+  completedAt DateTime?  // Campo opcional para rastrear quando o desafio foi concluído
 
   @@map("participation")
 }
