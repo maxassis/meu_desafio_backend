@@ -17,7 +17,9 @@ const UpdateTaskSchema = z.object({
         message: 'Invalid date format. Expected YYYY-MM-DDTHH:MM:SSZ.',
       },
     ),
-  duration: z.string().optional(),
+  duration: z
+    .number({ message: 'duration Required' })
+    .positive({ message: 'duration must be greater than zero' }),
   calories: z.number().optional(),
   distanceKm: z.number(),
   local: z.string().optional(),

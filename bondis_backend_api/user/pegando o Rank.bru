@@ -1,0 +1,15 @@
+meta {
+  name: pegando o Rank
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/users/getRanking/10
+  body: none
+  auth: none
+}
+
+vars:post-response {
+  tokenValue: res.body.access_token
+}

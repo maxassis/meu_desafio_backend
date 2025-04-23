@@ -67,7 +67,7 @@ model Task {
   name            String
   environment     String
   date            DateTime?
-  duration        DateTime?
+  duration        Decimal
   calories        Int?
   local           String?
   distanceKm      Decimal       @default(0)

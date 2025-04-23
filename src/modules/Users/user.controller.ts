@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Request,
@@ -27,6 +28,7 @@ import {
   GetUserDataUseCase,
   ChangePasswordUseCase,
   EditUserDataUseCase,
+  GetRankingUseCase,
 } from './useCases';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
@@ -41,6 +43,7 @@ export class UserController {
     private readonly uploadAvatarUseCase: UploadAvatarUseCase,
     private readonly deleteAvatarUseCase: DeleteAvatarUseCase,
     private readonly editUserDataUseCase: EditUserDataUseCase,
+    private readonly getRankingUseCase: GetRankingUseCase,
   ) {}
 
   @Post()
@@ -55,6 +58,11 @@ export class UserController {
   async changePassword(@Body() data: ChangePasswordDTO) {
     const { new_password, email } = data;
     return this.changePasswordUseCase.changePassword(email, new_password);
+  }
+
+  @Get('/getRanking/:desafioId')
+  async getRanking(@Param('desafioId') idDesafio: string) {
+    return this.getRankingUseCase.getRanking(idDesafio);
   }
 
   @Get('/getUserData')

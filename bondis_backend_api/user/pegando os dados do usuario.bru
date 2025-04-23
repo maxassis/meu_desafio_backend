@@ -13,3 +13,7 @@ get {
 auth:bearer {
   token: {{tokenValue}}
 }
+
+vars:post-response {
+  tokenValue: res.body.access_token
+}

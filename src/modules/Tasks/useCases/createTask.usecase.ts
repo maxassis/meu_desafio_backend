@@ -73,7 +73,7 @@ export class CreateTaskUseCase {
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        'Erro ao criar a tarefa 2',
+        'Erro ao criar a tarefa',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
