@@ -1,3 +1,115 @@
+// import { Injectable } from '@nestjs/common';
+// import { PrismaService } from 'src/infra/database/prisma.service';
+
+// @Injectable()
+// export class GetRankingUseCase {
+//   constructor(private readonly prisma: PrismaService) {}
+
+//   async getRanking(desafioId: string) {
+//     // Obter todas as participações para este desafio com seus usuários e tarefas
+//     const participations = await this.prisma.participation.findMany({
+//       where: {
+//         desafioId: +desafioId,
+//       },
+//       include: {
+//         user: {
+//           include: {
+//             UserData: true,
+//           },
+//         },
+//         tasks: {
+//           select: {
+//             distanceKm: true,
+//             duration: true,
+//           },
+//         },
+//       },
+//     });
+
+//     // Processar os dados para obter os valores agregados e calcular velocidade média
+//     const rankings = participations.map((participation) => {
+//       const totalDistance = participation.tasks.reduce(
+//         (sum, task) => sum + Number(task.distanceKm),
+//         0,
+//       );
+
+//       const totalDuration = participation.tasks.reduce(
+//         (sum, task) => sum + Number(task.duration),
+//         0,
+//       );
+
+//       // Calcular velocidade média em km/h (duration já está em horas)
+//       const avgSpeed = totalDuration > 0 ? totalDistance / totalDuration : 0;
+
+//       return {
+//         userId: participation.user.id,
+//         userName: participation.user.name,
+//         userAvatar: participation.user.UserData?.avatar_url || null,
+//         totalDistance,
+//         totalDuration,
+//         avgSpeed: parseFloat(avgSpeed.toFixed(2)),
+//       };
+//     });
+
+//     // Ordenar por velocidade média
+//     const sortedRankings = rankings.sort((a, b) => b.avgSpeed - a.avgSpeed);
+
+//     // Adicionar posição no ranking
+//     const finalRankings = sortedRankings.map((user, index) => ({
+//       position: index + 1,
+//       ...user,
+//     }));
+
+//     return finalRankings;
+//   }
+
+//   // async getRanking(desafioId: string) {
+//   //   // Obter todas as participações para este desafio com seus usuários e tarefas
+//   //   const participations = await this.prisma.participation.findMany({
+//   //     where: {
+//   //       desafioId: +desafioId,
+//   //     },
+//   //     include: {
+//   //       user: {
+//   //         include: {
+//   //           UserData: true,
+//   //         },
+//   //       },
+//   //       tasks: {
+//   //         select: {
+//   //           distanceKm: true,
+//   //           duration: true,
+//   //         },
+//   //       },
+//   //     },
+//   //   });
+
+//   //   // Processar os dados para obter os valores agregados
+//   //   const rankings = participations.map((participation) => {
+//   //     const totalDistance = participation.tasks.reduce(
+//   //       (sum, task) => sum + Number(task.distanceKm),
+//   //       0,
+//   //     );
+
+//   //     const totalDuration = participation.tasks.reduce(
+//   //       (sum, task) => sum + Number(task.duration),
+//   //       0,
+//   //     );
+
+//   //     return {
+//   //       userId: participation.user.id,
+//   //       userName: participation.user.name,
+//   //       userAvatar: participation.user.UserData?.avatar_url || null,
+//   //       totalDistance,
+//   //       totalDuration,
+//   //     };
+//   //   });
+
+//   //   // Ordenar por distância total
+//   //   return rankings.sort((a, b) => b.totalDistance - a.totalDistance);
+//   // }
+// }
+
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
 
@@ -6,6 +118,17 @@ export class GetRankingUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async getRanking(desafioId: string) {
+    // Obter o desafio para saber a distância total
+    const desafio = await this.prisma.desafio.findUnique({
+      where: {
+        id: +desafioId,
+      },
+    });
+
+    if (!desafio) {
+      throw new Error(`Desafio com ID ${desafioId} não encontrado`);
+    }
+
     // Obter todas as participações para este desafio com seus usuários e tarefas
     const participations = await this.prisma.participation.findMany({
       where: {
@@ -18,25 +141,76 @@ export class GetRankingUseCase {
           },
         },
         tasks: {
+          orderBy: {
+            date: 'asc',
+          },
           select: {
             distanceKm: true,
             duration: true,
+            date: true,
+            createdAt: true,
           },
         },
       },
     });
 
-    // Processar os dados para obter os valores agregados e calcular velocidade média
+    const now = new Date();
+
+    // Processar os dados para calcular taxa de progresso
     const rankings = participations.map((participation) => {
+      // Calcular a distância total percorrida nas tarefas
       const totalDistance = participation.tasks.reduce(
         (sum, task) => sum + Number(task.distanceKm),
         0,
       );
 
+      // Calcular duração total das tarefas
       const totalDuration = participation.tasks.reduce(
         (sum, task) => sum + Number(task.duration),
         0,
       );
+
+      // Data da primeira tarefa ou data de criação da participação
+      // Precisamos incluir a propriedade createdAt no select da participação
+      let startDate = new Date();
+      if (participation.tasks.length > 0) {
+        if (participation.tasks[0].date) {
+          startDate = new Date(participation.tasks[0].date);
+        } else if (participation.tasks[0].createdAt) {
+          startDate = new Date(participation.tasks[0].createdAt);
+        }
+      }
+
+      // Calcular dias desde o início
+      const daysSinceStart = Math.max(
+        1,
+        Math.ceil(
+          (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+        ),
+      );
+
+      // Calcular progresso como porcentagem da distância total do desafio
+      const progressPercent =
+        (Number(participation.progress) / Number(desafio.distance)) * 100;
+
+      // Taxa de progresso diário (porcentagem por dia)
+      const dailyProgressRate = progressPercent / daysSinceStart;
+
+      // Bônus de conclusão, se aplicável
+      const completionBonus =
+        participation.completed && participation.completedAt
+          ? 100 *
+            (1 -
+              Math.ceil(
+                (new Date(participation.completedAt).getTime() -
+                  startDate.getTime()) /
+                  (1000 * 60 * 60 * 24),
+              ) /
+                30)
+          : 0;
+
+      // Pontuação final
+      const finalScore = dailyProgressRate + completionBonus;
 
       // Calcular velocidade média em km/h (duration já está em horas)
       const avgSpeed = totalDuration > 0 ? totalDistance / totalDuration : 0;
@@ -47,12 +221,19 @@ export class GetRankingUseCase {
         userAvatar: participation.user.UserData?.avatar_url || null,
         totalDistance,
         totalDuration,
+        progress: Number(participation.progress),
+        progressPercent: parseFloat(progressPercent.toFixed(2)),
+        daysSinceStart,
+        dailyProgressRate: parseFloat(dailyProgressRate.toFixed(2)),
         avgSpeed: parseFloat(avgSpeed.toFixed(2)),
+        completed: participation.completed,
+        completionBonus: parseFloat(completionBonus.toFixed(2)),
+        finalScore: parseFloat(finalScore.toFixed(2)),
       };
     });
 
-    // Ordenar por velocidade média
-    const sortedRankings = rankings.sort((a, b) => b.avgSpeed - a.avgSpeed);
+    // Ordenar por pontuação final (taxa de progresso + bônus de conclusão)
+    const sortedRankings = rankings.sort((a, b) => b.finalScore - a.finalScore);
 
     // Adicionar posição no ranking
     const finalRankings = sortedRankings.map((user, index) => ({
@@ -62,50 +243,4 @@ export class GetRankingUseCase {
 
     return finalRankings;
   }
-
-  // async getRanking(desafioId: string) {
-  //   // Obter todas as participações para este desafio com seus usuários e tarefas
-  //   const participations = await this.prisma.participation.findMany({
-  //     where: {
-  //       desafioId: +desafioId,
-  //     },
-  //     include: {
-  //       user: {
-  //         include: {
-  //           UserData: true,
-  //         },
-  //       },
-  //       tasks: {
-  //         select: {
-  //           distanceKm: true,
-  //           duration: true,
-  //         },
-  //       },
-  //     },
-  //   });
-
-  //   // Processar os dados para obter os valores agregados
-  //   const rankings = participations.map((participation) => {
-  //     const totalDistance = participation.tasks.reduce(
-  //       (sum, task) => sum + Number(task.distanceKm),
-  //       0,
-  //     );
-
-  //     const totalDuration = participation.tasks.reduce(
-  //       (sum, task) => sum + Number(task.duration),
-  //       0,
-  //     );
-
-  //     return {
-  //       userId: participation.user.id,
-  //       userName: participation.user.name,
-  //       userAvatar: participation.user.UserData?.avatar_url || null,
-  //       totalDistance,
-  //       totalDuration,
-  //     };
-  //   });
-
-  //   // Ordenar por distância total
-  //   return rankings.sort((a, b) => b.totalDistance - a.totalDistance);
-  // }
 }
