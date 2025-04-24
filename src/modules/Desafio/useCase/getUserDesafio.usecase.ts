@@ -14,6 +14,7 @@ export class GetUserDesafioUseCase {
             id: true,
             name: true,
             description: true,
+            distance: true,
           },
         },
       },
