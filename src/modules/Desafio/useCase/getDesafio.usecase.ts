@@ -10,6 +10,9 @@ export class GetDesafioUseCase {
       where: { id: +idDesafio },
       include: {
         participation: {
+          where: {
+            completed: false,
+          },
           select: {
             desafioId: false,
             progress: true,
