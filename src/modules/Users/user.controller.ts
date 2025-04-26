@@ -61,6 +61,7 @@ export class UserController {
   }
 
   @Get('/getRanking/:desafioId')
+  @UseGuards(AuthGuard)
   async getRanking(@Param('desafioId') idDesafio: string) {
     return this.getRankingUseCase.getRanking(idDesafio);
   }

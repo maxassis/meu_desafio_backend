@@ -16,6 +16,7 @@ import {
   CreateDesafioUseCase,
   GetUserDesafioUseCase,
   GetDesafioUseCase,
+  GetAllDesafioUseCase,
 } from './useCase';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
@@ -27,6 +28,7 @@ export class DesafioController {
     private readonly registerUserDesafio: RegisterUserDesafioUseCase,
     private readonly getUserDesafio: GetUserDesafioUseCase,
     private readonly desafio: GetDesafioUseCase,
+    private readonly getAllDesafioUseCase: GetAllDesafioUseCase,
   ) {}
 
   @Post('/create')
@@ -53,6 +55,12 @@ export class DesafioController {
   @UseGuards(AuthGuard)
   async getDesafio(@Request() req: RequestSchemaDTO) {
     return this.getUserDesafio.getDesafio(req.user.id);
+  }
+
+  @Get('/getAllDesafio')
+  @UseGuards(AuthGuard)
+  async getAllDesafio(@Request() req: RequestSchemaDTO) {
+    return this.getAllDesafioUseCase.getAllDesafio(req.user.id);
   }
 
   @Get('/getDesafio/:id')
