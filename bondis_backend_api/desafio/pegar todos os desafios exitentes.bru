@@ -7,5 +7,9 @@ meta {
 get {
   url: {{baseUrl}}/desafio/getAllDesafio
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
 }
