@@ -37,13 +37,13 @@ export class TaskController {
     return this.createTaskUseCase.createTask(body, req.user.id);
   }
 
-  @Get('/get-tasks/:participationId')
+  @Get('/get-tasks/:inscriptionId')
   @UseGuards(AuthGuard)
   async getTasks(
     @Request() req: RequestSchemaDTO,
-    @Param() { participationId }: { participationId: string },
+    @Param() { inscriptionId }: { inscriptionId: string },
   ) {
-    return this.getUserTaskUseCase.getTask(req.user.id, +participationId);
+    return this.getUserTaskUseCase.getTask(req.user.id, +inscriptionId);
   }
 
   @Delete('/delete-task/:taskId')

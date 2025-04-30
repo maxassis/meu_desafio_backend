@@ -13,7 +13,7 @@ export class RegisterUserDesafioUseCase {
     const desafio = await this.prisma.desafio.findUnique({
       where: { id: +idDesafio },
       include: {
-        participation: {
+        inscription: {
           where: { userId: idUser },
         },
       },
@@ -23,7 +23,7 @@ export class RegisterUserDesafioUseCase {
       throw new NotFoundException(`Desafio with ID ${idDesafio} not found`);
     }
 
-    if (desafio.participation.length > 0) {
+    if (desafio.inscription.length > 0) {
       throw new BadRequestException(
         `User already registered for this challenge.`,
       );
@@ -32,14 +32,14 @@ export class RegisterUserDesafioUseCase {
     const result = await this.prisma.desafio.update({
       where: { id: +idDesafio },
       data: {
-        participation: {
+        inscription: {
           create: {
             userId: idUser,
             progress: 0,
           },
         },
       },
-      include: { participation: true },
+      include: { inscription: true },
     });
 
     if (!result) {

@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/users/getRanking/10
+  url: {{baseUrl}}/users/getRanking/5
   body: none
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
 }
 
 vars:post-response {

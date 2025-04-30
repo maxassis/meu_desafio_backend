@@ -1,7 +1,6 @@
 import { createZodDto } from '@anatine/zod-nestjs';
 import { z } from 'zod';
 
-
 const CreateTaskSchema = z.object({
   name: z.string(),
   environment: z.enum(['livre', 'esteira']),
@@ -14,7 +13,7 @@ const CreateTaskSchema = z.object({
   calories: z.number().optional(),
   distance: z.number({ message: 'distance Required' }),
   local: z.string().optional(),
-  participationId: z.number({ message: 'participationId Required' }),
+  inscriptionId: z.number({ message: 'inscriptionId Required' }),
 });
 
 export class CreateTaskDTO extends createZodDto(CreateTaskSchema) {}

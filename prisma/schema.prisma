@@ -1,22 +1,21 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 model Users {
-  id            String          @id @default(cuid())
-  name          String
-  email         String          @unique
-  password      String
-  createdAt     DateTime        @default(now())
-  UserData      UserData?
-  Participation Participation[]
-  Task          Task[]
+  id          String        @id @default(cuid())
+  name        String
+  email       String        @unique
+  password    String
+  createdAt   DateTime      @default(now())
+  UserData    UserData?
+  Inscription Inscription[]
+  Task        Task[]
 
   @@map("users")
 }
@@ -38,45 +37,45 @@ model UserData {
 }
 
 model Desafio {
-  id            Int             @id @default(autoincrement())
-  name          String          @unique
-  description   String?
-  location      String
-  distance      Decimal
-  participation Participation[]
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  description String?
+  location    String
+  distance    Decimal
+  inscription Inscription[]
 
   @@map("desafio")
 }
 
-model Participation {
-  id        Int     @id @default(autoincrement())
-  userId    String
-  desafioId Int
-  progress  Decimal @default(0)
-  tasks     Task[]
-  user      Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  desafio   Desafio @relation(fields: [desafioId], references: [id], onDelete: Cascade)
-  completed Boolean @default(false)  // Campo para rastrear se o desafio foi concluído
-  completedAt DateTime?  // Campo opcional para rastrear quando o desafio foi concluído
+model Inscription {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  desafioId   Int
+  progress    Decimal   @default(0)
+  tasks       Task[]
+  user        Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  desafio     Desafio   @relation(fields: [desafioId], references: [id], onDelete: Cascade)
+  completed   Boolean   @default(false) // Campo para rastrear se o desafio foi concluído
+  completedAt DateTime? // Campo opcional para rastrear quando o desafio foi concluído
 
-  @@map("participation")
+  @@map("inscription")
 }
 
 model Task {
-  id              Int           @id @default(autoincrement())
-  name            String
-  environment     String
-  date            DateTime?
-  duration        Decimal
-  calories        Int?
-  local           String?
-  distanceKm      Decimal       @default(0)
-  participationId Int
-  participation   Participation @relation(fields: [participationId], references: [id], onDelete: Cascade)
-  Users           Users?        @relation(fields: [usersId], references: [id])
-  usersId         String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id            Int         @id @default(autoincrement())
+  name          String
+  environment   String
+  date          DateTime?
+  duration      Decimal
+  calories      Int?
+  local         String?
+  distanceKm    Decimal     @default(0)
+  inscriptionId Int
+  inscription   Inscription @relation(fields: [inscriptionId], references: [id], onDelete: Cascade)
+  Users         Users?      @relation(fields: [usersId], references: [id])
+  usersId       String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   @@map("tasks")
 }

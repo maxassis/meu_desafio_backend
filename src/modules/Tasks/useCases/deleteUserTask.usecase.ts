@@ -32,11 +32,11 @@ export class DeleteUserTaskUseCase {
         },
       });
 
-      // Busca todas as tarefas do usuário com o ID de participação fornecido
+      // Busca todas as tarefas do usuário com o ID de inscrição fornecido
       const tasks = await this.prisma.task.findMany({
         where: {
           usersId: userId,
-          participationId: task.participationId,
+          inscriptionId: task.inscriptionId,
         },
       });
 
@@ -45,9 +45,9 @@ export class DeleteUserTaskUseCase {
         .reduce((acc, task) => acc + parseFloat(task.distanceKm + ''), 0)
         .toFixed(3);
 
-      // Atualiza o progresso da participação com a distância total
-      await this.prisma.participation.update({
-        where: { id: task.participationId },
+      // Atualiza o progresso da inscrição com a distância total
+      await this.prisma.inscription.update({
+        where: { id: task.inscriptionId },
         data: { progress: totalDistance },
       });
 

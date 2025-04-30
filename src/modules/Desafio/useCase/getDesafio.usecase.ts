@@ -9,7 +9,7 @@ export class GetDesafioUseCase {
     const desafio = await this.prisma.desafio.findUnique({
       where: { id: +idDesafio },
       include: {
-        participation: {
+        inscription: {
           where: {
             completed: false,
           },

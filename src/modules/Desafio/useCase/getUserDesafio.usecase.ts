@@ -6,7 +6,7 @@ export class GetUserDesafioUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async getDesafio(userId: string) {
-    const desafio = await this.prisma.participation.findMany({
+    const desafio = await this.prisma.inscription.findMany({
       where: { userId: userId },
       include: {
         desafio: {

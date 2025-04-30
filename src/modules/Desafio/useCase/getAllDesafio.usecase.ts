@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
 
@@ -17,7 +16,7 @@ export class GetAllDesafioUseCase {
       },
     });
 
-    const participacoes = await this.prisma.participation.findMany({
+    const inscriptions = await this.prisma.inscription.findMany({
       where: {
         userId,
       },
@@ -29,16 +28,14 @@ export class GetAllDesafioUseCase {
       },
     });
 
-    const participacoesMap = new Map(
-      participacoes.map((p) => [p.desafioId, p]),
-    );
+    const inscriptionsMap = new Map(inscriptions.map((p) => [p.desafioId, p]));
 
     const desafiosComStatus = desafios.map((desafio) => {
-      const participacao = participacoesMap.get(desafio.id);
+      const inscription = inscriptionsMap.get(desafio.id);
 
       let progressPercentage = 0;
-      if (participacao) {
-        const progressValue = Number(participacao.progress);
+      if (inscription) {
+        const progressValue = Number(inscription.progress);
         const distanceValue = Number(desafio.distance);
 
         progressPercentage =
@@ -49,9 +46,9 @@ export class GetAllDesafioUseCase {
 
       return {
         ...desafio,
-        isRegistered: !!participacao,
-        completed: participacao?.completed || false,
-        completedAt: participacao?.completedAt || null,
+        isRegistered: !!inscription,
+        completed: inscription?.completed || false,
+        completedAt: inscription?.completedAt || null,
         progress: progressPercentage,
       };
     });

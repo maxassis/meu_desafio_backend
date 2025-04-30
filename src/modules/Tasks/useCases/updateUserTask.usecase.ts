@@ -35,7 +35,7 @@ export class UpdateUserTaskUseCase {
         const tasks = await prisma.task.findMany({
           where: {
             usersId: userId,
-            participationId: taskExists.participationId,
+            inscriptionId: taskExists.inscriptionId,
           },
         });
 
@@ -44,9 +44,9 @@ export class UpdateUserTaskUseCase {
           .reduce((acc, task) => acc + parseFloat(task.distanceKm + ''), 0)
           .toFixed(3);
 
-        // Atualiza o progresso da participação com a distância total
-        await prisma.participation.update({
-          where: { id: taskExists.participationId },
+        // Atualiza o progresso da inscrição com a distância total
+        await prisma.inscription.update({
+          where: { id: taskExists.inscriptionId },
           data: { progress: totalDistance },
         });
       }
