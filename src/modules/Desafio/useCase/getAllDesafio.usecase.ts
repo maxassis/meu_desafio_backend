@@ -13,6 +13,7 @@ export class GetAllDesafioUseCase {
         name: true,
         description: true,
         distance: true,
+        photo: true,
       },
     });
 

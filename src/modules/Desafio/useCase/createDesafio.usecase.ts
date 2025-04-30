@@ -7,9 +7,10 @@ export class CreateDesafioUseCase {
 
   async createDesafio(
     name: string,
-    description: string | null | undefined,
+    description: string,
     location: Array<{ latitude: number; longitude: number }>,
     distance: number,
+    photo: string,
   ) {
     const desafioExists = await this.prisma.desafio.findFirst({
       where: {
@@ -27,6 +28,7 @@ export class CreateDesafioUseCase {
         description,
         location: JSON.stringify(location),
         distance,
+        photo,
       },
     });
 
@@ -37,6 +39,6 @@ export class CreateDesafioUseCase {
       );
     }
 
-    return { message: 'Desafio criado com sucesso' };
+    return { message: 'desafio created successfully' };
   }
 }

@@ -34,11 +34,14 @@ export class DesafioController {
   @Post('/create')
   // @UseGuards(AuthGuard)
   async createDesafio(@Body() body: CreateDesafioDTO) {
+    const { location, name, description, distance, photo } = body;
+
     return this.createDesafioUseCase.createDesafio(
-      body.name,
-      body.description,
-      body.location,
-      body.distance,
+      name,
+      description,
+      location,
+      distance,
+      photo,
     );
   }
 

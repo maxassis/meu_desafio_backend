@@ -39,9 +39,10 @@ model UserData {
 model Desafio {
   id          Int           @id @default(autoincrement())
   name        String        @unique
-  description String?
+  description String
   location    String
   distance    Decimal
+  photo       String        @default("")
   inscription Inscription[]
 
   @@map("desafio")

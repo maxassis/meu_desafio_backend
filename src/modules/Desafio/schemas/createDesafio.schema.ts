@@ -13,6 +13,7 @@ const CreateDesafioSchema = z.object({
   description: z.string(),
   location: coordinatesArraySchema,
   distance: z.number(),
+  photo: z.string().url(),
 });
 
 export class CreateDesafioDTO extends createZodDto(CreateDesafioSchema) {}
