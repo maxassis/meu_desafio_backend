@@ -8,6 +8,7 @@ import { ConfirmCodeUseCase } from './useCase/sendmail.confirmCode.usercase';
 import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
 import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
 import { CheckEmailUseCase } from './useCase/checkValidEmail.usecase';
+import { RedisService } from 'src/infra/cache/redis/redis.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CheckEmailUseCase } from './useCase/checkValidEmail.usecase';
     ConfirmCodeUseCase,
     SendMailRecoveryDoneUseCase,
     CheckEmailUseCase,
+    RedisService,
   ],
   exports: [],
 })

@@ -1,22 +1,28 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import Redis from 'ioredis';
-import { RedisService, DEFAULT_REDIS } from '@liaoliaots/nestjs-redis';
+import { RedisService } from '../../../infra/cache/redis/redis.service';
 
 @Injectable()
 export class ConfirmCodeUseCase {
-  private readonly redis: Redis;
-
-  constructor(private readonly redisService: RedisService) {
-    this.redis = this.redisService.getOrThrow();
-  }
+  constructor(private readonly redisService: RedisService) {}
 
   async confirmCode(code: string, email: string) {
-    const codeRedis = await this.redis.get(`code-${email}`);
+    const redisKey = `code-${email}`;
 
-    if (code !== codeRedis) {
-      throw new HttpException('Codigo invalido', HttpStatus.UNAUTHORIZED);
+    const codeRedis = await this.redisService.get(redisKey);
+
+    if (!codeRedis) {
+      throw new HttpException(
+        'Código expirado ou não encontrado',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
-    return { message: `O codigo ${code}, esta correto` };
+    if (code.trim() !== codeRedis.trim()) {
+      throw new HttpException('Código inválido', HttpStatus.UNAUTHORIZED);
+    }
+
+    await this.redisService.del(redisKey);
+
+    return { message: `Código ${code} está correto!` };
   }
 }
