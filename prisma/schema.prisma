@@ -1,5 +1,88 @@
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// model Users {
+//   id          String        @id @default(cuid())
+//   name        String
+//   email       String        @unique
+//   password    String
+//   createdAt   DateTime      @default(now())
+//   UserData    UserData?
+//   Inscription Inscription[]
+//   Task        Task[]
+
+//   @@map("users")
+// }
+
+// model UserData {
+//   id              String   @id @default(cuid())
+//   avatar_url      String?
+//   avatar_filename String?
+//   full_name       String?
+//   bio             String?
+//   gender          String? // homem, mulher, nao_binario, prefiro_nao_responder
+//   sport           String? // corrida, bicicleta
+//   birthDate       String?
+//   createdAt       DateTime @default(now())
+//   user            Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
+//   usersId         String   @unique
+
+//   @@map("userData")
+// }
+
+// model Desafio {
+//   id          Int           @id @default(autoincrement())
+//   name        String        @unique
+//   description String
+//   location    String
+//   distance    Decimal
+//   photo       String        @default("")
+//   inscription Inscription[]
+
+//   @@map("desafio")
+// }
+
+// model Inscription {
+//   id          Int       @id @default(autoincrement())
+//   userId      String
+//   desafioId   Int
+//   progress    Decimal   @default(0)
+//   tasks       Task[]
+//   user        Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   desafio     Desafio   @relation(fields: [desafioId], references: [id], onDelete: Cascade)
+//   completed   Boolean   @default(false) // Campo para rastrear se o desafio foi concluído
+//   completedAt DateTime? // Campo opcional para rastrear quando o desafio foi concluído
+
+//   @@map("inscription")
+// }
+
+// model Task {
+//   id            Int         @id @default(autoincrement())
+//   name          String
+//   environment   String
+//   date          DateTime?
+//   duration      Decimal
+//   calories      Int?
+//   local         String?
+//   distanceKm    Decimal     @default(0)
+//   inscriptionId Int
+//   inscription   Inscription @relation(fields: [inscriptionId], references: [id], onDelete: Cascade)
+//   Users         Users?      @relation(fields: [usersId], references: [id])
+//   usersId       String?
+//   createdAt     DateTime    @default(now())
+//   updatedAt     DateTime    @updatedAt
+
+//   @@map("tasks")
+// }
+
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql" // Alterado para PostgreSQL
   url      = env("DATABASE_URL")
 }
 
@@ -37,7 +120,7 @@ model UserData {
 }
 
 model Desafio {
-  id          Int           @id @default(autoincrement())
+  id          Int           @id @default(autoincrement()) // Compatível com PostgreSQL
   name        String        @unique
   description String
   location    String
@@ -56,8 +139,8 @@ model Inscription {
   tasks       Task[]
   user        Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
   desafio     Desafio   @relation(fields: [desafioId], references: [id], onDelete: Cascade)
-  completed   Boolean   @default(false) // Campo para rastrear se o desafio foi concluído
-  completedAt DateTime? // Campo opcional para rastrear quando o desafio foi concluído
+  completed   Boolean   @default(false)
+  completedAt DateTime?
 
   @@map("inscription")
 }
