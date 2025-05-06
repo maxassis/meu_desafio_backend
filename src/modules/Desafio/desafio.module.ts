@@ -8,6 +8,7 @@ import {
   RegisterUserDesafioUseCase,
   CreateDesafioUseCase,
 } from './useCase';
+import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 
 @Module({
   imports: [],
@@ -19,6 +20,7 @@ import {
     GetUserDesafioUseCase,
     GetDesafioUseCase,
     GetAllDesafioUseCase,
+    Supabase,
   ],
 })
 export class DesafioModule {}

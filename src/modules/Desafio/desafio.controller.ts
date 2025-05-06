@@ -5,7 +5,9 @@ import {
   Param,
   Post,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
@@ -19,6 +21,7 @@ import {
   GetAllDesafioUseCase,
 } from './useCase';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('/desafio/')
 @UsePipes(ZodValidationPipe)
@@ -33,15 +36,20 @@ export class DesafioController {
 
   @Post('/create')
   // @UseGuards(AuthGuard)
-  async createDesafio(@Body() body: CreateDesafioDTO) {
-    const { location, name, description, distance, photo } = body;
+  @UseInterceptors(FileInterceptor('image'))
+  async createDesafio(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: CreateDesafioDTO,
+  ) {
+    const { name, description, location, distance } = body;
+    const parsedLocation = JSON.parse(location);
 
     return this.createDesafioUseCase.createDesafio(
       name,
       description,
-      location,
-      distance,
-      photo,
+      parsedLocation,
+      Number(distance),
+      file,
     );
   }
 

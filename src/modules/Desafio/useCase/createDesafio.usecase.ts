@@ -1,34 +1,104 @@
+// import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+// import { PrismaService } from 'src/infra/database/prisma.service';
+
+// @Injectable()
+// export class CreateDesafioUseCase {
+//   constructor(private readonly prisma: PrismaService) {}
+
+//   async createDesafio(
+//     name: string,
+//     description: string,
+//     location: Array<{ latitude: number; longitude: number }>,
+//     distance: number,
+//   ) {
+//     const desafioExists = await this.prisma.desafio.findFirst({
+//       where: {
+//         name,
+//       },
+//     });
+
+//     if (desafioExists) {
+//       throw new HttpException('Name already exists', HttpStatus.CONFLICT);
+//     }
+
+//     const result = await this.prisma.desafio.create({
+//       data: {
+//         name,
+//         description,
+//         location: JSON.stringify(location),
+//         distance,
+//       },
+//     });
+
+//     if (!result) {
+//       throw new HttpException(
+//         'Error creating desafio',
+//         HttpStatus.INTERNAL_SERVER_ERROR,
+//       );
+//     }
+
+//     return { message: 'desafio created successfully' };
+//   }
+// }
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
+import { randomUUID } from 'crypto';
+import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 
 @Injectable()
 export class CreateDesafioUseCase {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly supabase: Supabase,
+  ) {}
 
   async createDesafio(
     name: string,
     description: string,
     location: Array<{ latitude: number; longitude: number }>,
     distance: number,
-    photo: string,
+    imageFile: Express.Multer.File,
   ) {
     const desafioExists = await this.prisma.desafio.findFirst({
-      where: {
-        name,
-      },
+      where: { name },
     });
 
     if (desafioExists) {
       throw new HttpException('Name already exists', HttpStatus.CONFLICT);
     }
 
+    let imageUrl: string | null = null;
+
+    if (imageFile) {
+      const fileName = `${randomUUID()}-${imageFile.originalname}`;
+      const { error } = await this.supabase.client.storage
+        .from('desafios')
+        .upload(fileName, imageFile.buffer, {
+          contentType: imageFile.mimetype,
+        });
+
+      if (error) {
+        throw new HttpException(
+          'Error uploading image to Supabase',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      const { data: dataUrl } = this.supabase.client.storage
+        .from('desafios')
+        .getPublicUrl(fileName);
+
+      imageUrl = dataUrl.publicUrl;
+    }
+
     const result = await this.prisma.desafio.create({
       data: {
         name,
         description,
-        location: JSON.stringify(location),
+        location: location,
         distance,
-        photo,
+        photo: imageUrl ? imageUrl : undefined,
       },
     });
 
@@ -39,6 +109,6 @@ export class CreateDesafioUseCase {
       );
     }
 
-    return { message: 'desafio created successfully' };
+    return { message: 'Desafio created successfully' };
   }
 }

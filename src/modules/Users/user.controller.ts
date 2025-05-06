@@ -16,7 +16,6 @@ import {
   ChangePasswordDTO,
   CreateUserSchemaDTO,
   RequestSchemaDTO,
-  // DeleteAvatarDTO,
   EditUserDataDTO,
 } from './schemas';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
