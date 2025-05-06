@@ -6,7 +6,6 @@ export class GetAllDesafioUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAllDesafio(userId: string) {
-    // Get all challenges
     const desafios = await this.prisma.desafio.findMany({
       select: {
         id: true,
@@ -18,26 +17,55 @@ export class GetAllDesafioUseCase {
     });
 
     const inscriptions = await this.prisma.inscription.findMany({
-      where: {
-        userId,
-      },
+      where: { userId },
       select: {
         desafioId: true,
         completed: true,
         completedAt: true,
         progress: true,
+        tasks: {
+          select: {
+            distanceKm: true,
+          },
+        },
       },
     });
 
-    const inscriptionsMap = new Map(inscriptions.map((p) => [p.desafioId, p]));
+    // Cria um Map com soma de distanceKm para cada desafio
+    const inscriptionsMap = new Map<
+      number,
+      {
+        completed: boolean;
+        completedAt: Date | null;
+        progress: number;
+        totalDistanceKm: number;
+      }
+    >();
+
+    for (const inscription of inscriptions) {
+      const totalDistanceKm = inscription.tasks.reduce(
+        (sum, task) => sum + Number(task.distanceKm || 0),
+        0,
+      );
+
+      inscriptionsMap.set(inscription.desafioId, {
+        completed: inscription.completed,
+        completedAt: inscription.completedAt,
+        progress: Number(inscription.progress),
+        totalDistanceKm,
+      });
+    }
 
     const desafiosComStatus = desafios.map((desafio) => {
       const inscription = inscriptionsMap.get(desafio.id);
 
       let progressPercentage = 0;
+      let totalDistanceKm = 0;
+
       if (inscription) {
-        const progressValue = Number(inscription.progress);
+        const progressValue = inscription.progress;
         const distanceValue = Number(desafio.distance);
+        totalDistanceKm = inscription.totalDistanceKm;
 
         progressPercentage =
           distanceValue > 0
@@ -51,6 +79,7 @@ export class GetAllDesafioUseCase {
         completed: inscription?.completed || false,
         completedAt: inscription?.completedAt || null,
         progress: progressPercentage,
+        totalDistanceKm,
       };
     });
 

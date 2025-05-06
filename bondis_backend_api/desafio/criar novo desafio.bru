@@ -6,7 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/desafio/create
-  body: json
+  body: multipartForm
   auth: bearer
 }
 
@@ -16,18 +16,18 @@ auth:bearer {
 
 body:json {
   {
-    "name" : "teste",
+    "name": "teste",
     "description": "teste",
     "location": [
-    {
-      "latitude": -22.88316,
-      "longitude": -42.01437
-    },
-    {
-      "latitude": -22.88326,
-      "longitude": -42.01454
-    }
-  ],
+      {
+        "latitude": -22.88316,
+        "longitude": -42.01437
+      },
+      {
+        "latitude": -22.88326,
+        "longitude": -42.01454
+      }
+    ],
     "distance": 1599,
   }
 }
