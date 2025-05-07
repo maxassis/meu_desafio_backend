@@ -5,9 +5,10 @@ import {
   Param,
   Post,
   Request,
-  UploadedFile,
+  // UploadedFile,
   UseGuards,
   UseInterceptors,
+  // UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
@@ -21,7 +22,18 @@ import {
   GetAllDesafioUseCase,
 } from './useCase';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FastifyRequest } from 'fastify';
+import { FileFastifyInterceptor } from 'fastify-file-interceptor';
+
+// Define interface for Express.Multer.File compatibility
+interface MulterLikeFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
+}
 
 @Controller('/desafio/')
 @UsePipes(ZodValidationPipe)
@@ -36,13 +48,16 @@ export class DesafioController {
 
   @Post('/create')
   // @UseGuards(AuthGuard)
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileFastifyInterceptor('image'))
   async createDesafio(
-    @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateDesafioDTO,
+    @Request() req: FastifyRequest,
   ) {
     const { name, description, location, distance } = body;
     const parsedLocation = JSON.parse(location);
+
+    // Get the file from the request
+    const file = req.file as unknown as MulterLikeFile;
 
     return this.createDesafioUseCase.createDesafio(
       name,
@@ -53,7 +68,7 @@ export class DesafioController {
     );
   }
 
-  @Post('/registerUserDesafio/:id')
+  @Post('/register-user-desafio/:id')
   @UseGuards(AuthGuard)
   async registerDesafio(
     @Param('id') idDesafio: string,
@@ -62,19 +77,19 @@ export class DesafioController {
     return this.registerUserDesafio.registerUserDesafio(idDesafio, req.user.id);
   }
 
-  @Get('/getUserDesafio')
+  @Get('/get-user-desafio')
   @UseGuards(AuthGuard)
   async getDesafio(@Request() req: RequestSchemaDTO) {
     return this.getUserDesafio.getDesafio(req.user.id);
   }
 
-  @Get('/getAllDesafio')
+  @Get('/get-all-desafio')
   @UseGuards(AuthGuard)
   async getAllDesafio(@Request() req: RequestSchemaDTO) {
     return this.getAllDesafioUseCase.getAllDesafio(req.user.id);
   }
 
-  @Get('/getDesafio/:id')
+  @Get('/get-desafio/:id')
   @UseGuards(AuthGuard)
   async getDesafioById(@Param('id') idDesafio: string) {
     return this.desafio.getDesafio(idDesafio);

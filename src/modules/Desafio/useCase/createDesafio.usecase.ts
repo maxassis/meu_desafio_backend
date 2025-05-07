@@ -3,6 +3,15 @@ import { PrismaService } from 'src/infra/database/prisma.service';
 import { randomUUID } from 'crypto';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 
+interface MulterLikeFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
+}
+
 @Injectable()
 export class CreateDesafioUseCase {
   constructor(
@@ -15,7 +24,7 @@ export class CreateDesafioUseCase {
     description: string,
     location: Array<{ latitude: number; longitude: number }>,
     distance: number,
-    imageFile: Express.Multer.File,
+    imageFile: MulterLikeFile,
   ) {
     const desafioExists = await this.prisma.desafio.findFirst({
       where: { name },

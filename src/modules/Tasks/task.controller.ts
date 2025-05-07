@@ -37,30 +37,30 @@ export class TaskController {
     return this.createTaskUseCase.createTask(body, req.user.id);
   }
 
-  @Get('/get-tasks/:inscriptionId')
+  @Get('/get-tasks/:inscriptionid')
   @UseGuards(AuthGuard)
   async getTasks(
     @Request() req: RequestSchemaDTO,
-    @Param() { inscriptionId }: { inscriptionId: string },
+    @Param('inscriptionid') inscriptionid: string,
   ) {
-    return this.getUserTaskUseCase.getTask(req.user.id, +inscriptionId);
+    return this.getUserTaskUseCase.getTask(req.user.id, +inscriptionid);
   }
 
-  @Delete('/delete-task/:taskId')
+  @Delete('/delete-task/:taskid')
   @UseGuards(AuthGuard)
   async deleteTask(
     @Request() req: RequestSchemaDTO,
-    @Param() { taskId }: { taskId: string },
+    @Param('taskid') taskId: string,
   ) {
     return this.deleteTaskUseCase.deleteTask(req.user.id, +taskId);
   }
 
-  @Patch('/update-task/:taskId')
+  @Patch('/update-task/:taskid')
   @UseGuards(AuthGuard)
   async updateTask(
     @Request() req: RequestSchemaDTO,
     @Body() body: UpdateTaskDTO,
-    @Param() { taskId }: { taskId: string },
+    @Param('taskid') taskId: string,
   ) {
     return this.updateTaskUseCase.updateTask(req.user.id, body, +taskId);
   }
