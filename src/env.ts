@@ -4,6 +4,7 @@ export const envSchema = z.object({
   NODE_ENV: z.enum(['dev', 'test', 'production']).default('dev'),
   REDIS_PORT: z.coerce.number().default(6379),
   REDIS_HOST: z.string().default('127.0.0.1'),
+  REDIS_URL: z.string().url(),
   SUPABASE_URL: z.string().url(),
   SUPABASE_KEY: z.string(),
   SUPABASE_BUCKET: z.string(),

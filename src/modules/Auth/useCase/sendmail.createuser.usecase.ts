@@ -18,9 +18,6 @@ export class SendMailUseCase {
     try {
       await this.redisService.set(`code-${email}`, code, 'EX', 300);
 
-      const savedCode = await this.redisService.get(`code-${email}`);
-      console.log(`[Redis] Código salvo para ${email}: ${savedCode}`);
-
       await this.mailerService.sendMail({
         to: email,
         from: 'bondis@meudesafio.com',
