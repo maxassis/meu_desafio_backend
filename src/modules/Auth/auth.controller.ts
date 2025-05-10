@@ -36,7 +36,7 @@ export class LoginController {
   }
 
   // CHECK EMAIL
-  @Post('/checkEmail')
+  @Post('/check-email')
   async checkEmail(@Body() data: CheckEmailDTO) {
     const { email } = data;
 
@@ -44,20 +44,20 @@ export class LoginController {
   }
 
   // ROTAS DE EMAIL
-  @Post('/sendMail')
+  @Post('/send-email')
   async getCode(@Body() data: SendMailCreateUserDTO) {
     const { name, email } = data;
 
     return await this.sendMailCreateUseCase.sendMail(name, email);
   }
 
-  @Post('/confirmCode')
+  @Post('/confirm-code')
   async confirmCode(@Body() data: ConfirmCodeDTO) {
     const { code, email } = data;
     return await this.confirmCodeUseCase.confirmCode(code, email);
   }
 
-  @Post('/sendMailRecovery')
+  @Post('/send-mail-recovery')
   async RecoveryMail(@Body() data: SendMailRecoveryDTO) {
     const { email } = data;
     return await this.sendMailRecoveryUseCase.sendMailRecovery(email);

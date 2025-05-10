@@ -6,21 +6,21 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   Request,
-  UploadedFile,
+  // UploadedFile,
   UseGuards,
-  UseInterceptors,
+  // UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import {
   ChangePasswordDTO,
   CreateUserSchemaDTO,
   RequestSchemaDTO,
-  // DeleteAvatarDTO,
   EditUserDataDTO,
 } from './schemas';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
-import { FileInterceptor } from '@nestjs/platform-express';
+// import { FileInterceptor } from '@nestjs/platform-express';
 import {
   DeleteAvatarUseCase,
   CreateUserUseCase,
@@ -31,6 +31,15 @@ import {
   GetRankingUseCase,
 } from './useCases';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { FastifyRequest } from 'fastify';
+
+interface AuthenticatedFastifyRequest extends FastifyRequest {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}
 
 @Controller('/users')
 @UsePipes(ZodValidationPipe)
@@ -54,41 +63,40 @@ export class UserController {
     return dt;
   }
 
-  @Patch('/changePassword')
+  @Patch('/change-password')
   async changePassword(@Body() data: ChangePasswordDTO) {
     const { new_password, email } = data;
     return this.changePasswordUseCase.changePassword(email, new_password);
   }
 
-  @Get('/getRanking/:desafioId')
+  @Get('/get-ranking/:desafioid')
   @UseGuards(AuthGuard)
-  async getRanking(@Param('desafioId') idDesafio: string) {
+  async getRanking(@Param('desafioid') idDesafio: string) {
     return this.getRankingUseCase.getRanking(idDesafio);
   }
 
-  @Get('/getUserData')
+  @Get('/get-user-data')
   @UseGuards(AuthGuard)
   async getUserData(@Request() req: RequestSchemaDTO) {
     return this.getUserDataUseCase.getUserData(req.user.id, req.user.name);
   }
 
-  @Post('/uploadAvatar')
+  @Post('/upload-avatar')
   @UseGuards(AuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadAvatar(
-    @Request() req: RequestSchemaDTO,
-    @UploadedFile() file: Express.Multer.File,
-  ): Promise<any> {
-    return this.uploadAvatarUseCase.uploadAvatar(req.user.id, file);
+  async uploadAvatar(@Req() req: AuthenticatedFastifyRequest): Promise<any> {
+    const parts = req.parts();
+    const file = await parts.next();
+
+    return this.uploadAvatarUseCase.uploadAvatar(req.user.id, file.value);
   }
 
-  @Delete('/deleteAvatar')
+  @Delete('/delete-avatar')
   @UseGuards(AuthGuard)
   async deleteAvatar(@Request() req: RequestSchemaDTO) {
     return this.deleteAvatarUseCase.deleteAvatar(req.user.id);
   }
 
-  @Patch('/editUserData')
+  @Patch('/edit-userdata')
   @UseGuards(AuthGuard)
   async editAvatar(
     @Request() req: RequestSchemaDTO,
