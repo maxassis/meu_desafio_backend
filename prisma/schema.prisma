@@ -1,6 +1,7 @@
 datasource db {
-  provider = "postgresql" 
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -44,7 +45,7 @@ model Desafio {
   distance    Decimal       @db.Decimal(10, 5)
   photo       String        @default("")
   inscription Inscription[]
-
+   
   @@map("desafio")
 }
 

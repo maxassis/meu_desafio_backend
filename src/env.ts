@@ -10,6 +10,7 @@ export const envSchema = z.object({
   SUPABASE_BUCKET: z.string(),
   JWT_SECRET: z.string(),
   DATABASE_URL: z.string().url(),
+  DIRECT_URL: z.string().url(),
 
   PORT: z.coerce.number().optional().default(3000),
   // TURSO_AUTH_TOKEN: z.string(),
