@@ -8,8 +8,10 @@ import {
   Post,
   Req,
   Request,
+  UploadedFile,
   // UploadedFile,
   UseGuards,
+  UseInterceptors,
   // UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -32,6 +34,7 @@ import {
 } from './useCases';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { FastifyRequest } from 'fastify';
+import { FileFastifyInterceptor } from 'fastify-file-interceptor';
 
 interface AuthenticatedFastifyRequest extends FastifyRequest {
   user: {
@@ -39,6 +42,15 @@ interface AuthenticatedFastifyRequest extends FastifyRequest {
     email: string;
     name: string;
   };
+}
+
+interface FastifyFileInterceptorFile {
+  fieldname: string;
+  filename: string;
+  encoding: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
 }
 
 @Controller('/users')
@@ -81,13 +93,29 @@ export class UserController {
     return this.getUserDataUseCase.getUserData(req.user.id, req.user.name);
   }
 
+  // @Post('/upload-avatar')
+  // @UseGuards(AuthGuard)
+  // async uploadAvatar(@Req() req: AuthenticatedFastifyRequest): Promise<any> {
+  //   const parts = req.parts();
+  //   const file = await parts.next();
+
+  //   return this.uploadAvatarUseCase.uploadAvatar(req.user.id, file.value);
+  // }
+
   @Post('/upload-avatar')
   @UseGuards(AuthGuard)
-  async uploadAvatar(@Req() req: AuthenticatedFastifyRequest): Promise<any> {
-    const parts = req.parts();
-    const file = await parts.next();
-
-    return this.uploadAvatarUseCase.uploadAvatar(req.user.id, file.value);
+  @UseInterceptors(
+    FileFastifyInterceptor('file', {
+      limits: {
+        fileSize: 5 * 1024 * 1024, // Limite de 5MB
+      },
+    }),
+  )
+  async uploadAvatar(
+    @Req() req: AuthenticatedFastifyRequest,
+    @UploadedFile() file: FastifyFileInterceptorFile,
+  ): Promise<any> {
+    return this.uploadAvatarUseCase.uploadAvatar(req.user.id, file as any);
   }
 
   @Delete('/delete-avatar')

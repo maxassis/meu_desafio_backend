@@ -4,6 +4,16 @@ import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 import { ConfigService } from '@nestjs/config';
 import { Env } from 'src/env';
 
+// Definindo a interface para o arquivo do Fastify
+interface FastifyFileInterceptorFile {
+  fieldname: string;
+  filename: string;
+  encoding: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
+}
+
 @Injectable()
 export class UploadAvatarUseCase {
   constructor(
@@ -12,7 +22,17 @@ export class UploadAvatarUseCase {
     private configService: ConfigService<Env, true>,
   ) {}
 
-  async uploadAvatar(id: string, file: Express.Multer.File): Promise<any> {
+  async uploadAvatar(
+    id: string,
+    file: FastifyFileInterceptorFile,
+  ): Promise<any> {
+    if (!file || !file.mimetype) {
+      throw new HttpException(
+        'Nenhum arquivo fornecido ou formato inválido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (!file.mimetype.startsWith('image/')) {
       throw new HttpException(
         'O arquivo enviado não é uma imagem.',
@@ -41,7 +61,15 @@ export class UploadAvatarUseCase {
       }
     }
 
-    const newFileName = `${id}-${Date.now()}`;
+    let fileExtension = '';
+    if (file.filename) {
+      fileExtension = file.filename.split('.').pop() || '';
+    } else if (file.mimetype) {
+      fileExtension = file.mimetype.split('/').pop() || '';
+    }
+
+    const newFileName = `${id}-${Date.now()}${fileExtension ? '.' + fileExtension : ''}`;
+
     const fileUpload = await this.supabase.client.storage
       .from('avatars')
       .upload(newFileName, file.buffer, {
@@ -56,14 +84,17 @@ export class UploadAvatarUseCase {
       );
     }
 
-    // Atualize o banco de dados com o novo avatar dentro da transação
-    const SUPABASE_URL = this.configService.get('SUPABASE_URL', {
-      infer: true,
-    });
+    // Gerar a URL pública corretamente com base no path real
+    const { data: publicUrlData } = this.supabase.client.storage
+      .from('avatars')
+      .getPublicUrl(fileUpload.data.path);
+
+    const publicUrl = publicUrlData.publicUrl;
+
     const updatedUser = await this.prisma.userData.update({
       where: { usersId: id },
       data: {
-        avatar_url: `${SUPABASE_URL}/storage/v1/object/public/avatars/${fileUpload.data.path}`,
+        avatar_url: publicUrl,
         avatar_filename: fileUpload.data.path,
       },
     });
