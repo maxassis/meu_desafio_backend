@@ -1,10 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
-import { ConfigService } from '@nestjs/config';
-import { Env } from 'src/env';
 
-// Definindo a interface para o arquivo do Fastify
 interface FastifyFileInterceptorFile {
   fieldname: string;
   filename: string;
@@ -19,7 +16,6 @@ export class UploadAvatarUseCase {
   constructor(
     private readonly supabase: Supabase,
     private readonly prisma: PrismaService,
-    private configService: ConfigService<Env, true>,
   ) {}
 
   async uploadAvatar(
@@ -84,7 +80,6 @@ export class UploadAvatarUseCase {
       );
     }
 
-    // Gerar a URL pública corretamente com base no path real
     const { data: publicUrlData } = this.supabase.client.storage
       .from('avatars')
       .getPublicUrl(fileUpload.data.path);

@@ -93,21 +93,12 @@ export class UserController {
     return this.getUserDataUseCase.getUserData(req.user.id, req.user.name);
   }
 
-  // @Post('/upload-avatar')
-  // @UseGuards(AuthGuard)
-  // async uploadAvatar(@Req() req: AuthenticatedFastifyRequest): Promise<any> {
-  //   const parts = req.parts();
-  //   const file = await parts.next();
-
-  //   return this.uploadAvatarUseCase.uploadAvatar(req.user.id, file.value);
-  // }
-
   @Post('/upload-avatar')
   @UseGuards(AuthGuard)
   @UseInterceptors(
     FileFastifyInterceptor('file', {
       limits: {
-        fileSize: 5 * 1024 * 1024, // Limite de 5MB
+        fileSize: 1 * 1024 * 1024,
       },
     }),
   )
