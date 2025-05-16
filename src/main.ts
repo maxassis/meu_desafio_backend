@@ -27,6 +27,8 @@ async function bootstrap() {
   const configService: ConfigService<Env, true> = app.get(ConfigService);
   const port = configService.get('PORT', { infer: true });
 
+  console.log(new Date().toISOString());
+
   await app.listen(port, '0.0.0.0');
 }
 bootstrap();

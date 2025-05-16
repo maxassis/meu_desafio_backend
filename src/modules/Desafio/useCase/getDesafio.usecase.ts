@@ -34,13 +34,16 @@ export class GetDesafioUseCase {
             },
             _count: {
               select: {
-                tasks: true, // totalTasks
+                tasks: true,
               },
             },
             tasks: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
               select: {
-                calories: true,
-                distanceKm: true,
+                createdAt: true,
               },
             },
           },
@@ -53,21 +56,15 @@ export class GetDesafioUseCase {
     }
 
     const inscriptionsWithStats = desafio.inscription.map((inscription) => {
-      const totalCalories = inscription.tasks.reduce(
-        (sum, task) => sum + (task.calories ?? 0),
-        0,
-      );
-      const totalDistanceKm = inscription.tasks.reduce(
-        (sum, task) => sum + task.distanceKm.toNumber(),
-        0,
-      );
+      const lastTaskDate = inscription.tasks[0]?.createdAt ?? null;
 
       return {
         user: inscription.user,
         progress: inscription.progress,
         totalTasks: inscription._count.tasks,
-        totalCalories,
-        totalDistanceKm,
+        totalCalories: 0, // se quiser manter os totais, terá que buscar todas as tasks
+        totalDistanceKm: 0,
+        lastTaskDate,
       };
     });
 
