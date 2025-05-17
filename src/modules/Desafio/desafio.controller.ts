@@ -56,7 +56,6 @@ export class DesafioController {
     const { name, description, location, distance } = body;
     const parsedLocation = JSON.parse(location);
 
-    // Get the file from the request
     const file = req.file as unknown as MulterLikeFile;
 
     return this.createDesafioUseCase.createDesafio(

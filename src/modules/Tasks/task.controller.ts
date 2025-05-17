@@ -10,11 +10,12 @@ import {
   Patch,
   UsePipes,
 } from '@nestjs/common';
-import { CreateTaskDTO, UpdateTaskDTO } from './schemas';
+import { CheckCompletionDTO, CreateTaskDTO, UpdateTaskDTO } from './schemas';
 import {
   CreateTaskUseCase,
   DeleteUserTaskUseCase,
   GetUserTaskUseCase,
+  CheckCompletionUseCase,
 } from './useCases';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { RequestSchemaDTO } from '../Users/schemas';
@@ -29,6 +30,7 @@ export class TaskController {
     private readonly getUserTaskUseCase: GetUserTaskUseCase,
     private readonly deleteTaskUseCase: DeleteUserTaskUseCase,
     private readonly updateTaskUseCase: UpdateUserTaskUseCase,
+    private readonly checkCompletionUseCase: CheckCompletionUseCase,
   ) {}
 
   @Post('/create')
@@ -63,5 +65,18 @@ export class TaskController {
     @Param('taskid') taskId: string,
   ) {
     return this.updateTaskUseCase.updateTask(req.user.id, body, +taskId);
+  }
+
+  @Post('/check-completion')
+  @UseGuards(AuthGuard)
+  async checkCompletion(
+    @Body() body: CheckCompletionDTO,
+    @Request() req: RequestSchemaDTO,
+  ) {
+    return this.checkCompletionUseCase.checkCompletion(
+      req.user.id,
+      body.inscriptionId,
+      body.distance,
+    );
   }
 }
