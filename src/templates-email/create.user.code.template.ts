@@ -125,7 +125,7 @@ export function CreateUserTemplate(name, code) {
   <body>
     <div class="mail-container">
       <div class="mail-logo-wrapper">
-        <img src="https://iijythvtsrfruihwseua.supabase.co/storage/v1/object/public/Meu%20desafio/logo.png?t=2024-05-26T23%3A20%3A25.568Z" />
+        <img src="https://yvievpygnysrufdcakbz.supabase.co/storage/v1/object/public/emails//logoEmail.png" />
       </div>
   
       <h3 class="mail-name">Ola, ${name},</h3>
@@ -150,7 +150,7 @@ export function CreateUserTemplate(name, code) {
   
       <span class="mail-text-6">Siga-nos nossa rede:</span>
   
-      <img class="mail-instagram" src="https://iijythvtsrfruihwseua.supabase.co/storage/v1/object/public/Meu%20desafio/insta.png" />
+      <img class="mail-instagram" src="https://yvievpygnysrufdcakbz.supabase.co/storage/v1/object/public/emails//insta.png" />
   
       <div class="mail-social-wrapper">
         <a target="_blank" class="mail-link" href="https://www.meudesafio.com.br/">

@@ -6,6 +6,23 @@ meta {
 
 post {
   url: {{baseUrl}}/tasks/check-completion
-  body: none
-  auth: inherit
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
+}
+
+body:json {
+  {
+    "name": "teste",
+    "environment": "livre",
+    "date": "2025-05-16T22:10:45.848Z",
+    "duration": 6,
+    "calories": 33,
+    "distance": 32,
+    "local": "rio",
+    "inscriptionId": 3
+  }
 }
