@@ -23,6 +23,7 @@ const UpdateTaskSchema = z.object({
   calories: z.number().optional(),
   distanceKm: z.number(),
   local: z.string().optional(),
+  gpsTask: z.boolean().optional(),
 });
 
 export class UpdateTaskDTO extends createZodDto(UpdateTaskSchema) {}

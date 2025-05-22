@@ -14,6 +14,7 @@ const CreateTaskSchema = z.object({
   distance: z.number({ message: 'distance Required' }),
   local: z.string().optional(),
   inscriptionId: z.number({ message: 'inscriptionId Required' }),
+  gpsTask: z.boolean().optional(),
 });
 
 export class CreateTaskDTO extends createZodDto(CreateTaskSchema) {}

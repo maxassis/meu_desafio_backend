@@ -44,6 +44,7 @@ export class CreateTaskUseCase {
             distanceKm: body.distance,
             inscriptionId: body.inscriptionId,
             usersId: id,
+            gpsTask: body.gpsTask,
           },
         });
 

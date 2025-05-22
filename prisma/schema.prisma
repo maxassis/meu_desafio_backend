@@ -8,6 +8,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Gender {
+  homem
+  mulher
+  nao_binario
+  prefiro_nao_responder
+}
+
+enum Sport {
+  corrida
+  bicicleta
+}
+
 model Users {
   id          String        @id @default(cuid())
   name        String
@@ -27,8 +39,8 @@ model UserData {
   avatar_filename String?
   full_name       String?
   bio             String?
-  gender          String? // homem, mulher, nao_binario, prefiro_nao_responder
-  sport           String? // corrida, bicicleta
+  gender          Gender?
+  sport           Sport?
   birthDate       String?
   createdAt       DateTime @default(now())
   user            Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
@@ -41,11 +53,11 @@ model Desafio {
   id          Int           @id @default(autoincrement())
   name        String        @unique
   description String
-  location    Json 
+  location    Json
   distance    Decimal       @db.Decimal(10, 5)
   photo       String        @default("")
   inscription Inscription[]
-   
+
   @@map("desafio")
 }
 
@@ -78,6 +90,7 @@ model Task {
   usersId       String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  gpsTask       Boolean?    @default(false)
 
   @@map("tasks")
 }
