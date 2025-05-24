@@ -11,10 +11,11 @@ export class GetUserDesafioUseCase {
       include: {
         desafio: {
           select: {
-            id: true,
+            // id: true,
             name: true,
             description: true,
             distance: true,
+            photo: true,
           },
         },
       },
