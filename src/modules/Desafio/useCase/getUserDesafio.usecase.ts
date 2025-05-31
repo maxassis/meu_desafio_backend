@@ -6,12 +6,11 @@ export class GetUserDesafioUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async getDesafio(userId: string) {
-    const desafio = await this.prisma.inscription.findMany({
+    const inscricoes = await this.prisma.inscription.findMany({
       where: { userId: userId },
       include: {
         desafio: {
           select: {
-            // id: true,
             name: true,
             description: true,
             distance: true,
@@ -21,6 +20,12 @@ export class GetUserDesafioUseCase {
       },
     });
 
-    return desafio;
+    const desafios = inscricoes.map((inscricao) => ({
+      ...inscricao.desafio,
+      isRegistered: true,
+      completed: inscricao.completed,
+    }));
+
+    return desafios;
   }
 }

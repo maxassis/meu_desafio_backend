@@ -9,7 +9,8 @@ const CreateTaskSchema = z.object({
   }),
   duration: z
     .number({ message: 'duration Required' })
-    .positive({ message: 'duration must be greater than zero' }),
+    .positive({ message: 'duration must be greater than zero' })
+    .default(0),
   calories: z.number().optional(),
   distance: z.number({ message: 'distance Required' }),
   local: z.string().optional(),
