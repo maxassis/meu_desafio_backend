@@ -111,6 +111,13 @@ export class CreateTaskUseCase {
 
         // Invalida o cache relacionado ao desafio para garantir que dados atualizados sejam carregados na próxima consulta
         await this.redisService.del(`desafio:${desafio.id}`);
+        await this.redisService.del(`user:${userInscription.userId}:desafios`);
+        await this.redisService.del(
+          `user:${userInscription.userId}:my-desafios`,
+        );
+        await this.redisService.del(
+          `user:${userInscription.userId}:inscription:${userInscription.id}:tasks`,
+        );
 
         // Retorna a resposta dentro da transação
         return {

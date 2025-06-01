@@ -11,6 +11,7 @@ import {
   GetUserDataUseCase,
   ChangePasswordUseCase,
 } from './useCases';
+import { RedisService } from 'src/infra/cache/redis/redis.service';
 
 @Module({
   imports: [],
@@ -25,6 +26,7 @@ import {
     DeleteAvatarUseCase,
     EditUserDataUseCase,
     GetRankingUseCase,
+    RedisService,
   ],
 })
 export class UserModule {}

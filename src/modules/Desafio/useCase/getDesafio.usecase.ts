@@ -15,7 +15,6 @@ export class GetDesafioUseCase {
     // Tenta obter do cache
     const cachedDesafio = await this.redisService.get(cacheKey);
     if (cachedDesafio) {
-      console.log('Desafio obtido do cache');
       return JSON.parse(cachedDesafio);
     }
 
@@ -78,8 +77,8 @@ export class GetDesafioUseCase {
     };
 
     // Define no cache com TTL de 5 minutos (300 segundos)
-    await this.redisService.set(cacheKey, JSON.stringify(result), 'EX', 300);
-    // await this.redisService.set(cacheKey, JSON.stringify(result), 'EX', 900) // 15 min
+    // await this.redisService.set(cacheKey, JSON.stringify(result), 'EX', 300);
+    await this.redisService.set(cacheKey, JSON.stringify(result), 'EX', 900); // 15 min
 
     return result;
   }
