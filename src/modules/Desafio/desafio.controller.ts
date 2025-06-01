@@ -5,10 +5,8 @@ import {
   Param,
   Post,
   Request,
-  // UploadedFile,
   UseGuards,
   UseInterceptors,
-  // UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';

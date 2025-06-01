@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
-import { UpdateTaskDTO } from '../schemas'; // Supondo que este é o DTO correto para a operação de atualização
+import { RedisService } from '../../../infra/cache/redis/redis.service';
+import { UpdateTaskDTO } from '../schemas'; // Supondo que este é o DTO correto
 
 @Injectable()
 export class UpdateUserTaskUseCase {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redisService: RedisService,
+  ) {}
 
   async updateTask(userId: string, body: UpdateTaskDTO, taskId: number) {
     // Verifica se a tarefa existe e pertence ao usuário
@@ -30,6 +34,8 @@ export class UpdateUserTaskUseCase {
         },
       });
 
+      let progressUpdated = false;
+
       // Verifica se a distância foi alterada
       if (+taskExists.distanceKm !== body.distanceKm) {
         const tasks = await prisma.task.findMany({
@@ -49,9 +55,31 @@ export class UpdateUserTaskUseCase {
           where: { id: taskExists.inscriptionId },
           data: { progress: totalDistance },
         });
+
+        progressUpdated = true;
       }
 
-      return updatedTask;
+      // Busca o desafio relacionado à inscrição
+      const desafio = await prisma.desafio.findFirst({
+        where: {
+          inscription: {
+            some: {
+              id: taskExists.inscriptionId,
+            },
+          },
+        },
+      });
+
+      if (desafio) {
+        await this.redisService.del(`desafio:${desafio.id}`);
+      }
+
+      return {
+        message: 'Tarefa atualizada com sucesso',
+        updatedTask,
+        cacheInvalidated: !!desafio,
+        progressUpdated,
+      };
     });
   }
 }
