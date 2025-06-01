@@ -69,7 +69,7 @@ export class DeleteUserTaskUseCase {
         await this.redisService.del(`desafio:${desafio.id}`);
         await this.redisService.del(`user:${userId}:desafios`);
         await this.redisService.del(`user:${userId}:my-desafios`);
-         await this.redisService.del(
+        await this.redisService.del(
           `user:${userId}:inscription:${task.inscriptionId}:tasks`,
         );
       }
