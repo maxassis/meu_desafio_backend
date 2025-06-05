@@ -15,7 +15,7 @@ import { RedisService } from 'src/infra/cache/redis/redis.service';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '90d' },
+      signOptions: { expiresIn: '45d' },
     }),
   ],
   controllers: [LoginController],
