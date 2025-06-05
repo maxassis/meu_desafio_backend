@@ -9,6 +9,7 @@ import {
   CreateDesafioUseCase,
 } from './useCase';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
+import { RedisService } from 'src/infra/cache/redis/redis.service';
 
 @Module({
   imports: [],
@@ -21,6 +22,7 @@ import { Supabase } from 'src/infra/providers/storage/storage-supabase';
     GetDesafioUseCase,
     GetAllDesafioUseCase,
     Supabase,
+    RedisService,
   ],
 })
 export class DesafioModule {}

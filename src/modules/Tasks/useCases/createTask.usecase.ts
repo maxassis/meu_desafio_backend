@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { CreateTaskDTO } from '../schemas';
+import { RedisService } from '../../../infra/cache/redis/redis.service';
 
 @Injectable()
 export class CreateTaskUseCase {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redisService: RedisService,
+  ) {}
   async createTask(body: CreateTaskDTO, id: string) {
     try {
       // Verificar se o usuário está cadastrado no desafio
@@ -104,6 +108,16 @@ export class CreateTaskUseCase {
             completedAt: isCompleted ? new Date() : null,
           },
         });
+
+        // Invalida o cache relacionado ao desafio para garantir que dados atualizados sejam carregados na próxima consulta
+        await this.redisService.del(`desafio:${desafio.id}`);
+        await this.redisService.del(`user:${userInscription.userId}:desafios`);
+        await this.redisService.del(
+          `user:${userInscription.userId}:my-desafios`,
+        );
+        await this.redisService.del(
+          `user:${userInscription.userId}:inscription:${userInscription.id}:tasks`,
+        );
 
         // Retorna a resposta dentro da transação
         return {

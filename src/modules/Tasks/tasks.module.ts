@@ -8,6 +8,7 @@ import {
   GetUserTaskUseCase,
 } from './useCases';
 import { UpdateUserTaskUseCase } from './useCases/updateUserTask.usecase';
+import { RedisService } from 'src/infra/cache/redis/redis.service';
 
 @Module({
   imports: [],
@@ -19,6 +20,7 @@ import { UpdateUserTaskUseCase } from './useCases/updateUserTask.usecase';
     DeleteUserTaskUseCase,
     UpdateUserTaskUseCase,
     CheckCompletionUseCase,
+    RedisService,
   ],
 })
 export class TasksModule {}
