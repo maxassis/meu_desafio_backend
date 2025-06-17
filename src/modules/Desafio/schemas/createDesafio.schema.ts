@@ -10,7 +10,6 @@ import { z } from 'zod';
 
 const CreateDesafioSchema = z.object({
   name: z.string(),
-  description: z.string(),
   location: z.string(),
   distance: z.string(),
 });

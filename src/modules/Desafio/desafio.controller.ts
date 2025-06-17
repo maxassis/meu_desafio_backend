@@ -18,6 +18,7 @@ import {
   GetUserDesafioUseCase,
   GetDesafioUseCase,
   GetAllDesafioUseCase,
+  GetPurchaseDataUseCase
 } from './useCase';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { FastifyRequest } from 'fastify';
@@ -42,6 +43,7 @@ export class DesafioController {
     private readonly getUserDesafio: GetUserDesafioUseCase,
     private readonly desafio: GetDesafioUseCase,
     private readonly getAllDesafioUseCase: GetAllDesafioUseCase,
+    private readonly getPurchaseDataUseCase: GetPurchaseDataUseCase
   ) {}
 
   @Post('/create')
@@ -51,14 +53,13 @@ export class DesafioController {
     @Body() body: CreateDesafioDTO,
     @Request() req: FastifyRequest,
   ) {
-    const { name, description, location, distance } = body;
+    const { name, location, distance } = body;
     const parsedLocation = JSON.parse(location);
 
     const file = req.file as unknown as MulterLikeFile;
 
     return this.createDesafioUseCase.createDesafio(
       name,
-      description,
       parsedLocation,
       Number(distance),
       file,
@@ -90,5 +91,11 @@ export class DesafioController {
   @UseGuards(AuthGuard)
   async getDesafioById(@Param('id') idDesafio: string) {
     return this.desafio.getDesafio(idDesafio);
+  }
+
+  @Get('purchase-data/:id')
+  @UseGuards(AuthGuard)
+  async getPurchaseData(@Param('id') idDesafio: string) {
+    return this.getPurchaseDataUseCase.getPurchaseData(idDesafio);
   }
 }

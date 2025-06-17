@@ -134,7 +134,6 @@ export class GetAllDesafioUseCase {
       select: {
         id: true,
         name: true,
-        description: true,
         distance: true,
         photo: true,
       },

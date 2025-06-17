@@ -50,13 +50,13 @@ model UserData {
 }
 
 model Desafio {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  description String
-  location    Json
-  distance    Decimal       @db.Decimal(10, 5)
-  photo       String        @default("")
-  inscription Inscription[]
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  location     Json
+  distance     Decimal       @db.Decimal(10, 5)
+  photo        String        @default("")
+  inscription  Inscription[]
+  purchaseData Json @default("{}")
 
   @@map("desafio")
 }

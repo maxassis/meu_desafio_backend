@@ -57,7 +57,6 @@ export class GetUserDesafioUseCase {
         desafio: {
           select: {
             name: true,
-            description: true,
             distance: true,
             photo: true,
           },

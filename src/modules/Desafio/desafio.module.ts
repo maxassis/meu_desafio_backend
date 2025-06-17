@@ -7,6 +7,7 @@ import {
   GetUserDesafioUseCase,
   RegisterUserDesafioUseCase,
   CreateDesafioUseCase,
+  GetPurchaseDataUseCase,
 } from './useCase';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 import { RedisService } from 'src/infra/cache/redis/redis.service';
@@ -21,6 +22,7 @@ import { RedisService } from 'src/infra/cache/redis/redis.service';
     GetUserDesafioUseCase,
     GetDesafioUseCase,
     GetAllDesafioUseCase,
+    GetPurchaseDataUseCase,
     Supabase,
     RedisService,
   ],

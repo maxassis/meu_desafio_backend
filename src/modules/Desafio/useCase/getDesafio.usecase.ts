@@ -23,7 +23,6 @@ export class GetDesafioUseCase {
       select: {
         id: true,
         name: true,
-        description: true,
         location: true,
         distance: true,
         photo: true,
@@ -69,7 +68,6 @@ export class GetDesafioUseCase {
     const result = {
       id: desafio.id,
       name: desafio.name,
-      description: desafio.description,
       location: desafio.location,
       distance: desafio.distance,
       photo: desafio.photo,

@@ -1,0 +1,15 @@
+meta {
+  name: pegar dados da pagina de compra
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/desafio/purchase-data/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
+}

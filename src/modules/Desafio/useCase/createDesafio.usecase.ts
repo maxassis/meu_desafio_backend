@@ -21,7 +21,6 @@ export class CreateDesafioUseCase {
 
   async createDesafio(
     name: string,
-    description: string,
     location: Array<{ latitude: number; longitude: number }>,
     distance: number,
     imageFile: MulterLikeFile,
@@ -61,7 +60,6 @@ export class CreateDesafioUseCase {
     const result = await this.prisma.desafio.create({
       data: {
         name,
-        description,
         location: location,
         distance,
         photo: imageUrl ? imageUrl : undefined,
