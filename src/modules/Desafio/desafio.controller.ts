@@ -10,7 +10,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
-import { CreateDesafioDTO } from './schemas';
+import { CreateDesafioDTO, PurchaseDataSchema } from './schemas';
 import { RequestSchemaDTO } from '../Users/schemas';
 import {
   RegisterUserDesafioUseCase,
@@ -18,13 +18,12 @@ import {
   GetUserDesafioUseCase,
   GetDesafioUseCase,
   GetAllDesafioUseCase,
-  GetPurchaseDataUseCase
+  GetPurchaseDataUseCase,
 } from './useCase';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { FastifyRequest } from 'fastify';
-import { FileFastifyInterceptor } from 'fastify-file-interceptor';
+import { FilesFastifyInterceptor } from 'fastify-file-interceptor';
 
-// Define interface for Express.Multer.File compatibility
 interface MulterLikeFile {
   fieldname: string;
   originalname: string;
@@ -43,26 +42,31 @@ export class DesafioController {
     private readonly getUserDesafio: GetUserDesafioUseCase,
     private readonly desafio: GetDesafioUseCase,
     private readonly getAllDesafioUseCase: GetAllDesafioUseCase,
-    private readonly getPurchaseDataUseCase: GetPurchaseDataUseCase
+    private readonly getPurchaseDataUseCase: GetPurchaseDataUseCase,
   ) {}
 
   @Post('/create')
   // @UseGuards(AuthGuard)
-  @UseInterceptors(FileFastifyInterceptor('image'))
+  @UseInterceptors(FilesFastifyInterceptor('images'))
   async createDesafio(
     @Body() body: CreateDesafioDTO,
     @Request() req: FastifyRequest,
   ) {
-    const { name, location, distance } = body;
+    const { name, location, distance, purchaseData } = body;
+
+    const purchaseJSON = JSON.parse(purchaseData);
+    const validatedPurchaseData = PurchaseDataSchema.parse(purchaseJSON);
+
     const parsedLocation = JSON.parse(location);
 
-    const file = req.file as unknown as MulterLikeFile;
+    const files = req.files as unknown as MulterLikeFile[];
 
     return this.createDesafioUseCase.createDesafio(
       name,
       parsedLocation,
       Number(distance),
-      file,
+      validatedPurchaseData,
+      files,
     );
   }
 
