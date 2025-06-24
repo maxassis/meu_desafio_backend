@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "Meu desafio local",
+  "name": "Meu desafio",
   "type": "collection",
   "ignore": [
     "node_modules",
