@@ -52,7 +52,7 @@ export class DesafioController {
     @Body() body: CreateDesafioDTO,
     @Request() req: FastifyRequest,
   ) {
-    const { name, location, distance, purchaseData } = body;
+    const { name, location, distance, purchaseData, active, priceId } = body;
 
     const purchaseJSON = JSON.parse(purchaseData);
     const validatedPurchaseData = PurchaseDataSchema.parse(purchaseJSON);
@@ -65,6 +65,8 @@ export class DesafioController {
       name,
       parsedLocation,
       Number(distance),
+      active,
+      priceId,
       validatedPurchaseData,
       files,
     );

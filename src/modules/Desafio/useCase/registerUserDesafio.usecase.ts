@@ -46,6 +46,6 @@ export class RegisterUserDesafioUseCase {
       throw new BadRequestException('Error registering user');
     }
 
-    return 'Desafio registrado com sucesso';
+    return { message: 'User registered successfully.' };
   }
 }

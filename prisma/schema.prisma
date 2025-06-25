@@ -56,6 +56,8 @@ model Desafio {
   distance     Decimal       @db.Decimal(10, 5)
   photo        String        @default("")
   inscription  Inscription[]
+  priceId      String
+  active       Boolean       @default(true)
   purchaseData Json @default("{}")
 
   @@map("desafio")

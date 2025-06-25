@@ -24,63 +24,6 @@ export class PaymentsController {
     return { url: sessionUrl };
   }
 
-  // @Post('webhook-debug')
-  // async debugWebhook(@Req() request: RawBodyRequest) {
-  //   console.log('=== DEBUG WEBHOOK ===');
-  //   console.log('🔍 Headers:', request.headers);
-  //   console.log('🔍 Body type:', typeof request.body);
-  //   console.log('🔍 Raw body type:', typeof request.rawBody);
-  //   console.log(
-  //     '🔍 Raw body length:',
-  //     request.rawBody ? request.rawBody.length : 'undefined',
-  //   );
-  //   console.log('🔍 Has raw body:', !!request.rawBody);
-
-  //   // ✅ COMO USAR O RAW BODY:
-  //   if (request.rawBody) {
-  //     // 1. Como Buffer (dados binários)
-  //     console.log('📦 Raw body as Buffer:', request.rawBody);
-
-  //     // 2. Como String UTF-8
-  //     const bodyAsString = request.rawBody.toString('utf8');
-  //     console.log('📝 Raw body as string:', bodyAsString);
-
-  //     // 3. Como JSON (se for JSON válido)
-  //     try {
-  //       const bodyAsJson = JSON.parse(bodyAsString);
-  //       console.log('🎯 Raw body as JSON:', bodyAsJson);
-  //     } catch (error) {
-  //       console.log('❌ Raw body is not valid JSON');
-  //     }
-
-  //     // 4. Como Base64 (útil para dados binários)
-  //     const bodyAsBase64 = request.rawBody.toString('base64');
-  //     console.log('🔐 Raw body as Base64:', bodyAsBase64);
-
-  //     // 5. Verificar encoding específico
-  //     const bodyAsHex = request.rawBody.toString('hex');
-  //     console.log('🔢 Raw body as Hex:', bodyAsHex);
-  //   }
-
-  //   console.log('=====================');
-
-  //   return {
-  //     message: 'Debug complete - Raw body usage examples above',
-  //     hasRawBody: !!request.rawBody,
-  //     rawBodyType: typeof request.rawBody,
-  //     rawBodyLength: request.rawBody?.length || 0,
-  //     // Retorna os dados processados
-  //     data: request.rawBody
-  //       ? {
-  //           asString: request.rawBody.toString('utf8'),
-  //           asBase64: request.rawBody.toString('base64'),
-  //           asHex: request.rawBody.toString('hex'),
-  //           length: request.rawBody.length,
-  //         }
-  //       : null,
-  //   };
-  // }
-
   @Post('webhook')
   async handleStripeWebhook(
     @Req() req: any,
