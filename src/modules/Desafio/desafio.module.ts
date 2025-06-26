@@ -4,8 +4,8 @@ import { PrismaService } from 'src/infra/database/prisma.service';
 import {
   GetAllDesafioUseCase,
   GetDesafioUseCase,
-  GetUserDesafioUseCase,
-  RegisterUserDesafioUseCase,
+  // GetUserDesafioUseCase,
+  // RegisterUserDesafioUseCase,
   CreateDesafioUseCase,
   GetPurchaseDataUseCase,
 } from './useCase';
@@ -18,8 +18,8 @@ import { RedisService } from 'src/infra/cache/redis/redis.service';
   providers: [
     CreateDesafioUseCase,
     PrismaService,
-    RegisterUserDesafioUseCase,
-    GetUserDesafioUseCase,
+    // RegisterUserDesafioUseCase,
+    // GetUserDesafioUseCase,
     GetDesafioUseCase,
     GetAllDesafioUseCase,
     GetPurchaseDataUseCase,

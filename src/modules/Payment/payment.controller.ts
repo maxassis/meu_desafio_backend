@@ -2,14 +2,14 @@ import { Controller, Post, Body, Req, Headers } from '@nestjs/common';
 import { StripeService } from '../../infra/providers/payment/stripe-payment';
 import Stripe from 'stripe';
 import { CheckoutDTO } from './schemas/checkout.schema';
-
-// interface RawBodyRequest extends Request {
-//   rawBody: Buffer;
-// }
+import { RegisterUserDesafioUseCase } from './useCases/registerUserDesafio.usecase';
 
 @Controller('payments')
 export class PaymentsController {
-  constructor(private readonly stripeService: StripeService) {}
+  constructor(
+    private readonly stripeService: StripeService,
+    private registerUserDesafioUseCase: RegisterUserDesafioUseCase,
+  ) {}
 
   @Post('checkout-session')
   async createCheckoutSession(@Body() body: CheckoutDTO) {
@@ -47,16 +47,15 @@ export class PaymentsController {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        // console.log(`✅ Pagamento confirmado. Session ID: ${session.id}`);
-        // console.log(`Cliente: ${session.customer_email}`);
 
         if (!session.metadata) {
           throw new Error('Session metadata is missing');
         }
 
-        console.log(session.metadata.desafioId);
-
-        await this.handleCheckoutCompleted(session);
+        await this.registerUserDesafioUseCase.registerUserDesafio(
+          session.metadata.desafioId,
+          session.metadata.userId,
+        );
         break;
       }
 

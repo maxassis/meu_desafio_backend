@@ -13,9 +13,9 @@ import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { CreateDesafioDTO, PurchaseDataSchema } from './schemas';
 import { RequestSchemaDTO } from '../Users/schemas';
 import {
-  RegisterUserDesafioUseCase,
+  // RegisterUserDesafioUseCase,
   CreateDesafioUseCase,
-  GetUserDesafioUseCase,
+  // GetUserDesafioUseCase,
   GetDesafioUseCase,
   GetAllDesafioUseCase,
   GetPurchaseDataUseCase,
@@ -38,8 +38,8 @@ interface MulterLikeFile {
 export class DesafioController {
   constructor(
     private readonly createDesafioUseCase: CreateDesafioUseCase,
-    private readonly registerUserDesafio: RegisterUserDesafioUseCase,
-    private readonly getUserDesafio: GetUserDesafioUseCase,
+    // private readonly registerUserDesafio: RegisterUserDesafioUseCase,
+    // private readonly getUserDesafio: GetUserDesafioUseCase,
     private readonly desafio: GetDesafioUseCase,
     private readonly getAllDesafioUseCase: GetAllDesafioUseCase,
     private readonly getPurchaseDataUseCase: GetPurchaseDataUseCase,
@@ -72,20 +72,20 @@ export class DesafioController {
     );
   }
 
-  @Post('/register-user-desafio/:id')
-  @UseGuards(AuthGuard)
-  async registerDesafio(
-    @Param('id') idDesafio: string,
-    @Request() req: RequestSchemaDTO,
-  ) {
-    return this.registerUserDesafio.registerUserDesafio(idDesafio, req.user.id);
-  }
+  // @Post('/register-user-desafio/:id')
+  // @UseGuards(AuthGuard)
+  // async registerDesafio(
+  //   @Param('id') idDesafio: string,
+  //   @Request() req: RequestSchemaDTO,
+  // ) {
+  //   return this.registerUserDesafio.registerUserDesafio(idDesafio, req.user.id);
+  // }
 
-  @Get('/get-user-desafio')
-  @UseGuards(AuthGuard)
-  async getDesafio(@Request() req: RequestSchemaDTO) {
-    return this.getUserDesafio.getDesafio(req.user.id);
-  }
+  // @Get('/get-user-desafio')
+  // @UseGuards(AuthGuard)
+  // async getDesafio(@Request() req: RequestSchemaDTO) {
+  //   return this.getUserDesafio.getDesafio(req.user.id);
+  // }
 
   @Get('/get-all-desafio')
   @UseGuards(AuthGuard)
