@@ -1,14 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
+import { ConfigService } from '@nestjs/config';
+import { Env } from 'src/env';
 
 @Injectable()
 export class StripeService {
   private stripe: Stripe;
 
-  constructor() {
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2025-05-28.basil',
-    });
+  constructor(private configService: ConfigService<Env, true>) {
+    this.stripe = new Stripe(
+      this.configService.get('STRIPE_SECRET_KEY', { infer: true }),
+      {
+        apiVersion: '2025-05-28.basil',
+      },
+    );
   }
 
   async createCheckoutSession(
@@ -40,7 +45,9 @@ export class StripeService {
   }
 
   constructEvent(rawBody: string, signature: string) {
-    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+    const endpointSecret = this.configService.get('STRIPE_WEBHOOK_SECRET', {
+      infer: true,
+    });
     return this.stripe.webhooks.constructEvent(
       rawBody,
       signature,

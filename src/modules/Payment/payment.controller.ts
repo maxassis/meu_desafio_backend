@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Req, Headers } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  Headers,
+  InternalServerErrorException,
+  BadRequestException,
+} from '@nestjs/common';
 import { StripeService } from '../../infra/providers/payment/stripe-payment';
 import Stripe from 'stripe';
 import { CheckoutDTO } from './schemas/checkout.schema';
@@ -36,47 +44,48 @@ export class PaymentsController {
     } catch (err) {
       if (err instanceof Error) {
         console.error('❌ Webhook signature verification failed.', err.message);
-        throw new Error(`Webhook Error: ${err.message}`);
+        throw new BadRequestException(`Webhook Error: ${err.message}`);
       } else {
         console.error('❌ Unknown error:', err);
-        throw new Error('Unknown error');
+        throw new BadRequestException('Unknown error');
       }
     }
 
-    // Lida com os eventos
-    switch (event.type) {
-      case 'checkout.session.completed': {
-        const session = event.data.object as Stripe.Checkout.Session;
+    try {
+      switch (event.type) {
+        case 'checkout.session.completed': {
+          const session = event.data.object as Stripe.Checkout.Session;
 
-        if (!session.metadata) {
-          throw new Error('Session metadata is missing');
+          if (!session.metadata) {
+            throw new Error('Session metadata is missing');
+          }
+
+          const { userId, desafioId } = session.metadata;
+          if (!userId || !desafioId) {
+            throw new Error(
+              'Required metadata (userId or desafioId) is missing',
+            );
+          }
+
+          await this.registerUserDesafioUseCase.registerUserDesafio(
+            desafioId,
+            userId,
+          );
+
+          console.log(
+            `✅ User registered successfully for desafio: ${desafioId}`,
+          );
+          break;
         }
 
-        await this.registerUserDesafioUseCase.registerUserDesafio(
-          session.metadata.desafioId,
-          session.metadata.userId,
-        );
-        break;
+        default:
+        // console.log(`⚠️ Evento não tratado: ${event.type}`);
       }
 
-      default:
-      // console.log(`⚠️ Evento não tratado: ${event.type}`);
-    }
-
-    return { received: true };
-  }
-
-  // Método auxiliar para processar checkout completado
-  private async handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-    const metadata = session.metadata;
-
-    if (metadata) {
-      const userId = metadata.userId;
-      const desafioId = metadata.desafioId;
-
-      console.log('📊 Processando dados:');
-      console.log('- User ID:', userId);
-      console.log('- Desafio ID:', desafioId);
+      return { received: true };
+    } catch (error) {
+      console.error('❌ Error processing webhook event:', error);
+      throw new InternalServerErrorException('Error processing webhook');
     }
   }
 }

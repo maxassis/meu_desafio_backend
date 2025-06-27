@@ -51,7 +51,7 @@ export class RegisterUserDesafioUseCase {
     }
 
     await this.redisService.del(`user:${idUser}:desafios`);
-    await this.redisService.del(`user:${idUser}:my-desafios`);
+    // await this.redisService.del(`user:${idUser}:my-desafios`);
 
     return { message: 'User registered successfully.' };
   }
