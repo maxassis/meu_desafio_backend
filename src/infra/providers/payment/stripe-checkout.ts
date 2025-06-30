@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Env } from 'src/env';
 
 @Injectable()
-export class StripeService {
+export class StripeCheckoutService {
   private stripe: Stripe;
 
   constructor(private configService: ConfigService<Env, true>) {
@@ -24,7 +24,7 @@ export class StripeService {
   ): Promise<string> {
     const frontendUrl = process.env.FRONTEND_URL!;
     const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'boleto'],
       mode: 'payment',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email,

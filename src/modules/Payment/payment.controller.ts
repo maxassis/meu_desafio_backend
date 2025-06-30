@@ -7,15 +7,17 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
-import { StripeService } from '../../infra/providers/payment/stripe-payment';
+import { StripeCheckoutService } from '../../infra/providers/payment/stripe-checkout';
 import Stripe from 'stripe';
-import { CheckoutDTO } from './schemas/checkout.schema';
+import { CheckoutDTO, CreatePaymentIntentDTO } from './schemas';
 import { RegisterUserDesafioUseCase } from './useCases/registerUserDesafio.usecase';
+import { StripePaymentIntentService } from 'src/infra/providers/payment/stripe-paymentIntent';
 
 @Controller('payments')
 export class PaymentsController {
   constructor(
-    private readonly stripeService: StripeService,
+    private readonly stripeCheckoutService: StripeCheckoutService,
+    private readonly stripePaymentService: StripePaymentIntentService,
     private registerUserDesafioUseCase: RegisterUserDesafioUseCase,
   ) {}
 
@@ -23,13 +25,32 @@ export class PaymentsController {
   async createCheckoutSession(@Body() body: CheckoutDTO) {
     const { email, priceId, desafioId, userId } = body;
 
-    const sessionUrl = await this.stripeService.createCheckoutSession(
+    const sessionUrl = await this.stripeCheckoutService.createCheckoutSession(
       email,
       priceId,
       desafioId,
       userId,
     );
     return { url: sessionUrl };
+  }
+
+  @Post('payment-intent')
+  async createPaymentIntent(@Body() body: CreatePaymentIntentDTO) {
+    const { amount, currency, userId, desafioId } = body;
+
+    try {
+      const paymentIntent = await this.stripePaymentService.createPaymentIntent(
+        amount,
+        currency,
+        userId,
+        String(desafioId),
+      );
+
+      return { clientSecret: paymentIntent.client_secret };
+    } catch (error) {
+      console.error('❌ Failed to create payment intent:', error);
+      throw new InternalServerErrorException('Failed to create payment intent');
+    }
   }
 
   @Post('webhook')
@@ -40,7 +61,7 @@ export class PaymentsController {
     let event: Stripe.Event;
 
     try {
-      event = this.stripeService.constructEvent(req.rawBody, signature);
+      event = this.stripeCheckoutService.constructEvent(req.rawBody, signature);
     } catch (err) {
       if (err instanceof Error) {
         console.error('❌ Webhook signature verification failed.', err.message);
