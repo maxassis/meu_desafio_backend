@@ -59,9 +59,11 @@ export class PaymentsController {
     @Headers('stripe-signature') signature: string,
   ) {
     let event: Stripe.Event;
+    console.log('📩 Webhook recebido');
 
     try {
       event = this.stripeCheckoutService.constructEvent(req.rawBody, signature);
+      console.log('✅ Evento construído com sucesso:', event.type);
     } catch (err) {
       if (err instanceof Error) {
         console.error('❌ Webhook signature verification failed.', err.message);
@@ -76,16 +78,57 @@ export class PaymentsController {
       switch (event.type) {
         case 'checkout.session.completed': {
           const session = event.data.object as Stripe.Checkout.Session;
+          console.log('✅ Checkout Session:', session);
 
-          if (!session.metadata) {
-            throw new Error('Session metadata is missing');
+          const metadata = session.metadata;
+          console.log(
+            '📦 Metadata completo:',
+            JSON.stringify(metadata, null, 2),
+          );
+          console.log(
+            '📦 Chaves disponíveis nos metadados:',
+            Object.keys(metadata || {}),
+          );
+          if (!metadata) {
+            throw new Error('Metadata ausente no Checkout Session');
           }
 
-          const { userId, desafioId } = session.metadata;
+          const { userId, desafioId } = metadata;
+          console.log('🔍 userId extraído:', userId);
+          console.log('🔍 desafioId extraído:', desafioId);
+
           if (!userId || !desafioId) {
-            throw new Error(
-              'Required metadata (userId or desafioId) is missing',
+            console.error(
+              '❌ Dados ausentes - userId:',
+              userId,
+              'desafioId:',
+              desafioId,
             );
+            throw new Error('userId ou desafioId ausente');
+          }
+
+          await this.registerUserDesafioUseCase.registerUserDesafio(
+            desafioId,
+            userId,
+          );
+
+          console.log(`✅ [Checkout] User registrado no desafio ${desafioId}`);
+          break;
+        }
+
+        case 'payment_intent.succeeded': {
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          // console.log('✅ PaymentIntent:', paymentIntent);
+
+          const metadata = paymentIntent.metadata;
+          if (!metadata) {
+            throw new Error('Metadata ausente no PaymentIntent');
+          }
+
+          const { userId, desafioId } = metadata;
+
+          if (!userId || !desafioId) {
+            throw new Error('userId ou desafioId ausente');
           }
 
           await this.registerUserDesafioUseCase.registerUserDesafio(
@@ -94,7 +137,7 @@ export class PaymentsController {
           );
 
           console.log(
-            `✅ User registered successfully for desafio: ${desafioId}`,
+            `✅ [PaymentIntent] User registrado no desafio ${desafioId}`,
           );
           break;
         }
