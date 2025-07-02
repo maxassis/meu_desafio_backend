@@ -22,15 +22,15 @@ export class StripeCheckoutService {
     desafioId: string,
     userId: string,
   ): Promise<string> {
-    const frontendUrl = process.env.FRONTEND_URL!;
+    // const frontendUrl = process.env.FRONTEND_URL!;
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card', 'boleto'],
       mode: 'payment',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email,
       // success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      success_url: 'https://httpbin.org/get?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: `${frontendUrl}/cancel`,
+      success_url: 'https://google.com',
+      cancel_url: `https://google.com`,
       metadata: {
         desafioId: desafioId,
         userId: userId,
