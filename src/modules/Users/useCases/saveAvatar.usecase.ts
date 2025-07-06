@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { RedisService } from 'src/infra/cache/redis/redis.service';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 
@@ -16,6 +17,7 @@ export class UploadAvatarUseCase {
   constructor(
     private readonly supabase: Supabase,
     private readonly prisma: PrismaService,
+    private readonly redisService: RedisService,
   ) {}
 
   async uploadAvatar(
@@ -93,6 +95,8 @@ export class UploadAvatarUseCase {
         avatar_filename: fileUpload.data.path,
       },
     });
+
+    await this.redisService.del(`user:${id}:data`);
 
     return updatedUser;
   }

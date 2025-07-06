@@ -1,0 +1,20 @@
+meta {
+  name: payment
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/payments/payment-intent
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "amount": 1000,
+    "currency": "brl",
+    "userId": "user-123",
+    "desafioId": 23
+  }
+}

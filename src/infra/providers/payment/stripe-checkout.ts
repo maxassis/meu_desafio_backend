@@ -24,7 +24,7 @@ export class StripeCheckoutService {
   ): Promise<string> {
     // const frontendUrl = process.env.FRONTEND_URL!;
     const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'boleto'],
+      payment_method_types: ['card'],
       mode: 'payment',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email,
