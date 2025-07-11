@@ -12,7 +12,7 @@ const CreateTaskSchema = z.object({
     .positive({ message: 'duration must be greater than zero' })
     .default(0),
   calories: z.number().optional(),
-  distance: z.number({ message: 'distance Required' }),
+  distance: z.number({ message: 'distance Required' }).default(0),
   local: z.string().optional(),
   inscriptionId: z.number({ message: 'inscriptionId Required' }),
   gpsTask: z.boolean().optional(),
