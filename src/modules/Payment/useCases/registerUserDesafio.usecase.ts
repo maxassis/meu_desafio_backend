@@ -50,8 +50,10 @@ export class RegisterUserDesafioUseCase {
       throw new BadRequestException('Error registering user');
     }
 
-    await this.redisService.del(`user:${idUser}:desafios`);
-    // await this.redisService.del(`user:${idUser}:my-desafios`);
+    await Promise.all([
+      this.redisService.del(`user:${idUser}:desafios`),
+      this.redisService.del(`user:${idUser}:my-desafios`),
+    ]);
 
     return { message: 'User registered successfully.' };
   }
