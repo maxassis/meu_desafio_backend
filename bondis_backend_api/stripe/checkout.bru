@@ -1,0 +1,20 @@
+meta {
+  name: checkout
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/payments/checkout-session
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "test@example.com",
+    "priceId": "price_1RcuUJI3vAQkfd8JA3K4w0Dl",
+    "userId": "cmazouwxc000099vn6guahnap",
+    "desafioId": "27"
+  }
+}

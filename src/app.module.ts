@@ -6,6 +6,7 @@ import { DesafioModule } from './modules/Desafio/desafio.module';
 import { TasksModule } from './modules/Tasks/tasks.module';
 import { ConfigModule } from '@nestjs/config';
 import { envSchema } from './env';
+import { StripeModule } from './modules/Payment/payment.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { envSchema } from './env';
     DesafioModule,
     LoginModule,
     TasksModule,
+    StripeModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.ethereal.email',

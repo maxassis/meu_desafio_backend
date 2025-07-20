@@ -1,89 +1,3 @@
-// import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// import { PrismaService } from 'src/infra/database/prisma.service';
-// import { randomUUID } from 'crypto';
-// import { Supabase } from 'src/infra/providers/storage/storage-supabase';
-// import { PurchaseDataSchema } from '../schemas';
-// import { z } from 'zod';
-
-// interface MulterLikeFile {
-//   fieldname: string;
-//   originalname: string;
-//   encoding: string;
-//   mimetype: string;
-//   buffer: Buffer;
-//   size: number;
-// }
-
-// type PurchaseData = z.infer<typeof PurchaseDataSchema>;
-
-// @Injectable()
-// export class CreateDesafioUseCase {
-//   constructor(
-//     private readonly prisma: PrismaService,
-//     private readonly supabase: Supabase,
-//   ) {}
-
-//   async createDesafio(
-//     name: string,
-//     location: Array<{ latitude: number; longitude: number }>,
-//     distance: number,
-//     purchaseData: PurchaseData,
-//     files: MulterLikeFile[],
-//   ) {
-//     console.log(files);
-
-//     const desafioExists = await this.prisma.desafio.findFirst({
-//       where: { name },
-//     });
-
-//     if (desafioExists) {
-//       throw new HttpException('Name already exists', HttpStatus.CONFLICT);
-//     }
-
-//     let imageUrl: string | null = null;
-
-//     if (imageFile) {
-//       const fileName = `${randomUUID()}-${imageFile.originalname}`;
-//       const { error } = await this.supabase.client.storage
-//         .from('desafios')
-//         .upload(fileName, imageFile.buffer, {
-//           contentType: imageFile.mimetype,
-//         });
-
-//       if (error) {
-//         throw new HttpException(
-//           'Error uploading image to Supabase',
-//           HttpStatus.INTERNAL_SERVER_ERROR,
-//         );
-//       }
-
-//       const { data: dataUrl } = this.supabase.client.storage
-//         .from('desafios')
-//         .getPublicUrl(fileName);
-
-//       imageUrl = dataUrl.publicUrl;
-//     }
-
-//     const result = await this.prisma.desafio.create({
-//       data: {
-//         name,
-//         location: location,
-//         distance,
-//         photo: imageUrl ? imageUrl : undefined,
-//       },
-//     });
-
-//     if (!result) {
-//       throw new HttpException(
-//         'Error creating desafio',
-//         HttpStatus.INTERNAL_SERVER_ERROR,
-//       );
-//     }
-
-//     return { message: 'Desafio created successfully' };
-//   }
-// }
-
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { randomUUID } from 'crypto';
@@ -113,10 +27,12 @@ export class CreateDesafioUseCase {
     name: string,
     location: Array<{ latitude: number; longitude: number }>,
     distance: number,
+    active: boolean,
+    priceId: string,
     purchaseData: PurchaseData,
     files: MulterLikeFile[],
   ) {
-    console.log('Files received:', files);
+    // console.log('Files received:', files);
 
     // Verifica se já existe um desafio com o mesmo nome
     const desafioExists = await this.prisma.desafio.findFirst({
@@ -144,7 +60,7 @@ export class CreateDesafioUseCase {
             });
 
           if (error) {
-            console.error('Supabase upload error:', error);
+            // console.error('Supabase upload error:', error);
             throw new HttpException(
               `Error uploading image ${file.originalname} to Supabase: ${error.message}`,
               HttpStatus.INTERNAL_SERVER_ERROR,
@@ -158,7 +74,7 @@ export class CreateDesafioUseCase {
 
           imageUrls.push(dataUrl.publicUrl);
         } catch (error) {
-          console.error('Error processing file:', file.originalname, error);
+          // console.error('Error processing file:', file.originalname, error);
           throw new HttpException(
             `Error processing file ${file.originalname}`,
             HttpStatus.INTERNAL_SERVER_ERROR,
@@ -186,10 +102,12 @@ export class CreateDesafioUseCase {
           distance,
           photo: mainPhoto,
           purchaseData: updatedPurchaseData,
+          priceId,
+          active,
         },
       });
 
-      console.log('Desafio created successfully:', result.id);
+      // console.log('Desafio created successfully:', result.id);
 
       return {
         message: 'Desafio created successfully',
@@ -198,11 +116,11 @@ export class CreateDesafioUseCase {
         mainPhoto: mainPhoto,
       };
     } catch (error) {
-      console.error('Database error:', error);
+      // console.error('Database error:', error);
 
       // Em caso de erro na criação do desafio, tenta limpar as imagens já enviadas
       if (imageUrls.length > 0) {
-        console.log('Attempting to cleanup uploaded images...');
+        // console.log('Attempting to cleanup uploaded images...');
         await this.cleanupUploadedImages(imageUrls);
       }
 
