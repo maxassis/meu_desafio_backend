@@ -44,7 +44,7 @@ COPY --chown=node:node --from=builder /usr/src/app/prisma ./prisma/
 EXPOSE 3000
 
 # Healthcheck to ensure the application is responsive
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
 # Command to run the application directly with node
