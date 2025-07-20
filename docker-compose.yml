@@ -1,20 +1,21 @@
-# version: "3.1"
-
 services:
-  postgres:
-    image: bitnami/postgresql:latest
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - '5432:5432'
+      - '${PORT}:${PORT}'
     environment:
-       POSTGRES_PASSWORD: example
-       POSTGRES_DB: bondis_app
-       POSTGRES_USER: docker
-
-  redis:
-    image: bitnami/redis:latest
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - '6379:6379'
-         
-
+      - NODE_ENV=production
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_URL=${REDIS_URL}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_BUCKET=${SUPABASE_BUCKET}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    restart: unless-stopped
