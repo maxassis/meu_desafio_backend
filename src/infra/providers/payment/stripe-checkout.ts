@@ -28,8 +28,8 @@ export class StripeCheckoutService {
       mode: 'payment',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email,
-      // success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      success_url: 'https://google.com',
+      success_url:
+        'https://staging.d1vywkellavezx.amplifyapp.com/payment/success/',
       cancel_url: `https://google.com`,
       metadata: {
         desafioId: desafioId,
