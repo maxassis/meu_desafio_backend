@@ -18,4 +18,4 @@ services:
       - SUPABASE_BUCKET=${SUPABASE_BUCKET}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-    restart: unless-stopped
+    # restart: unless-stopped

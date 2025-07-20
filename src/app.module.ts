@@ -7,6 +7,7 @@ import { TasksModule } from './modules/Tasks/tasks.module';
 import { ConfigModule } from '@nestjs/config';
 import { envSchema } from './env';
 import { StripeModule } from './modules/Payment/payment.module';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { StripeModule } from './modules/Payment/payment.module';
       },
     }),
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule {}
