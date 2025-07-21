@@ -60,7 +60,7 @@ export class PaymentsController {
   ) {
     let event: Stripe.Event;
     console.log('📩 Webhook recebido');
-  
+
     try {
       event = this.stripeCheckoutService.constructEvent(req.rawBody, signature);
       console.log('✅ Evento construído com sucesso:', event.type);
@@ -73,42 +73,83 @@ export class PaymentsController {
         throw new BadRequestException('Unknown error');
       }
     }
-  
-    if (event.type !== 'checkout.session.completed') {
-      console.log(`⚠️ Evento ignorado: ${event.type}`);
-      return { received: true };
-    }
-  
+
     try {
-      const session = event.data.object as Stripe.Checkout.Session;
-      console.log('✅ Checkout Session:', session.id);
-  
-      const metadata = session.metadata;
-      console.log('📦 Metadata completo:', JSON.stringify(metadata, null, 2));
-      console.log('📦 Chaves disponíveis nos metadados:', Object.keys(metadata || {}));
-  
-      if (!metadata) {
-        throw new Error('Metadata ausente no Checkout Session');
+      switch (event.type) {
+        case 'checkout.session.completed': {
+          const session = event.data.object as Stripe.Checkout.Session;
+          console.log('✅ Checkout Session:', session);
+
+          const metadata = session.metadata;
+          console.log(
+            '📦 Metadata completo:',
+            JSON.stringify(metadata, null, 2),
+          );
+          console.log(
+            '📦 Chaves disponíveis nos metadados:',
+            Object.keys(metadata || {}),
+          );
+          if (!metadata) {
+            throw new Error('Metadata ausente no Checkout Session');
+          }
+
+          const { userId, desafioId } = metadata;
+          console.log('🔍 userId extraído:', userId);
+          console.log('🔍 desafioId extraído:', desafioId);
+
+          if (!userId || !desafioId) {
+            console.error(
+              '❌ Dados ausentes - userId:',
+              userId,
+              'desafioId:',
+              desafioId,
+            );
+            throw new Error('userId ou desafioId ausente');
+          }
+
+          await this.registerUserDesafioUseCase.registerUserDesafio(
+            desafioId,
+            userId,
+          );
+
+          console.log(`✅ [Checkout] User registrado no desafio ${desafioId}`);
+          break;
+        }
+
+        case 'payment_intent.succeeded': {
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          // console.log('✅ PaymentIntent:', paymentIntent);
+
+          const metadata = paymentIntent.metadata;
+          if (!metadata) {
+            throw new Error('Metadata ausente no PaymentIntent');
+          }
+
+          const { userId, desafioId } = metadata;
+
+          if (!userId || !desafioId) {
+            throw new Error('userId ou desafioId ausente');
+          }
+
+          await this.registerUserDesafioUseCase.registerUserDesafio(
+            desafioId,
+            userId,
+          );
+
+          console.log(
+            `✅ [PaymentIntent] User registrado no desafio ${desafioId}`,
+          );
+          break;
+        }
+
+        default:
+        // console.log(`⚠️ Evento não tratado: ${event.type}`);
       }
-  
-      const { userId, desafioId } = metadata;
-      console.log('🔍 userId extraído:', userId);
-      console.log('🔍 desafioId extraído:', desafioId);
-  
-      if (!userId || !desafioId) {
-        console.error('❌ Dados ausentes - userId:', userId, 'desafioId:', desafioId);
-        throw new Error('userId ou desafioId ausente');
-      }
-  
-      await this.registerUserDesafioUseCase.registerUserDesafio(desafioId, userId);
-  
-      console.log(`✅ [Checkout] User registrado no desafio ${desafioId}`);
-  
+
       return { received: true };
     } catch (error) {
       console.error('❌ Error processing webhook event:', error);
       throw new InternalServerErrorException('Error processing webhook');
     }
   }
-  
 }
