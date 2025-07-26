@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { RedisService } from '../../../infra/cache/redis/redis.service';
-import { UpdateTaskDTO } from '../schemas'; // Supondo que este é o DTO correto
+import { UpdateTaskDTO } from '../schemas';
 
 @Injectable()
 export class UpdateUserTaskUseCase {

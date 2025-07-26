@@ -15,7 +15,7 @@ export class RegisterUserDesafioUseCase {
 
   async registerUserDesafio(idDesafio: string, idUser: string) {
     const desafio = await this.prisma.desafio.findUnique({
-      where: { id: +idDesafio },
+      where: { id: idDesafio },
       include: {
         inscription: {
           where: { userId: idUser },
@@ -34,7 +34,7 @@ export class RegisterUserDesafioUseCase {
     }
 
     const result = await this.prisma.desafio.update({
-      where: { id: +idDesafio },
+      where: { id: idDesafio },
       data: {
         inscription: {
           create: {

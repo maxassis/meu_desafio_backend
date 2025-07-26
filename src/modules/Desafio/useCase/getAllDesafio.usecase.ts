@@ -47,7 +47,7 @@ export class GetAllDesafioUseCase {
     });
 
     const inscriptionsMap = new Map<
-      number,
+      string,
       {
         inscriptionId: number;
         completed: boolean;

@@ -19,7 +19,7 @@ export class GetDesafioUseCase {
     }
 
     const desafio = await this.prisma.desafio.findUnique({
-      where: { id: +idDesafio },
+      where: { id: idDesafio },
       select: {
         id: true,
         name: true,

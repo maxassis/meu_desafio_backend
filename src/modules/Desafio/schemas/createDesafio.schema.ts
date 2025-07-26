@@ -1,20 +1,6 @@
 import { createZodDto } from '@anatine/zod-nestjs';
 import { z } from 'zod';
 
-// const coordinateSchema = z.object({
-//   latitude: z.number(),
-//   longitude: z.number(),
-// });
-
-// const coordinatesArraySchema = z.array(coordinateSchema);
-
-// const CreateDesafioSchema = z.object({
-//   name: z.string(),
-//   location: z.string(),
-//   distance: z.string(),
-//   purchaseData: z.object({}),
-// });
-
 // Schema para validar purchaseData após o parse
 export const PurchaseDataSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),

@@ -18,7 +18,7 @@ export class GetPurchaseDataUseCase {
     }
 
     const desafio = await this.prisma.desafio.findUnique({
-      where: { id: +desafioId },
+      where: { id: desafioId },
       select: { purchaseData: true },
     });
 

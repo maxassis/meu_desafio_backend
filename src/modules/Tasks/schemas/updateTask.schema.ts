@@ -1,7 +1,6 @@
 import { createZodDto } from '@anatine/zod-nestjs';
 import { z } from 'zod';
 
-
 const UpdateTaskSchema = z.object({
   name: z.string().optional(),
   environment: z.enum(['livre', 'esteira']),
