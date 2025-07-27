@@ -22,11 +22,11 @@ import { HealthController } from './health/health.controller';
     StripeModule,
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.ethereal.email',
+        host: 'smtp.gmail.com',
         port: 587,
         auth: {
-          user: 'harrison.mckenzie10@ethereal.email',
-          pass: 'ukbf87dyRxUpRcRBaY',
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASSWORD,
         },
         secure: false,
       },
