@@ -1,53 +1,3 @@
-// import {
-//   Injectable,
-//   InternalServerErrorException,
-//   UnauthorizedException,
-// } from '@nestjs/common';
-// import { customAlphabet } from 'nanoid';
-// import { MailerService } from '@nestjs-modules/mailer';
-// import { PrismaService } from 'src/infra/database/prisma.service';
-// import { RedisService } from '../../../infra/cache/redis/redis.service';
-// import { AccountRecoveryCodeTemplate } from 'src/templates-email/account.recovery.code.template';
-
-// @Injectable()
-// export class SendMailRecoveryUseCase {
-//   constructor(
-//     private readonly prisma: PrismaService,
-//     private readonly redisService: RedisService,
-//     private readonly mailerService: MailerService,
-//   ) {}
-
-//   async sendMailRecovery(email: string) {
-//     const user = await this.prisma.users.findUnique({
-//       where: {
-//         email,
-//       },
-//     });
-
-//     if (!user) {
-//       throw new UnauthorizedException();
-//     }
-
-//     const nanoid = customAlphabet('0123456789', 6);
-//     const code = nanoid();
-
-//     try {
-//       await this.redisService.set(`code-${email}`, code, 'EX', 300);
-
-//       await this.mailerService.sendMail({
-//         to: email,
-//         from: 'bondis@meudesafio.com',
-//         subject: 'Confirme seu email',
-//         html: AccountRecoveryCodeTemplate(user.name, code),
-//       });
-//     } catch {
-//       throw new InternalServerErrorException();
-//     }
-
-//     return { message: 'Email enviado com sucesso' };
-//   }
-// }
-
 import {
   Injectable,
   InternalServerErrorException,
@@ -58,8 +8,6 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { RedisService } from '../../../infra/cache/redis/redis.service';
 import { AccountRecoveryCodeTemplate } from 'src/templates-email/account.recovery.code.template';
-import { ConfigService } from '@nestjs/config';
-import { Env } from 'src/env';
 
 @Injectable()
 export class SendMailRecoveryUseCase {
@@ -67,7 +15,6 @@ export class SendMailRecoveryUseCase {
     private readonly prisma: PrismaService,
     private readonly redisService: RedisService,
     private readonly mailerService: MailerService,
-    private configService: ConfigService<Env, true>,
   ) {}
 
   async sendMailRecovery(email: string) {
@@ -89,7 +36,7 @@ export class SendMailRecoveryUseCase {
 
       await this.mailerService.sendMail({
         to: email,
-        from: `"Meu Desafio" <${this.configService.get('GMAIL_USER')}>`, // Usando seu Gmail
+        from: 'bondis@meudesafio.com',
         subject: 'Código de recuperação de senha',
         html: AccountRecoveryCodeTemplate(user.name, code),
       });

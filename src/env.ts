@@ -13,8 +13,6 @@ export const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string(),
   STRIPE_WEBHOOK_SECRET: z.string(),
   PORT: z.coerce.number().optional().default(3000),
-  GMAIL_USER: z.string().email(),
-  GMAIL_APP_PASSWORD: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;
