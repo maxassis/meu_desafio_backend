@@ -25,8 +25,8 @@ import { HealthController } from './health/health.controller';
         host: 'smtp.ethereal.email',
         port: 587,
         auth: {
-          user: 'harrison.mckenzie10@ethereal.email',
-          pass: 'ukbf87dyRxUpRcRBaY',
+          user: 'salvatore76@ethereal.email',
+          pass: '2RQhYDY6Cvs2hGbwpf',
         },
         secure: false,
       },
