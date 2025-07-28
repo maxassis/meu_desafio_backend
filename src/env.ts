@@ -16,7 +16,8 @@ export const envSchema = z.object({
   R2_ACCOUNT_ID: z.string(),
   R2_ACCESS_KEY_ID: z.string(),
   R2_SECRET_ACCESS_KEY: z.string(),
-  R2_PUBLIC_URL: z.string(),
+  R2_PUBLIC_URL_AVATARS: z.string(),
+  R2_PUBLIC_URL_DESAFIOS: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;
