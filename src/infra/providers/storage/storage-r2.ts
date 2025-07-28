@@ -129,17 +129,12 @@ import {
 @Injectable()
 export class CloudflareR2Service {
   private readonly s3Client: S3Client;
-  private readonly bucketName: string;
   private readonly publicDomain: string;
 
   constructor() {
-    this.bucketName = process.env.R2_BUCKET_NAME as string;
     this.publicDomain = process.env.R2_PUBLIC_URL as string;
 
     // Validação das variáveis
-    if (!this.bucketName) {
-      throw new Error('R2_BUCKET_NAME não está definido');
-    }
     if (!process.env.R2_ACCOUNT_ID) {
       throw new Error('R2_ACCOUNT_ID não está definido');
     }
@@ -165,36 +160,34 @@ export class CloudflareR2Service {
     key: string,
     buffer: Buffer,
     contentType: string,
-    bucket?: string, // bucket opcional
-  ): Promise<string> {
-    const targetBucket = bucket || this.bucketName;
+    bucket: string, // bucket opcional
+  ): Promise<string> {;
 
     try {
       const command = new PutObjectCommand({
-        Bucket: targetBucket,
+        Bucket: bucket,
         Key: key,
         Body: buffer,
         ContentType: contentType,
       });
 
       await this.s3Client.send(command);
-      return this.getPublicUrl(key, targetBucket); // Passa o bucket aqui também
+      return this.getPublicUrl(key, bucket); // Passa o bucket aqui também
     } catch (error: any) {
       console.error('Erro ao fazer upload no R2:', {
         key,
-        bucket: targetBucket,
+        bucket: bucket,
         error: error.message,
       });
       throw new Error(`Falha ao fazer upload: ${error.message}`);
     }
   }
 
-  async deleteFile(key: string, bucket?: string): Promise<any> {
-    const targetBucket = bucket || this.bucketName;
+  async deleteFile(key: string, bucket: string): Promise<any> {
 
     try {
       const command = new DeleteObjectCommand({
-        Bucket: targetBucket,
+        Bucket: bucket,
         Key: key,
       });
 
@@ -202,15 +195,15 @@ export class CloudflareR2Service {
     } catch (error: any) {
       console.error('Erro ao deletar arquivo do R2:', {
         key,
-        bucket: targetBucket,
+        bucket: bucket,
         error: error.message,
       });
       throw new Error(`Falha ao deletar arquivo: ${error.message}`);
     }
   }
 
-  getPublicUrl(key: string, bucket?: string): string {
-    const activeBucket = bucket || this.bucketName;
+  getPublicUrl(key: string, bucket: string): string {
+    const activeBucket = bucket
 
     if (this.publicDomain) {
       return `${this.publicDomain}/${key}`;
