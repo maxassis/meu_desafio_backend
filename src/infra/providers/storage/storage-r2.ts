@@ -9,23 +9,25 @@
 // @Injectable()
 // export class CloudflareR2Service {
 //   private readonly s3Client: S3Client;
-//   private readonly bucketName: string;
+//   private readonly bucketName = process.env.R2_BUCKET_NAME;
 //   private readonly publicDomain: string;
 
 //   constructor() {
 //     this.bucketName = process.env.R2_BUCKET_NAME as string;
 //     this.publicDomain = process.env.R2_PUBLIC_URL as string;
 
-//     console.log(process.env.R2_BUCKET_NAME as string);
-
-//     if (
-//       !process.env.R2_BUCKET_NAME ||
-//       !process.env.R2_PUBLIC_URL ||
-//       !process.env.R2_ACCOUNT_ID ||
-//       !process.env.R2_ACCESS_KEY_ID ||
-//       !process.env.R2_SECRET_ACCESS_KEY
-//     ) {
-//       throw new Error('Variáveis de ambiente não definidas');
+//     // Validar se as variáveis de ambiente estão definidas
+//     if (!this.bucketName) {
+//       throw new Error('CLOUDFLARE_R2_BUCKET_NAME não está definido');
+//     }
+//     if (!process.env.R2_ACCOUNT_ID) {
+//       throw new Error('CLOUDFLARE_ACCOUNT_ID não está definido');
+//     }
+//     if (!process.env.R2_ACCESS_KEY_ID) {
+//       throw new Error('CLOUDFLARE_R2_ACCESS_KEY_ID não está definido');
+//     }
+//     if (!process.env.R2_SECRET_ACCESS_KEY) {
+//       throw new Error('CLOUDFLARE_R2_SECRET_ACCESS_KEY não está definido');
 //     }
 
 //     this.s3Client = new S3Client({
@@ -35,6 +37,15 @@
 //         accessKeyId: process.env.R2_ACCESS_KEY_ID,
 //         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
 //       },
+//       forcePathStyle: true,
+//       tls: true,
+//       requestHandler: {
+//         requestTimeout: 30000,
+//         httpsAgent: {
+//           keepAlive: true,
+//           rejectUnauthorized: true,
+//         },
+//       },
 //     });
 //   }
 
@@ -43,23 +54,51 @@
 //     buffer: Buffer,
 //     contentType: string,
 //   ): Promise<any> {
-//     const command = new PutObjectCommand({
-//       Bucket: this.bucketName,
-//       Key: key,
-//       Body: buffer,
-//       ContentType: contentType,
-//     });
+//     try {
+//       const command = new PutObjectCommand({
+//         Bucket: this.bucketName,
+//         Key: key,
+//         Body: buffer,
+//         ContentType: contentType,
+//       });
 
-//     return await this.s3Client.send(command);
+//       const result = await this.s3Client.send(command);
+//       return result;
+//     } catch (error: unknown) {
+//       if (error instanceof Error) {
+//         console.error('Erro ao deletar arquivo do R2:', {
+//           key,
+//           bucket: this.bucketName,
+//           error: error.message,
+//         });
+//         throw new Error(`Falha ao deletar arquivo: ${error.message}`);
+//       } else {
+//         console.error('Erro desconhecido ao deletar arquivo do R2:', {
+//           key,
+//           bucket: this.bucketName,
+//         });
+//         throw new Error('Erro desconhecido ao deletar arquivo');
+//       }
+//     }
 //   }
 
 //   async deleteFile(key: string): Promise<any> {
-//     const command = new DeleteObjectCommand({
-//       Bucket: this.bucketName,
-//       Key: key,
-//     });
+//     try {
+//       const command = new DeleteObjectCommand({
+//         Bucket: this.bucketName,
+//         Key: key,
+//       });
 
-//     return await this.s3Client.send(command);
+//       const result = await this.s3Client.send(command);
+//       return result;
+//     } catch (error: any) {
+//       console.error('Erro ao deletar arquivo do R2:', {
+//         key,
+//         bucket: this.bucketName,
+//         error: error.message,
+//       });
+//       throw new Error(`Falha ao deletar arquivo: ${error.message}`);
+//     }
 //   }
 
 //   async getFile(key: string): Promise<any> {
@@ -76,7 +115,7 @@
 //       return `${this.publicDomain}/${key}`;
 //     }
 //     // Fallback para URL padrão do R2 (se configurado para público)
-//     return `https://${this.bucketName}.${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
+//     return `https://${this.bucketName}.${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
 //   }
 // }
 
@@ -85,7 +124,6 @@ import {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
-  GetObjectCommand,
 } from '@aws-sdk/client-s3';
 
 @Injectable()
@@ -98,18 +136,18 @@ export class CloudflareR2Service {
     this.bucketName = process.env.R2_BUCKET_NAME as string;
     this.publicDomain = process.env.R2_PUBLIC_URL as string;
 
-    // Validar se as variáveis de ambiente estão definidas
+    // Validação das variáveis
     if (!this.bucketName) {
-      throw new Error('CLOUDFLARE_R2_BUCKET_NAME não está definido');
+      throw new Error('R2_BUCKET_NAME não está definido');
     }
     if (!process.env.R2_ACCOUNT_ID) {
-      throw new Error('CLOUDFLARE_ACCOUNT_ID não está definido');
+      throw new Error('R2_ACCOUNT_ID não está definido');
     }
     if (!process.env.R2_ACCESS_KEY_ID) {
-      throw new Error('CLOUDFLARE_R2_ACCESS_KEY_ID não está definido');
+      throw new Error('R2_ACCESS_KEY_ID não está definido');
     }
     if (!process.env.R2_SECRET_ACCESS_KEY) {
-      throw new Error('CLOUDFLARE_R2_SECRET_ACCESS_KEY não está definido');
+      throw new Error('R2_SECRET_ACCESS_KEY não está definido');
     }
 
     this.s3Client = new S3Client({
@@ -120,14 +158,6 @@ export class CloudflareR2Service {
         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
       },
       forcePathStyle: true,
-      tls: true,
-      requestHandler: {
-        requestTimeout: 30000,
-        httpsAgent: {
-          keepAlive: true,
-          rejectUnauthorized: true,
-        },
-      },
     });
   }
 
@@ -135,68 +165,57 @@ export class CloudflareR2Service {
     key: string,
     buffer: Buffer,
     contentType: string,
-  ): Promise<any> {
+    bucket?: string, // bucket opcional
+  ): Promise<string> {
+    const targetBucket = bucket || this.bucketName;
+
     try {
       const command = new PutObjectCommand({
-        Bucket: this.bucketName,
+        Bucket: targetBucket,
         Key: key,
         Body: buffer,
         ContentType: contentType,
       });
 
-      const result = await this.s3Client.send(command);
-      return result;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Erro ao deletar arquivo do R2:', {
-          key,
-          bucket: this.bucketName,
-          error: error.message,
-        });
-        throw new Error(`Falha ao deletar arquivo: ${error.message}`);
-      } else {
-        console.error('Erro desconhecido ao deletar arquivo do R2:', {
-          key,
-          bucket: this.bucketName,
-        });
-        throw new Error('Erro desconhecido ao deletar arquivo');
-      }
+      await this.s3Client.send(command);
+      return this.getPublicUrl(key, targetBucket); // Passa o bucket aqui também
+    } catch (error: any) {
+      console.error('Erro ao fazer upload no R2:', {
+        key,
+        bucket: targetBucket,
+        error: error.message,
+      });
+      throw new Error(`Falha ao fazer upload: ${error.message}`);
     }
   }
 
-  async deleteFile(key: string): Promise<any> {
+  async deleteFile(key: string, bucket?: string): Promise<any> {
+    const targetBucket = bucket || this.bucketName;
+
     try {
       const command = new DeleteObjectCommand({
-        Bucket: this.bucketName,
+        Bucket: targetBucket,
         Key: key,
       });
 
-      const result = await this.s3Client.send(command);
-      return result;
+      return await this.s3Client.send(command);
     } catch (error: any) {
       console.error('Erro ao deletar arquivo do R2:', {
         key,
-        bucket: this.bucketName,
+        bucket: targetBucket,
         error: error.message,
       });
       throw new Error(`Falha ao deletar arquivo: ${error.message}`);
     }
   }
 
-  async getFile(key: string): Promise<any> {
-    const command = new GetObjectCommand({
-      Bucket: this.bucketName,
-      Key: key,
-    });
+  getPublicUrl(key: string, bucket?: string): string {
+    const activeBucket = bucket || this.bucketName;
 
-    return await this.s3Client.send(command);
-  }
-
-  getPublicUrl(key: string): string {
     if (this.publicDomain) {
       return `${this.publicDomain}/${key}`;
     }
-    // Fallback para URL padrão do R2 (se configurado para público)
-    return `https://${this.bucketName}.${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
+
+    return `https://${activeBucket}.${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
   }
 }

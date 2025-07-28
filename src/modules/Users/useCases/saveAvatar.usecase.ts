@@ -46,18 +46,6 @@
 //       throw new HttpException('Usuário não encontrado.', HttpStatus.NOT_FOUND);
 //     }
 
-//     // Remove avatar antigo se existir
-//     if (user.avatar_filename) {
-//       try {
-//         await this.cloudflareR2.deleteFile(user.avatar_filename);
-//       } catch (error: unknown) {
-//         throw new HttpException(
-//           `Erro ao remover avatar antigo: ${(error as Error).message}`,
-//           HttpStatus.INTERNAL_SERVER_ERROR,
-//         );
-//       }
-//     }
-
 //     // Determina a extensão do arquivo
 //     let fileExtension = '';
 //     if (file.filename) {
@@ -66,27 +54,26 @@
 //       fileExtension = file.mimetype.split('/').pop() || '';
 //     }
 
-//     const newFileName = `${id}-${Date.now()}${fileExtension ? '.' + fileExtension : ''}`;
+//     const fileName = `${id}-avatar${fileExtension ? '.' + fileExtension : ''}`;
 
-//     // Upload do novo arquivo
 //     try {
-//       await this.cloudflareR2.uploadFile(
-//         newFileName,
-//         file.buffer,
-//         file.mimetype,
-//       );
+//       await this.cloudflareR2.uploadFile(fileName, file.buffer, file.mimetype);
 
-//       // Gera URL pública
-//       const publicUrl = this.cloudflareR2.getPublicUrl(newFileName);
-//       console.log('URL gerada:', publicUrl);
+//       const publicUrl = this.cloudflareR2.getPublicUrl(fileName);
 
-//       const updatedUser = await this.prisma.userData.update({
-//         where: { usersId: id },
-//         data: {
-//           avatar_url: publicUrl,
-//           avatar_filename: newFileName,
-//         },
-//       });
+//       const needsUpdate =
+//         !user.avatar_filename || user.avatar_filename !== fileName;
+
+//       let updatedUser = user;
+//       if (needsUpdate) {
+//         updatedUser = await this.prisma.userData.update({
+//           where: { usersId: id },
+//           data: {
+//             avatar_url: publicUrl,
+//             avatar_filename: fileName,
+//           },
+//         });
+//       }
 
 //       await this.redisService.del(`user:${id}:data`);
 
@@ -163,17 +150,19 @@ export class UploadAvatarUseCase {
       fileExtension = file.mimetype.split('/').pop() || '';
     }
 
-    // 🎯 SEMPRE USA O MESMO NOME - sobrescreve automaticamente
     const fileName = `${id}-avatar${fileExtension ? '.' + fileExtension : ''}`;
+    const bucketName = 'avatars'; // ✅ Define bucket específico
 
     try {
-      // 1️⃣ Upload sobrescreve o arquivo existente automaticamente
-      await this.cloudflareR2.uploadFile(fileName, file.buffer, file.mimetype);
+      await this.cloudflareR2.uploadFile(
+        fileName,
+        file.buffer,
+        file.mimetype,
+        bucketName, // ✅ bucket passado dinamicamente
+      );
 
-      // 2️⃣ Gera URL pública (sempre a mesma)
-      const publicUrl = this.cloudflareR2.getPublicUrl(fileName);
+      const publicUrl = this.cloudflareR2.getPublicUrl(fileName, bucketName); // ✅ mesma coisa aqui
 
-      // 3️⃣ Atualiza apenas se mudou (primeira vez ou extensão diferente)
       const needsUpdate =
         !user.avatar_filename || user.avatar_filename !== fileName;
 
@@ -188,7 +177,6 @@ export class UploadAvatarUseCase {
         });
       }
 
-      // 4️⃣ Invalida o cache (sempre, porque a imagem mudou)
       await this.redisService.del(`user:${id}:data`);
 
       return updatedUser;
