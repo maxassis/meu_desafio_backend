@@ -11,6 +11,7 @@ import {
 } from './useCase';
 import { Supabase } from 'src/infra/providers/storage/storage-supabase';
 import { RedisService } from 'src/infra/cache/redis/redis.service';
+import { CloudflareR2Service } from 'src/infra/providers/storage/storage-r2';
 
 @Module({
   imports: [],
@@ -25,6 +26,7 @@ import { RedisService } from 'src/infra/cache/redis/redis.service';
     GetPurchaseDataUseCase,
     Supabase,
     RedisService,
+    CloudflareR2Service,
   ],
 })
 export class DesafioModule {}
