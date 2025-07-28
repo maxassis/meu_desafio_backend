@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infra/database/prisma.service';
-import { Supabase } from 'src/infra/providers/storage/storage-supabase';
+import { CloudflareR2Service } from 'src/infra/providers/storage/storage-r2';
 import { RedisService } from 'src/infra/cache/redis/redis.service';
 
 @Injectable()
 export class DeleteAvatarUseCase {
   constructor(
-    private readonly supabase: Supabase,
+    private readonly cloudflareR2: CloudflareR2Service,
     private readonly prisma: PrismaService,
     private readonly redisService: RedisService,
   ) {}
@@ -26,21 +26,25 @@ export class DeleteAvatarUseCase {
         );
       }
 
-      const { error: deleteError } = await this.supabase.client.storage
-        .from('avatars')
-        .remove([user.avatar_filename]);
-
-      if (deleteError) {
+      // Remove o arquivo do Cloudflare R2
+      try {
+        await this.cloudflareR2.deleteFile(user.avatar_filename);
+      } catch (deleteError: unknown) {
+        const errorMessage =
+          deleteError instanceof Error
+            ? deleteError.message
+            : 'Erro desconhecido';
         console.error(
-          'Erro ao deletar arquivo do Supabase:',
-          deleteError.message,
+          'Erro ao deletar arquivo do Cloudflare R2:',
+          errorMessage,
         );
         throw new HttpException(
-          `Erro ao remover avatar do armazenamento: ${deleteError.message}`,
+          `Erro ao remover avatar do armazenamento: ${errorMessage}`,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
+      // Atualiza o banco de dados
       const updatedUser = await this.prisma.userData.update({
         where: {
           usersId: id,
@@ -59,7 +63,6 @@ export class DeleteAvatarUseCase {
       if (error instanceof HttpException) {
         throw error;
       }
-
       console.error('Erro inesperado ao remover avatar:', error);
       throw new HttpException(
         'Erro inesperado ao remover avatar.',

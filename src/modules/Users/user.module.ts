@@ -12,6 +12,7 @@ import {
   ChangePasswordUseCase,
 } from './useCases';
 import { RedisService } from 'src/infra/cache/redis/redis.service';
+import { CloudflareR2Service } from 'src/infra/providers/storage/storage-r2';
 
 @Module({
   imports: [],
@@ -27,6 +28,7 @@ import { RedisService } from 'src/infra/cache/redis/redis.service';
     EditUserDataUseCase,
     GetRankingUseCase,
     RedisService,
+    CloudflareR2Service,
   ],
 })
 export class UserModule {}
