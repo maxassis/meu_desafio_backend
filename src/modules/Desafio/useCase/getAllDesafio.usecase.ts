@@ -122,7 +122,7 @@ export class GetAllDesafioUseCase {
       cacheKey,
       JSON.stringify(desafiosComStatus),
       'EX',
-      3600,
+      600,
     );
 
     return desafiosComStatus;

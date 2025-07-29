@@ -71,12 +71,14 @@ export class UpdateUserTaskUseCase {
       });
 
       if (desafio) {
-        await this.redisService.del(`desafio:${desafio.id}`);
-        await this.redisService.del(`user:${userId}:desafios`);
-        // await this.redisService.del(`user:${userId}:my-desafios`);
-        await this.redisService.del(
-          `user:${userId}:inscription:${taskExists.inscriptionId}:tasks`,
-        );
+        await Promise.all([
+          this.redisService.del(`desafio:${desafio.id}`),
+          this.redisService.del(`user:${userId}:desafios`),
+          // await this.redisService.del(`user:${userId}:my-desafios`);
+          this.redisService.del(
+            `user:${userId}:inscription:${taskExists.inscriptionId}:tasks`,
+          ),
+        ]);
       }
 
       return {
