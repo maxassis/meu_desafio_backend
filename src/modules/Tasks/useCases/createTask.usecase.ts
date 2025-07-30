@@ -113,7 +113,7 @@ export class CreateTaskUseCase {
         await Promise.all([
           this.redisService.del(`desafio:${desafio.id}`),
           this.redisService.del(`user:${userInscription.userId}:desafios`),
-          this.redisService.del(`user:${userInscription.userId}:my-desafios`),
+          // this.redisService.del(`user:${userInscription.userId}:my-desafios`),
           this.redisService.del(
             `user:${userInscription.userId}:inscription:${userInscription.id}:tasks`,
           ),

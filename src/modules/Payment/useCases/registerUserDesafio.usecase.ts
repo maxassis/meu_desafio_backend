@@ -52,7 +52,7 @@ export class RegisterUserDesafioUseCase {
 
     await Promise.all([
       this.redisService.del(`user:${idUser}:desafios`),
-      this.redisService.del(`desafio:${desafio.id}`),
+      this.redisService.del(`desafio:${idDesafio}`),
       // this.redisService.del(`user:${idUser}:my-desafios`),
     ]);
 
