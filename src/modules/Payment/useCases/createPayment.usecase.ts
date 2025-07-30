@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
+import { RedisService } from 'src/infra/cache/redis/redis.service';
 
 @Injectable()
 export class CreatePaymentUseCase {
   private stripe: Stripe;
 
-  constructor() {
+  constructor(private readonly redisService: RedisService) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
       apiVersion: '2025-05-28.basil',
     });
@@ -17,6 +18,8 @@ export class CreatePaymentUseCase {
     userId: string,
     desafioId: number,
   ): Promise<Stripe.PaymentIntent> {
+    await this.redisService.del(`user:${userId}:desafios`);
+
     return await this.stripe.paymentIntents.create({
       amount,
       currency,
