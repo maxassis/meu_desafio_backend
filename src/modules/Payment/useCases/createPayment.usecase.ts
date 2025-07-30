@@ -16,11 +16,11 @@ export class CreatePaymentUseCase {
     amount: number,
     currency: string,
     userId: string,
-    desafioId: number,
+    desafioId: string,
   ): Promise<Stripe.PaymentIntent> {
     await this.redisService.del(`user:${userId}:desafios`);
 
-    return await this.stripe.paymentIntents.create({
+    return this.stripe.paymentIntents.create({
       amount,
       currency,
       metadata: {
