@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -31,10 +33,12 @@ import {
   ChangePasswordUseCase,
   EditUserDataUseCase,
   GetRankingUseCase,
+  GetUserProfileUseCase,
 } from './useCases';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { FastifyRequest } from 'fastify';
 import { FileFastifyInterceptor } from 'fastify-file-interceptor';
+import { z } from 'zod';
 
 interface AuthenticatedFastifyRequest extends FastifyRequest {
   user: {
@@ -56,7 +60,6 @@ interface FastifyFileInterceptorFile {
 @Controller('/users')
 @UsePipes(ZodValidationPipe)
 export class UserController {
-  // changeEmailUseCase: any;
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,
@@ -65,6 +68,7 @@ export class UserController {
     private readonly deleteAvatarUseCase: DeleteAvatarUseCase,
     private readonly editUserDataUseCase: EditUserDataUseCase,
     private readonly getRankingUseCase: GetRankingUseCase,
+    private readonly getUserProfileUseCase: GetUserProfileUseCase,
   ) {}
 
   @Post()
@@ -122,5 +126,11 @@ export class UserController {
     @Body() newData: EditUserDataDTO,
   ) {
     return this.editUserDataUseCase.editUserData(newData, req.user.id);
+  }
+
+  @Get('/get-user-profile/:id')
+  @UseGuards(AuthGuard)
+  async getUserProfile(@Param('id') id: string) {
+    return this.getUserProfileUseCase.getUserProfile(id);
   }
 }

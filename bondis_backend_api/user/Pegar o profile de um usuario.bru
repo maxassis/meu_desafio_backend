@@ -1,0 +1,19 @@
+meta {
+  name: Pegar o profile de um usuario
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/users/get-user-profile/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{tokenValue}}
+}
+
+settings {
+  encodeUrl: true
+}

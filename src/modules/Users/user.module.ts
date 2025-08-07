@@ -10,6 +10,7 @@ import {
   UploadAvatarUseCase,
   GetUserDataUseCase,
   ChangePasswordUseCase,
+  GetUserProfileUseCase,
 } from './useCases';
 import { RedisService } from 'src/infra/cache/redis/redis.service';
 import { CloudflareR2Service } from 'src/infra/providers/storage/storage-r2';
@@ -29,6 +30,7 @@ import { CloudflareR2Service } from 'src/infra/providers/storage/storage-r2';
     GetRankingUseCase,
     RedisService,
     CloudflareR2Service,
+    GetUserProfileUseCase,
   ],
 })
 export class UserModule {}
