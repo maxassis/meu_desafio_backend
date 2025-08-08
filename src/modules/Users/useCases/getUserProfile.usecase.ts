@@ -10,7 +10,6 @@ export class GetUserProfileUseCase {
   ) {}
 
   async getUserProfile(id: string) {
-    // 1. Basic user info (avatar, name, etc.)
     const userData = await this.prisma.userData.findUnique({
       where: { usersId: id },
       select: {
@@ -27,7 +26,6 @@ export class GetUserProfileUseCase {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    // 2. Count active inscriptions and completed challenges
     const [activeCount, completedCount, totalKmObj] = await Promise.all([
       this.prisma.inscription.count({
         where: { userId: id, completed: false },
@@ -41,7 +39,6 @@ export class GetUserProfileUseCase {
       }),
     ]);
 
-    // 3. Last 5 tasks
     const recentTasks = await this.prisma.task.findMany({
       where: { usersId: id },
       orderBy: { createdAt: 'desc' },
@@ -58,7 +55,6 @@ export class GetUserProfileUseCase {
       },
     });
 
-    // 4. Active challenges with distance covered
     const activeInscriptions = await this.prisma.inscription.findMany({
       where: {
         userId: id,
@@ -80,6 +76,21 @@ export class GetUserProfileUseCase {
       },
     });
 
+    const completedChallengesList = await this.prisma.inscription.findMany({
+      where: { userId: id, completed: true },
+      select: {
+        completedAt: true,
+        desafio: {
+          select: {
+            id: true,
+            name: true,
+            distance: true,
+          },
+        },
+      },
+      orderBy: { completedAt: 'desc' },
+    });
+
     const activeChallenges = activeInscriptions.map((insc) => ({
       id: insc.desafio.id,
       name: insc.desafio.name,
@@ -90,14 +101,21 @@ export class GetUserProfileUseCase {
       ),
     }));
 
-    // 5. Return final data
+    const completedChallenges = completedChallengesList.map((insc) => ({
+      id: insc.desafio.id,
+      name: insc.desafio.name,
+      totalDistance: Number(insc.desafio.distance),
+      completedAt: insc.completedAt,
+    }));
+
     return {
       name: userData.user.name,
       avatarUrl: userData.avatar_url,
       fullName: userData.full_name,
       bio: userData.bio,
       activeInscriptions: activeCount,
-      completedChallenges: completedCount,
+      completedChallengesCount: completedCount,
+      completedChallenges,
       totalDistance: Number(totalKmObj._sum.distanceKm ?? 0),
       recentTasks,
       activeChallenges,
