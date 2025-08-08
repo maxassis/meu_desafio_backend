@@ -128,12 +128,11 @@ export class GetRankingUseCase {
       ...user,
     }));
 
-    // ✅ Armazena no cache com expiração de 6 horas (21.600 segundos)
     await this.redisService.set(
       cacheKey,
       JSON.stringify(finalRankings),
       'EX',
-      21600,
+      10000,
     );
 
     return finalRankings;

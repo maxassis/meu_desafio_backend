@@ -10,6 +10,14 @@ export class GetUserProfileUseCase {
   ) {}
 
   async getUserProfile(id: string) {
+    const cacheKey = `user:profile:${id}`;
+
+    const cachedProfile = await this.redisService.get(cacheKey);
+    if (cachedProfile) {
+      return JSON.parse(cachedProfile);
+    }
+
+    // 2️⃣ Busca no banco
     const userData = await this.prisma.userData.findUnique({
       where: { usersId: id },
       select: {
@@ -108,7 +116,7 @@ export class GetUserProfileUseCase {
       completedAt: insc.completedAt,
     }));
 
-    return {
+    const profile = {
       name: userData.user.name,
       avatarUrl: userData.avatar_url,
       fullName: userData.full_name,
@@ -120,5 +128,9 @@ export class GetUserProfileUseCase {
       recentTasks,
       activeChallenges,
     };
+
+    await this.redisService.set(cacheKey, JSON.stringify(profile), 'EX', 300);
+
+    return profile;
   }
 }
