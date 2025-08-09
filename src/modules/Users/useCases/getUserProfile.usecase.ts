@@ -129,7 +129,7 @@ export class GetUserProfileUseCase {
       activeChallenges,
     };
 
-    await this.redisService.set(cacheKey, JSON.stringify(profile), 'EX', 300);
+    // await this.redisService.set(cacheKey, JSON.stringify(profile), 'EX', 300);
 
     return profile;
   }

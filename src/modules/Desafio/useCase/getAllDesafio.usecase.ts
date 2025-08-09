@@ -12,13 +12,11 @@ export class GetAllDesafioUseCase {
   async getAllDesafio(userId: string) {
     const cacheKey = `user:${userId}:desafios`;
 
-    // Tenta buscar no cache
     const cached = await this.redisService.get(cacheKey);
     if (cached) {
       return JSON.parse(cached);
     }
 
-    // Caso não tenha cache, busca no banco
     const desafios = await this.prisma.desafio.findMany({
       select: {
         id: true,
@@ -92,11 +90,13 @@ export class GetAllDesafioUseCase {
         const progressValue = inscription.progress;
         const distanceValue = Number(desafio.distance);
 
-        if (inscription.completed) {
-          totalDistanceKm = distanceValue;
-        } else {
-          totalDistanceKm = inscription.totalDistanceKm;
-        }
+        totalDistanceKm = inscription.totalDistanceKm;
+
+        // if (inscription.completed) {
+        //   totalDistanceKm = distanceValue;
+        // } else {
+        //   totalDistanceKm = inscription.totalDistanceKm;
+        // }
 
         progressPercentage =
           distanceValue > 0
@@ -117,7 +117,6 @@ export class GetAllDesafioUseCase {
       };
     });
 
-    // Salva no cache com TTL de 1 hora
     await this.redisService.set(
       cacheKey,
       JSON.stringify(desafiosComStatus),
