@@ -90,13 +90,11 @@ export class GetAllDesafioUseCase {
         const progressValue = inscription.progress;
         const distanceValue = Number(desafio.distance);
 
-        totalDistanceKm = inscription.totalDistanceKm;
-
-        // if (inscription.completed) {
-        //   totalDistanceKm = distanceValue;
-        // } else {
-        //   totalDistanceKm = inscription.totalDistanceKm;
-        // }
+        if (inscription.completed) {
+          totalDistanceKm = distanceValue;
+        } else {
+          totalDistanceKm = inscription.totalDistanceKm;
+        }
 
         progressPercentage =
           distanceValue > 0
