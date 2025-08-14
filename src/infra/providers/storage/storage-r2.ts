@@ -4,33 +4,35 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
+import { ConfigService } from '@nestjs/config';
+import { Env } from 'src/env';
 
 @Injectable()
 export class CloudflareR2Service {
   private readonly s3Client: S3Client;
   private readonly bucketUrlMap: Record<string, string>;
 
-  constructor() {
-    const accountId = process.env.R2_ACCOUNT_ID;
+  constructor(private configService: ConfigService<Env, true>) {
+    const accountId = this.configService.get('R2_ACCOUNT_ID');
     if (!accountId) throw new Error('R2_ACCOUNT_ID não está definido');
-    if (!process.env.R2_ACCESS_KEY_ID)
+    if (!this.configService.get('R2_ACCESS_KEY_ID'))
       throw new Error('R2_ACCESS_KEY_ID não está definido');
-    if (!process.env.R2_SECRET_ACCESS_KEY)
+    if (!this.configService.get('R2_SECRET_ACCESS_KEY'))
       throw new Error('R2_SECRET_ACCESS_KEY não está definido');
 
     this.s3Client = new S3Client({
       region: 'auto',
       endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
       credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID,
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+        accessKeyId: this.configService.get('R2_ACCESS_KEY_ID'),
+        secretAccessKey: this.configService.get('R2_SECRET_ACCESS_KEY'),
       },
       forcePathStyle: true,
     });
 
     this.bucketUrlMap = {
-      avatars: process.env.R2_PUBLIC_URL_AVATARS as string,
-      desafios: process.env.R2_PUBLIC_URL_DESAFIOS as string,
+      avatars: this.configService.get('R2_PUBLIC_URL_AVATARS'),
+      desafios: this.configService.get('R2_PUBLIC_URL_DESAFIOS'),
     };
   }
 

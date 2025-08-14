@@ -9,13 +9,19 @@ import { SendMailRecoveryUseCase } from './useCase/sendmail.recovery.usecase';
 import { SendMailRecoveryDoneUseCase } from './useCase/sendmail.recovery.done';
 import { CheckEmailUseCase } from './useCase/checkValidEmail.usecase';
 import { RedisService } from 'src/infra/cache/redis/redis.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    JwtModule.register({
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
       global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '45d' },
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [LoginController],
