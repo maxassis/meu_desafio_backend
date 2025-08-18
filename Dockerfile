@@ -1,6 +1,6 @@
 # ---- Base ----
 # Using a slim image and installing curl for healthchecks
-FROM node:20-slim AS base
+FROM node:22-slim AS base
 WORKDIR /usr/src/app
 RUN apt-get update -qq &&     apt-get install -y -qq --no-install-recommends openssl curl wget
 
