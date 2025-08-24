@@ -1,4 +1,11 @@
-import { Controller, Body, Post, UsePipes } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  UsePipes,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
   SignInSchemaDTO,
@@ -35,12 +42,14 @@ export class LoginController {
     return await this.signInUseCase.execute(data);
   }
 
-  // CHECK EMAIL
   @Post('/check-email')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async checkEmail(@Body() data: CheckEmailDTO) {
     const { email } = data;
 
-    return this.checkValidEmailUseCase.checkEmail(email);
+    await this.checkValidEmailUseCase.checkEmail(email);
+
+    return;
   }
 
   // ROTAS DE EMAIL
