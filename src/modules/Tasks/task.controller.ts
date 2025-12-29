@@ -20,7 +20,7 @@ import {
 import { AuthGuard } from 'src/infra/providers/auth-guard.provider';
 import { RequestSchemaDTO } from '../Users/schemas';
 import { UpdateUserTaskUseCase } from './useCases/updateUserTask.usecase';
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('/tasks')
 @UsePipes(ZodValidationPipe)

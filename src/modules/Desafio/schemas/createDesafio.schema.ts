@@ -1,4 +1,4 @@
-import { createZodDto } from '@anatine/zod-nestjs';
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 // Schema para validar purchaseData após o parse

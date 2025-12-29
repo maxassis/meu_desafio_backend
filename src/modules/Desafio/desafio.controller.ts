@@ -20,7 +20,7 @@ import {
   GetAllDesafioUseCase,
   GetPurchaseDataUseCase,
 } from './useCase';
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { ZodValidationPipe } from 'nestjs-zod';
 import { FastifyRequest } from 'fastify';
 import { FilesFastifyInterceptor } from 'fastify-file-interceptor';
 

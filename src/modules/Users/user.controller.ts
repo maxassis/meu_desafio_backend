@@ -35,7 +35,7 @@ import {
   GetRankingUseCase,
   GetUserProfileUseCase,
 } from './useCases';
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { ZodValidationPipe } from 'nestjs-zod';
 import { FastifyRequest } from 'fastify';
 import { FileFastifyInterceptor } from 'fastify-file-interceptor';
 import { z } from 'zod';

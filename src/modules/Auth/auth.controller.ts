@@ -6,7 +6,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
+import { ZodValidationPipe } from 'nestjs-zod';
 import {
   SignInSchemaDTO,
   SendMailCreateUserDTO,
