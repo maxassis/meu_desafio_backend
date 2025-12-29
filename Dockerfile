@@ -13,8 +13,9 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Copy Prisma schema and generate the client
+# Copy Prisma schema, config and generate the client
 COPY --chown=node:node prisma ./prisma/
+COPY --chown=node:node prisma.config.ts ./
 RUN npx prisma generate
 
 # Copy the rest of the source code
@@ -39,6 +40,7 @@ COPY --chown=node:node --from=builder /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/src/app/package.json ./package.json
 COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
 COPY --chown=node:node --from=builder /usr/src/app/prisma ./prisma/
+COPY --chown=node:node --from=builder /usr/src/app/prisma.config.ts ./
 
 # Expose the application port
 EXPOSE 3000
