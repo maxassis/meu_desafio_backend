@@ -47,4 +47,4 @@ EXPOSE 3000
 
 # Command to run the application directly with node
 
-CMD [ "node", "dist/main" ]
+CMD [ "node", "dist/src/main.js" ]
